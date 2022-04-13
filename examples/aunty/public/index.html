@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>example</title>
+    <!-- If you add `extractCSS:true` to your build config, add the <link> below -->
+    <!-- <link rel="stylesheet" href="index.css" /> -->
+    <script src="index.js"></script>
+    <!-- If you add `addModernJS:true` to your build config, replace the <script> above with the ones below -->
+    <!-- <script type="module" src="index_modern.js"></script> -->
+    <!-- <script nomodule src="index.js"></script> -->
+  </head>
+  <body>
+    <p>Before</p>
+    <p>Before</p>
+    <p>Before</p>
+    <p>Before</p>
+    <p>Before</p>
+    <p>Before</p>
+    <p>Before</p>
+    <p>Before</p>
+    <p>Before</p>
+    <p>Before</p>
+
+    <div id="scrollytellerNAMEtest" data-component="Anchor" data-mount="true"></div>
+
+    <a name="markNUMBER1"> </a>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum diam a erat bibendum sagittis.
+      Mauris vitae vestibulum nisi. Duis tincidunt enim mi, nec consequat enim consectetur non. Curabitur elit sapien,
+      rhoncus eu erat id, convallis auctor neque. Curabitur in luctus erat.
+    </p>
+
+    <a name="markNUMBER2"> </a>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum diam a erat bibendum sagittis.
+      Mauris vitae vestibulum nisi. Duis tincidunt enim mi, nec consequat enim consectetur non. Curabitur elit sapien,
+      rhoncus eu erat id, convallis auctor neque. Curabitur in luctus erat.
+    </p>
+
+    <a name="markNUMBER3ALIGNright"> </a>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum diam a erat bibendum sagittis.
+      Mauris vitae vestibulum nisi. Duis tincidunt enim mi, nec consequat enim consectetur non. Curabitur elit sapien,
+      rhoncus eu erat id, convallis auctor neque. Curabitur in luctus erat.
+    </p>
+
+    <a name="markNUMBER4ALIGNleft"> </a>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum diam a erat bibendum sagittis.
+      Mauris vitae vestibulum nisi. Duis tincidunt enim mi, nec consequat enim consectetur non. Curabitur elit sapien,
+      rhoncus eu erat id, convallis auctor neque. Curabitur in luctus erat.
+    </p>
+
+    <a name="markNUMBER5"> </a>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum diam a erat bibendum sagittis.
+      Mauris vitae vestibulum nisi. Duis tincidunt enim mi, nec consequat enim consectetur non. Curabitur elit sapien,
+      rhoncus eu erat id, convallis auctor neque. Curabitur in luctus erat.
+    </p>
+
+    <a name="markNUMBER6"> </a>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum diam a erat bibendum sagittis.
+      Mauris vitae vestibulum nisi. Duis tincidunt enim mi, nec consequat enim consectetur non. Curabitur elit sapien,
+      rhoncus eu erat id, convallis auctor neque. Curabitur in luctus erat.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum diam a erat bibendum sagittis.
+      Mauris vitae vestibulum nisi. Duis tincidunt enim mi, nec consequat enim consectetur non. Curabitur elit sapien,
+      rhoncus eu erat id, convallis auctor neque. Curabitur in luctus erat.
+    </p>
+
+    <a name="markNUMBER7"> </a>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum diam a erat bibendum sagittis.
+      Mauris vitae vestibulum nisi. Duis tincidunt enim mi, nec consequat enim consectetur non. Curabitur elit sapien,
+      rhoncus eu erat id, convallis auctor neque. Curabitur in luctus erat.
+    </p>
+    <a name="endscrollyteller"></a>
+
+    <p>After</p>
+    <p>After</p>
+    <p>After</p>
+    <p>After</p>
+    <p>After</p>
+    <p>After</p>
+    <p>After</p>
+    <p>After</p>
+    <p>After</p>
+    <p>After</p>
+
+    <!-- Mock Odyssey's loaded event so the `whenOdysseyLoaded` promise resolves -->
+    <script>
+      window.dispatchEvent(new CustomEvent('odyssey:api'));
+      window.__IS_ODYSSEY_FORMAT__ = true;
+    </script>
+  </body>
+</html>
