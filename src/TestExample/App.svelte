@@ -55,7 +55,11 @@
 <p>Before</p>
 <p>Before</p>
 
-<Scrollyteller panels={scrollyData.panels} {onMarker} {onProgress}>
+<Scrollyteller
+	panels={scrollyData.panels}
+	{onMarker}
+	{onProgress}
+>
 	<div class="graphic">
 		<Worm />
 		<span class="number">{number}</span>

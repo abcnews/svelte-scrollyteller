@@ -7,13 +7,19 @@
 
   let number = 0;
   let stProgress;
+
+  const markerChangeHandler = marker => {
+    console.log(marker);
+    number = marker.number;
+  };
+
+  const progressChangeHandler = progress => {
+    console.log(progress);
+    stProgress = progress;
+  };
 </script>
 
-<Scrollyteller
-  panels={scrollyData.panels}
-  onMarker={marker => (number = marker.number)}
-  onProgress={progress => (stProgress = progress)}
->
+<Scrollyteller panels={scrollyData.panels} onMarker={markerChangeHandler} onProgress={progressChangeHandler}>
   <div class="graphic">
     <Worm mark={number} />
     <PercentageIndicators percentage={stProgress?.scrollPct} />

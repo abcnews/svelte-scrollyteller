@@ -1,17 +1,31 @@
 import acto from '@abcnews/alternating-case-to-object';
 import { selectMounts, isMount, getMountValue } from '@abcnews/mount-utils';
-import type { PanelDefinition } from './types';
-import type { ScrollytellerDefinition } from './types';
+import type { PanelDefinition, ScrollytellerDefinition, PanelAlignment } from './types';
 
-const SELECTOR_COMMON = 'scrollyteller';
 const piecemeal = Symbol('piecemeal');
+const SELECTOR_COMMON = 'scrollyteller';
 
+type PanelMeta = {
+	[piecemeal]?: boolean;
+	align?: PanelAlignment;
+};
 declare global {
 	interface Window {
 		__scrollytellers: {
 			[key: string]: any;
 		};
 	}
+}
+
+function excludePanelMeta(config: PanelMeta) {
+	const _config = {
+		...config
+	};
+
+	delete _config[piecemeal];
+	delete _config.align;
+
+	return _config;
 }
 
 /**
@@ -66,11 +80,12 @@ export const loadScrollyteller = (
 /**
  * Parse a list of nodes looking for anchors starting with a given name
  * @param nodes
- * @param config
+ * @param initialMarker
  * @param name
  */
-const loadPanels = <T>(nodes: Node[], config: any, name: string): PanelDefinition[] => {
+const loadPanels = (nodes: Element[], initialConfig, name: string): PanelDefinition[] => {
 	const panels: PanelDefinition[] = [];
+	let nextConfigAndMeta: PanelMeta = initialConfig;
 	let nextNodes: Element[] = [];
 
 	// Commit the current nodes to a marker
@@ -78,8 +93,8 @@ const loadPanels = <T>(nodes: Node[], config: any, name: string): PanelDefinitio
 		if (nextNodes.length === 0) return;
 
 		panels.push({
-			align: config.align,
-			data: config,
+			align: nextConfigAndMeta.align,
+			data: excludePanelMeta(nextConfigAndMeta),
 			nodes: nextNodes
 		});
 		nextNodes = [];
@@ -95,10 +110,10 @@ const loadPanels = <T>(nodes: Node[], config: any, name: string): PanelDefinitio
 			const configString: string = getMountValue(node, name);
 
 			if (configString) {
-				config = acto(configString) as unknown as T;
+				nextConfigAndMeta = acto(configString) as unknown;
 			} else {
 				// Empty marks should stop the piecemeal flow
-				config[piecemeal] = false;
+				nextConfigAndMeta[piecemeal] = false;
 			}
 		} else {
 			// Any other nodes just get grouped for the next marker
@@ -111,7 +126,7 @@ const loadPanels = <T>(nodes: Node[], config: any, name: string): PanelDefinitio
 		}
 
 		// If piecemeal is on/true then each node has its own box
-		if (config[piecemeal]) {
+		if (nextConfigAndMeta[piecemeal]) {
 			pushPanel();
 		}
 

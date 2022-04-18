@@ -27,6 +27,9 @@
 	export let panels: PanelDefinition[];
 	export let onProgress: ((progress: any) => void) | null = null;
 	export let onMarker: (marker: any) => void;
+	export let observerOptions: IntersectionObserverInit = {
+		threshold: 0.5
+	};
 
 	const isOdyssey: boolean = window.__IS_ODYSSEY_FORMAT__;
 
@@ -53,13 +56,7 @@
 			}
 		});
 	};
-	const IntersectionObserverOptions: IntersectionObserverInit = {
-		threshold: 0.5
-	};
-	const observer = new IntersectionObserver(
-		IntersectionObserverCallback,
-		IntersectionObserverOptions
-	);
+	const observer = new IntersectionObserver(IntersectionObserverCallback, observerOptions);
 
 	onMount(() => {
 		scrollingPos = getScrollingPos();
@@ -99,8 +96,8 @@
 
 <svelte:head>
 	{#if isOdyssey}
-	<!-- styles required to make position sticky work -->
-	<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- styles required to make position sticky work -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
 		<style>
 			body {
 				overflow: visible;
@@ -114,7 +111,7 @@
 		<slot />
 	</div>
 	<div class="content">
-		{#each panels as panel, i}
+		{#each panels as panel}
 			{#if customPanel}
 				<svelte:component this={customPanel} {...panel} {steps} />
 			{:else}

@@ -35,18 +35,37 @@ When a new box comes into view `onMarker` will be called with the `data` of the 
 
   let marker = 0;
   let progress;
+
+  const markerChangeHandler = (data) => {
+    marker = data;
+  }
+
+  const progressChangeHandler = (data) => {
+    progress = data;
+  }
 </script>
 
 <Scrollyteller
   {panels}
-  onMarker={(data) => (marker = data)}
-  onProgress={(data) => (progress = data)}
+  onMarker={markerChangeHandler}
+  onProgress={progressChangeHandler}
 >
   <UpdatableGraphic marker={marker} />
 </Scrollyteller>
 ```
 
 For a more complete example using Typescript see the [examples](examples).
+
+## Props
+
+| Property  | Type | Description | Default |
+| --- | --- | --- | --- |
+| panels | Refer to **Usage** | **required** Array of nodes and data which dictate the markers |
+| onMarker | (marker) => void | **required** Function which fires when a marker intersects and returns that markers data| |
+| onProgress | (progress) => void | Function which fires when a on scroll and returns the scrollyteller progress |  |
+| customPanel | Svelte Component | Component to replace the default panel component | Panel.svelte |
+| observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | {threshold: 0.5} |
+
 
 ### Usage with Odyssey
 
