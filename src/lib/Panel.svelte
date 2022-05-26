@@ -33,6 +33,8 @@
   margin-left: auto;
   margin-right: auto;
 
+  width: 100%;
+
   position: relative;
   z-index: 1;
 
@@ -113,7 +115,7 @@
 }
 
 @media only screen and (max-width: $breakpoint) {
-  .scrollyteller {
+  .st-panel {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
 
