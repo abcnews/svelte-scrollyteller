@@ -121,11 +121,11 @@
 	</div>
 </div>
 
+
 <style lang="scss">
-	.scrollyteller {
+  .scrollyteller {
 		position: relative;
 	}
-
 	.graphic {
 		transform: translate3d(0, 0, 0);
 		height: calc(var(--vh, 1vh) * 100);
@@ -135,12 +135,13 @@
 		left: 0;
 		z-index: 1;
 	}
-
 	.content {
 		margin-top: calc(var(--vh, 1vh) * -100);
 		position: relative;
 		z-index: 2;
 		overflow: hidden;
 		min-height: calc(var(--vh, 1vh) * 100);
+    display: flex;
+    flex-direction: column;
 	}
 </style>

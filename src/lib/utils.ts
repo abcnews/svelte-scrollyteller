@@ -47,12 +47,16 @@ export const loadScrollyteller = (
 
 	if (!window.__scrollytellers[name]) {
 		const firstEl: Element | null = selectMounts(openingMountValuePrefix)[0];
-		className && firstEl.classList.add(className);
+
+		if (!firstEl) {
+			throw new Error(`Couldn't find element for #${openingMountValuePrefix}`);
+		}
 
 		if (!isMount(firstEl)) {
 			throw new Error('Attempting to mount to a non-mount node');
 		}
 
+		className && firstEl.classList.add(className);
 		const config = acto(getMountValue(firstEl, openingMountValuePrefix));
 
 		const els: Element[] = [];
