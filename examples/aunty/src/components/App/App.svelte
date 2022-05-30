@@ -2,6 +2,7 @@
   import Worm from '../Worm/Worm.svelte';
   import Scrollyteller from 'svelte-scrollyteller';
   import PercentageIndicators from '../PercentageIndicators.svelte';
+  import CustomPanel from '../CustomPanel.svelte';
 
   export let scrollyData;
 
@@ -19,7 +20,12 @@
   };
 </script>
 
-<Scrollyteller panels={scrollyData.panels} onMarker={markerChangeHandler} onProgress={progressChangeHandler}>
+<Scrollyteller
+  panels={scrollyData.panels}
+  onMarker={markerChangeHandler}
+  onProgress={progressChangeHandler}
+  customPanel={CustomPanel}
+>
   <div class="graphic">
     <Worm mark={number} />
     <PercentageIndicators percentage={stProgress?.scrollPct} />
