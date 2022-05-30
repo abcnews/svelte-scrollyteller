@@ -1,6 +1,6 @@
 {
-	"name": "jtfell-svelte-scrollyteller",
-	"version": "0.0.10",
+	"name": "svelte-scrollyteller",
+	"version": "0.0.7",
 	"scripts": {
 		"dev": "svelte-kit dev",
 		"build": "svelte-kit build",

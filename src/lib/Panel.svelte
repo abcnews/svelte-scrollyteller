@@ -49,9 +49,7 @@
   &::before {
     content: '';
 
-    /* background-color: var(--color-panel-background, rgba(0, 0, 0, 0.6)); */
-    box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 26%);
-    background-color: var(--color-panel-background, hsla(0, 0%, 100%, 0.9));
+    background-color: var(--color-panel-background, rgba(0, 0, 0, 0.6));
     border-radius: 2px;
 
     position: absolute;
@@ -74,8 +72,7 @@
     font-family: ABCSerif, Book Antiqua, Palatino Linotype, Palatino, serif;
     font-size: 1.375rem;
     line-height: 1.666666667;
-    /* color: var(--color-panel-text, #fefefe); */
-    color: var(--color-panel-text, #111);
+    color: var(--color-panel-text, #fefefe);
 
     padding-left: 0.875rem;
     padding-right: 0.875rem;
