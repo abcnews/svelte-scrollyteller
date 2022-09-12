@@ -41,11 +41,11 @@
     position: relative;
     z-index: 1;
 
-    &.first {
+    &:first-of-type {
       margin-top: 100vh;
     }
 
-    &.last {
+    &:last-of-type {
       margin-bottom: 100vh;
     }
 
