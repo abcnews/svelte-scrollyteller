@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { children } from './actions';
 	import type { PanelRef, PanelDefinition } from './types';
 
 	export let props: PanelDefinition;
@@ -13,11 +14,12 @@
 	});
 </script>
 
-<div class={`st-panel ${align || ''} ${panelClass || ''}`} bind:this={panelRef}>
-  {#each nodes as node}
-    {@html node.outerHTML}
-  {/each}
-</div>
+<div
+	class={`st-panel ${align || ''} ${panelClass || ''}`}
+	bind:this={panelRef}
+	use:children={nodes}
+/>
+
 
 <style lang="scss">
   $breakpoint: 61.25rem;
