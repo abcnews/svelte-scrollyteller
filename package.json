@@ -1,5 +1,5 @@
 {
-	"name": "svelte-scrollyteller",
+	"name": "@abcnews/svelte-scrollyteller",
 	"version": "0.0.9",
 	"scripts": {
 		"dev": "svelte-kit dev",
