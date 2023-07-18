@@ -28,29 +28,25 @@ When a new box comes into view `onMarker` will be called with the `data` of the 
 
 ```html
 <script lang="ts">
-  import Scrollyteller from 'svelte-scrollyteller/Scrollyteller.svelte';
-  import UpdatableGraphic from 'UpdatableGraphic.svelte'
+	import Scrollyteller from 'svelte-scrollyteller/Scrollyteller.svelte';
+	import UpdatableGraphic from 'UpdatableGraphic.svelte';
 
-  export let panels;
+	export let panels;
 
-  let marker = 0;
-  let progress;
+	let marker = 0;
+	let progress;
 
-  const markerChangeHandler = (data) => {
-    marker = data;
-  }
+	const markerChangeHandler = (data) => {
+		marker = data;
+	};
 
-  const progressChangeHandler = (data) => {
-    progress = data;
-  }
+	const progressChangeHandler = (data) => {
+		progress = data;
+	};
 </script>
 
-<Scrollyteller
-  {panels}
-  onMarker={markerChangeHandler}
-  onProgress={progressChangeHandler}
->
-  <UpdatableGraphic marker={marker} />
+<Scrollyteller {panels} onMarker="{markerChangeHandler}" onProgress="{progressChangeHandler}">
+	<UpdatableGraphic marker="{marker}" />
 </Scrollyteller>
 ```
 
@@ -58,14 +54,13 @@ For a more complete example using Typescript see the [examples](examples).
 
 ## Props
 
-| Property  | Type | Description | Default |
-| --- | --- | --- | --- |
-| panels | Refer to **Usage** | **required** Array of nodes and data which dictate the markers |
-| onMarker | (marker) => void | **required** Function which fires when a marker intersects and returns that markers data| |
-| onProgress | (progress) => void | Function which fires when a on scroll and returns the scrollyteller progress |  |
-| customPanel | Svelte Component | Component to replace the default panel component | Panel.svelte |
+| Property        | Type                     | Description                                                                                                                            | Default          |
+| --------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| panels          | Refer to **Usage**       | **required** Array of nodes and data which dictate the markers                                                                         |
+| onMarker        | (marker) => void         | **required** Function which fires when a marker intersects and returns that markers data                                               |                  |
+| onProgress      | (progress) => void       | Function which fires when a on scroll and returns the scrollyteller progress                                                           |                  |
+| customPanel     | Svelte Component         | Component to replace the default panel component                                                                                       | Panel.svelte     |
 | observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | {threshold: 0.5} |
-
 
 ### Usage with Odyssey
 
@@ -92,17 +87,44 @@ import { loadScrollyteller } from 'svelte-scrollyteller/utils';
 import App from 'App.svelte';
 
 const scrollyData = loadScrollyteller(
-  "",       // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
-  "u-full", // Class to apply to mount point u-full makes it full width in Odyssey
-  "mark"    // Name of marker in CoreMedia eg. for "point" use #point default: #mark
+	'', // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
+	'u-full', // Class to apply to mount point u-full makes it full width in Odyssey
+	'mark' // Name of marker in CoreMedia eg. for "point" use #point default: #mark
 );
 
 new App({
-  target: scrollyData.mountNode,
-  props: { panels: scrollyData.panels }
+	target: scrollyData.mountNode,
+	props: { panels: scrollyData.panels }
 });
 ```
 
-### Example
+## Development
 
-Mostly to aid development and demonstrate usage, there is an example project in `/examples`. It uses [aunty](https://github.com/abcnews/aunty) as the build tool to match the usual ABC News interactive development work flow.
+This is [packaged using SvelteKit](https://kit.svelte.dev/docs/packaging).
+
+### Get started
+
+```sh
+git clone git@github.com:abcnews/svelte-scrollyteller.git
+cd svelte-scrollyteller
+npm i
+npm run dev
+```
+
+This will get a SvelteKit app to use for development and testing up and running.
+
+### Releasing new versions
+
+```sh
+npm run release
+```
+
+This will:
+
+- install dependences
+- build
+- test
+- lint
+- bump version
+- commit
+- publish to npm

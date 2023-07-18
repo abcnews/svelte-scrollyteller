@@ -1,9 +1,9 @@
-<script lang="ts" context="module">
-	declare global {
-		interface Window {
-			__IS_ODYSSEY_FORMAT__: boolean;
-		}
-	}
+<script lang="ts">
+	
+	import type { PanelRef, PanelDefinition } from './types.js';
+	import Panel from './Panel.svelte';
+	import { onMount } from 'svelte';
+	import type { ComponentType } from 'svelte/internal';
 
 	enum ScrollPositions {
 		FULL = 'FULL',
@@ -11,19 +11,7 @@
 		BELOW = 'BELOW'
 	}
 
-	interface IntersectionEntries extends IntersectionObserverEntry {
-		target: PanelRef;
-	}
-</script>
-
-<script lang="ts">
-	import type { PanelRef } from './types';
-	import Panel from './Panel.svelte';
-	import { onMount } from 'svelte';
-	import type { SvelteComponent } from 'svelte/internal';
-	import type { PanelDefinition } from './types';
-
-	export let customPanel: SvelteComponent | null = null;
+	export let customPanel: ComponentType | null = null;
 	export let panels: PanelDefinition[];
 	export let onProgress: ((progress: any) => void) | null = null;
 	export let onMarker: (marker: any) => void;
@@ -121,9 +109,8 @@
 	</div>
 </div>
 
-
 <style lang="scss">
-  .scrollyteller {
+	.scrollyteller {
 		position: relative;
 	}
 	.graphic {
@@ -141,7 +128,7 @@
 		z-index: 2;
 		overflow: hidden;
 		min-height: calc(var(--vh, 1vh) * 100);
-    display: flex;
-    flex-direction: column;
+		display: flex;
+		flex-direction: column;
 	}
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Scrollyteller, { loadScrollyteller } from '$lib';
+	import Scrollyteller, { loadScrollyteller } from '$lib/index.js';
 	import PercentageIndicators from './PercentageIndicators.svelte';
 	import Worm from './Worm/Worm.svelte';
 
@@ -13,7 +13,6 @@
 	let stProgress;
 
 	const onMarker = (marker) => {
-		console.log(marker);
 		number = marker.number;
 	};
 
