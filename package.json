@@ -14,6 +14,9 @@
 		"release": "np",
 		"version": "npm run package"
 	},
+	"np": {
+		"yarn": false
+	},
 	"devDependencies": {
 		"@sveltejs/kit": "^1.22.1",
 		"@sveltejs/package": "^2.1.0",
@@ -30,6 +33,9 @@
 	},
 	"peerDependencies": {
 		"svelte": "^3.0.0"
+	},
+	"engines": {
+		"node": ">=18"
 	},
 	"type": "module",
 	"dependencies": {
