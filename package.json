@@ -1,6 +1,6 @@
 {
 	"name": "@abcnews/svelte-scrollyteller",
-	"version": "0.0.9",
+	"version": "1.0.0-0",
 	"scripts": {
 		"dev": "vite dev & svelte-package --watch",
 		"build": "vite build",
