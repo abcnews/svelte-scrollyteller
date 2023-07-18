@@ -37,6 +37,9 @@
 	"engines": {
 		"node": ">=18"
 	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"type": "module",
 	"dependencies": {
 		"@abcnews/alternating-case-to-object": "^3.0.2",
