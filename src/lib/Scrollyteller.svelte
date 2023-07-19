@@ -52,18 +52,7 @@
 		steps.forEach((step, i) => {
 			observer.observe(step);
 		});
-
-		setvhAmount();
 	});
-
-	const setvhAmount = () => {
-		const height = window.innerHeight;
-		scrollytellerRef.style.setProperty('--vh', `${height / 100}px`);
-	};
-
-	const windowResizeHandler = () => {
-		setvhAmount();
-	};
 
 	const scrollHandler = () => {
 		const rootRect = scrollytellerRef.getBoundingClientRect();
@@ -78,7 +67,7 @@
 	$: marker && onMarker(marker);
 </script>
 
-<svelte:window on:resize={windowResizeHandler} on:scroll={onProgress ? scrollHandler : null} />
+<svelte:window on:scroll={onProgress ? scrollHandler : null} />
 
 <svelte:head>
 	{#if isOdyssey}
@@ -113,7 +102,7 @@
 	}
 	.graphic {
 		transform: translate3d(0, 0, 0);
-		height: calc(var(--vh, 1vh) * 100);
+		height: 100dvh;
 		width: 100%;
 		position: sticky;
 		top: 0;
@@ -121,11 +110,11 @@
 		z-index: 1;
 	}
 	.content {
-		margin-top: calc(var(--vh, 1vh) * -100);
+		margin-top: -100dvh;
 		position: relative;
 		z-index: 2;
 		overflow: hidden;
-		min-height: calc(var(--vh, 1vh) * 100);
+		min-height: 100dvh;
 		display: flex;
 		flex-direction: column;
 	}
