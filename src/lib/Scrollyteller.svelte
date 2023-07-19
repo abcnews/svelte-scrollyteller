@@ -1,9 +1,7 @@
 <script lang="ts">
-	
-	import type { PanelRef, PanelDefinition } from './types.js';
 	import Panel from './Panel.svelte';
 	import { onMount } from 'svelte';
-	import type { ComponentType } from 'svelte/internal';
+	import type { ComponentType } from 'svelte';
 
 	enum ScrollPositions {
 		FULL = 'FULL',
