@@ -2,7 +2,7 @@
 	"name": "@abcnews/svelte-scrollyteller",
 	"version": "1.0.0-0",
 	"scripts": {
-		"dev": "vite dev & svelte-package --watch",
+		"dev": "concurrently \"vite dev\" \"svelte-package --watch\"",
 		"build": "vite build",
 		"preview": "vite preview",
 		"package": "svelte-package",
@@ -20,6 +20,7 @@
 	"devDependencies": {
 		"@sveltejs/kit": "^1.22.1",
 		"@sveltejs/package": "^2.1.0",
+		"concurrently": "^8.2.1",
 		"np": "^8.0.4",
 		"prettier": "^3.0.0",
 		"sass": "^1.63.6",
