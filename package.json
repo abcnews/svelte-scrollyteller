@@ -17,6 +17,9 @@
 	"np": {
 		"yarn": false
 	},
+	"engines": {
+		"node": ">=18"
+	},
 	"devDependencies": {
 		"@sveltejs/kit": "^1.22.1",
 		"@sveltejs/package": "^2.1.0",
