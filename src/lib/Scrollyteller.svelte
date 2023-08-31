@@ -2,6 +2,7 @@
 	import Panel from './Panel.svelte';
 	import { onMount } from 'svelte';
 	import type { ComponentType } from 'svelte';
+	import type { IntersectionEntries, PanelDefinition, PanelRef } from './types.js';
 
 	enum ScrollPositions {
 		FULL = 'FULL',
@@ -72,6 +73,17 @@
 <svelte:head>
 	{#if isOdyssey}
 		<!-- styles required to make position sticky work -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
+		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
 		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
 		<style>
 			body {

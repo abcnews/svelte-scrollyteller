@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { children } from './actions.js';
+	import type { PanelDefinition, PanelRef } from './types.js';
 
 	export let props: PanelDefinition;
+
 	const { align, panelClass, data, nodes = [], steps = [] } = props;
 
 	let panelRef: PanelRef;
