@@ -68,7 +68,7 @@
 			clear: both;
 		}
 
-		:global(p) {
+		:global(> *) {
 			font-family: ABCSerif, Book Antiqua, Palatino Linotype, Palatino, serif;
 			font-size: 1.375rem;
 			line-height: 1.666666667;
