@@ -65,7 +65,7 @@
 		});
 	};
 
-	$: marker && onMarker(marker);
+	$: marker && onMarker && onMarker(marker);
 </script>
 
 <svelte:window on:scroll={onProgress ? scrollHandler : null} />
