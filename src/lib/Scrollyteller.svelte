@@ -75,16 +75,6 @@
 		<!-- styles required to make position sticky work -->
 		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
 		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
 		<style>
 			body {
 				overflow: visible;
@@ -98,11 +88,15 @@
 		<slot />
 	</div>
 	<div class="content">
-		{#each panels as panel}
+		{#each panels as panel, i}
+			{@const panelClass =
+				(panel.panelClass ?? '') +
+				(i === 0 ? ' first' : '') +
+				(i === panels.length - 1 ? ' last' : '')}
 			{#if customPanel}
-				<svelte:component this={customPanel} {...panel} {steps} />
+				<svelte:component this={customPanel} {...panel} {steps} {panelClass} />
 			{:else}
-				<Panel props={{ ...panel, steps }} />
+				<Panel props={{ ...panel, steps, panelClass }} />
 			{/if}
 		{/each}
 	</div>
