@@ -1,9 +1,8 @@
-<script lang="ts" context="module">
-	declare global {
-		interface Window {
-			__IS_ODYSSEY_FORMAT__: boolean;
-		}
-	}
+<script lang="ts">
+	import Panel from './Panel.svelte';
+	import { onMount } from 'svelte';
+	import type { ComponentType } from 'svelte';
+	import type { IntersectionEntries, PanelDefinition, PanelRef } from './types.js';
 
 	enum ScrollPositions {
 		FULL = 'FULL',
@@ -11,19 +10,7 @@
 		BELOW = 'BELOW'
 	}
 
-	interface IntersectionEntries extends IntersectionObserverEntry {
-		target: PanelRef;
-	}
-</script>
-
-<script lang="ts">
-	import type { PanelRef } from './types';
-	import Panel from './Panel.svelte';
-	import { onMount } from 'svelte';
-	import type { SvelteComponent } from 'svelte/internal';
-	import type { PanelDefinition } from './types';
-
-	export let customPanel: SvelteComponent | null = null;
+	export let customPanel: ComponentType | null = null;
 	export let panels: PanelDefinition[];
 	export let onProgress: ((progress: any) => void) | null = null;
 	export let onMarker: (marker: any) => void;
@@ -66,18 +53,7 @@
 		steps.forEach((step, i) => {
 			observer.observe(step);
 		});
-
-		setvhAmount();
 	});
-
-	const setvhAmount = () => {
-		const height = window.innerHeight;
-		scrollytellerRef.style.setProperty('--vh', `${height / 100}px`);
-	};
-
-	const windowResizeHandler = () => {
-		setvhAmount();
-	};
 
 	const scrollHandler = () => {
 		const rootRect = scrollytellerRef.getBoundingClientRect();
@@ -89,16 +65,16 @@
 		});
 	};
 
-	$: marker && onMarker(marker);
+	$: marker && onMarker && onMarker(marker);
 </script>
 
-<svelte:window on:resize={windowResizeHandler} on:scroll={onProgress ? scrollHandler : null} />
+<svelte:window on:scroll={onProgress ? scrollHandler : null} />
 
 <svelte:head>
 	{#if isOdyssey}
-		<!-- styles required to make position sticky work -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
 		<style>
+			/* styles required to make position sticky work */
+			/* existing styles on an Odyssey body are preventing position sticky from 'sticking' */
 			body {
 				overflow: visible;
 			}
@@ -111,24 +87,27 @@
 		<slot />
 	</div>
 	<div class="content">
-		{#each panels as panel}
+		{#each panels as panel, i}
+			{@const panelClass =
+				(panel.panelClass ?? '') +
+				(i === 0 ? ' first' : '') +
+				(i === panels.length - 1 ? ' last' : '')}
 			{#if customPanel}
-				<svelte:component this={customPanel} {...panel} {steps} />
+				<svelte:component this={customPanel} {...panel} {steps} {panelClass} />
 			{:else}
-				<Panel props={{ ...panel, steps }} />
+				<Panel props={{ ...panel, steps, panelClass }} />
 			{/if}
 		{/each}
 	</div>
 </div>
 
-
 <style lang="scss">
-  .scrollyteller {
+	.scrollyteller {
 		position: relative;
 	}
 	.graphic {
 		transform: translate3d(0, 0, 0);
-		height: calc(var(--vh, 1vh) * 100);
+		height: 100dvh;
 		width: 100%;
 		position: sticky;
 		top: 0;
@@ -136,12 +115,12 @@
 		z-index: 1;
 	}
 	.content {
-		margin-top: calc(var(--vh, 1vh) * -100);
+		margin-top: -100dvh;
 		position: relative;
 		z-index: 2;
 		overflow: hidden;
-		min-height: calc(var(--vh, 1vh) * 100);
-    display: flex;
-    flex-direction: column;
+		min-height: 100dvh;
+		display: flex;
+		flex-direction: column;
 	}
 </style>

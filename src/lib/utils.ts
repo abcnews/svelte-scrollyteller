@@ -1,6 +1,6 @@
 import acto from '@abcnews/alternating-case-to-object';
 import { selectMounts, isMount, getMountValue } from '@abcnews/mount-utils';
-import type { PanelDefinition, ScrollytellerDefinition, PanelAlignment } from './types';
+import type { PanelAlignment, PanelDefinition, ScrollytellerDefinition } from './types';
 
 const piecemeal = Symbol('piecemeal');
 const SELECTOR_COMMON = 'scrollyteller';
@@ -58,7 +58,6 @@ export const loadScrollyteller = (
 
 		className && firstEl.classList.add(className);
 		const config = acto(getMountValue(firstEl, openingMountValuePrefix));
-
 		const els: Element[] = [];
 		let el: Element | null = firstEl.nextElementSibling;
 		let hasMoreContent = true;
