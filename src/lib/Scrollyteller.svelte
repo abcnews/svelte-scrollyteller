@@ -65,17 +65,16 @@
 		});
 	};
 
-	$: marker && onMarker(marker);
+	$: marker && onMarker && onMarker(marker);
 </script>
 
 <svelte:window on:scroll={onProgress ? scrollHandler : null} />
 
 <svelte:head>
 	{#if isOdyssey}
-		<!-- styles required to make position sticky work -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
-		<!-- existing styles on an Odyssey body are preventing position sticky from 'sticking' -->
 		<style>
+			/* styles required to make position sticky work */
+			/* existing styles on an Odyssey body are preventing position sticky from 'sticking' */
 			body {
 				overflow: visible;
 			}
