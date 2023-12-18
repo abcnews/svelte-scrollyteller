@@ -36,7 +36,7 @@
 		"vite": "^4.4.2"
 	},
 	"peerDependencies": {
-		"svelte": "^3.0.0"
+		"svelte": "^4.2.8"
 	},
 	"publishConfig": {
 		"access": "public"
