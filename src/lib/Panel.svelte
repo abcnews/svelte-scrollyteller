@@ -40,6 +40,8 @@
 		position: relative;
 		z-index: 1;
 
+		pointer-events: none;
+
 		&.first {
 			margin-top: 100vh;
 		}
@@ -71,7 +73,12 @@
 		}
 
 		:global(> *) {
-			font-family: ABCSerif, Book Antiqua, Palatino Linotype, Palatino, serif;
+			font-family:
+				ABCSerif,
+				Book Antiqua,
+				Palatino Linotype,
+				Palatino,
+				serif;
 			font-size: 1.375rem;
 			line-height: 1.666666667;
 			color: var(--color-panel-text, #fefefe);
@@ -84,6 +91,8 @@
 			margin-right: auto !important;
 
 			width: 66.666667%;
+
+			pointer-events: all;
 
 			&:last-child {
 				margin-bottom: 0;

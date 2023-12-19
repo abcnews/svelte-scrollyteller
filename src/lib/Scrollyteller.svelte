@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Panel from './Panel.svelte';
-	import { onMount } from 'svelte';
 	import type { ComponentType } from 'svelte';
+	import { onMount } from 'svelte';
+	import Panel from './Panel.svelte';
 	import type { IntersectionEntries, PanelDefinition, PanelRef } from './types.js';
 
 	enum ScrollPositions {
@@ -122,5 +122,6 @@
 		min-height: 100dvh;
 		display: flex;
 		flex-direction: column;
+		pointer-events: none;
 	}
 </style>
