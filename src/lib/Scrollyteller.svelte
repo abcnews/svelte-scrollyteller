@@ -17,6 +17,16 @@
 	export let observerOptions: IntersectionObserverInit = {
 		threshold: 0.5
 	};
+	/**
+	 * When `true` we remove the slot from the DOM when not in the viewport.
+	 * This is useful to free up layers/memory in complex interactives,
+	 * especially to prevent out of memory crashes issues with iPhone Safari.
+	 *
+	 * The trade-off is you may need to use `<link rel="preload"` for resources.
+	 *
+	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload mdn preload docs}
+	 */
+	export let discardSlot = false;
 
 	const isOdyssey: boolean = window.__IS_ODYSSEY_FORMAT__;
 
@@ -24,6 +34,7 @@
 	let steps: PanelRef[] = [];
 	let marker: any;
 	let scrollingPos: ScrollPositions;
+	let isInViewport = false;
 
 	const getScrollingPos = () => {
 		const boundingRect = scrollytellerRef.getBoundingClientRect();
@@ -36,14 +47,21 @@
 		return ScrollPositions.FULL;
 	};
 
-	const IntersectionObserverCallback = (entries: IntersectionEntries[]) => {
+	const panelIntersectionObserverCallback = (entries: IntersectionEntries[]) => {
 		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
 				marker = entry.target.scrollyData;
 			}
 		});
 	};
-	const observer = new IntersectionObserver(IntersectionObserverCallback, observerOptions);
+	const panelObserver = new IntersectionObserver(
+		panelIntersectionObserverCallback,
+		observerOptions
+	);
+
+	const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => {
+		isInViewport = scrollytellerEntry.isIntersecting;
+	});
 
 	onMount(() => {
 		scrollingPos = getScrollingPos();
@@ -51,8 +69,12 @@
 		if (scrollingPos === ScrollPositions.BELOW) marker = panels[panels.length - 1].data;
 
 		steps.forEach((step, i) => {
-			observer.observe(step);
+			panelObserver.observe(step);
 		});
+
+		if (discardSlot) {
+			scrollytellerObserver.observe(scrollytellerRef);
+		}
 	});
 
 	const scrollHandler = () => {
@@ -84,7 +106,9 @@
 
 <div class="scrollyteller" bind:this={scrollytellerRef}>
 	<div class="graphic">
-		<slot />
+		{#if isInViewport || discardSlot === false}
+			<slot />
+		{/if}
 	</div>
 	<div class="content">
 		{#each panels as panel, i}
