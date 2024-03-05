@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import Panel from './Panel.svelte';
 	import type { IntersectionEntries, PanelDefinition, PanelRef } from './types.js';
+	import { getScrollSpeed } from './utils';
 
 	enum ScrollPositions {
 		FULL = 'FULL',
@@ -17,6 +18,25 @@
 	export let observerOptions: IntersectionObserverInit = {
 		threshold: 0.5
 	};
+	/**
+	 * When `true` we remove the slot from the DOM when not in the viewport, and
+	 * debounce loading markers while the browser is scrolling quickly.
+	 *
+	 * This is useful to free up layers/memory/CPU in complex interactives,
+	 * especially to prevent out of memory crashe issues with iPhone Safari.
+	 *
+	 * The trade-off is you may need to use `<link rel="preload"` for resources
+	 * that don't appear in the page by default.
+	 *
+	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload mdn preload docs}
+	 */
+	export let discardSlot = false;
+
+	/**
+	 * When the user is scrolling at a speed greater than this, don't mount
+	 * new components or update markers.
+	 */
+	$: maxScrollSpeed = discardSlot ? 0.5 : Infinity;
 
 	const isOdyssey: boolean = window.__IS_ODYSSEY_FORMAT__;
 
@@ -24,6 +44,9 @@
 	let steps: PanelRef[] = [];
 	let marker: any;
 	let scrollingPos: ScrollPositions;
+	let isInViewport = false;
+	let scrollSpeed = 0;
+	let deferUntilScrollSettlesActions = [];
 
 	const getScrollingPos = () => {
 		const boundingRect = scrollytellerRef.getBoundingClientRect();
@@ -36,14 +59,40 @@
 		return ScrollPositions.FULL;
 	};
 
-	const IntersectionObserverCallback = (entries: IntersectionEntries[]) => {
+	const panelIntersectionObserverCallback = (entries: IntersectionEntries[]) => {
 		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
 				marker = entry.target.scrollyData;
 			}
 		});
 	};
-	const observer = new IntersectionObserver(IntersectionObserverCallback, observerOptions);
+	const panelObserver = new IntersectionObserver(
+		panelIntersectionObserverCallback,
+		observerOptions
+	);
+
+	const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) =>
+		deferUntilScrollSettles(() => {
+			isInViewport = scrollytellerEntry.isIntersecting;
+		})
+	);
+
+	const deferUntilScrollSettles = (fn) => {
+		if (scrollSpeed < maxScrollSpeed) {
+			fn();
+		} else {
+			deferUntilScrollSettlesActions = [...deferUntilScrollSettlesActions, fn];
+		}
+	};
+
+	const runDeferredActions = () => {
+		if (scrollSpeed < maxScrollSpeed) {
+			if (deferUntilScrollSettlesActions.length) {
+				deferUntilScrollSettlesActions.forEach((fn) => fn());
+				deferUntilScrollSettlesActions = [];
+			}
+		}
+	};
 
 	onMount(() => {
 		scrollingPos = getScrollingPos();
@@ -51,7 +100,16 @@
 		if (scrollingPos === ScrollPositions.BELOW) marker = panels[panels.length - 1].data;
 
 		steps.forEach((step, i) => {
-			observer.observe(step);
+			panelObserver.observe(step);
+		});
+
+		if (discardSlot) {
+			scrollytellerObserver.observe(scrollytellerRef);
+		}
+
+		getScrollSpeed((newSpeed) => {
+			scrollSpeed = newSpeed;
+			runDeferredActions();
 		});
 	});
 
@@ -65,7 +123,7 @@
 		});
 	};
 
-	$: marker && onMarker && onMarker(marker);
+	$: marker && onMarker && deferUntilScrollSettles(() => onMarker(marker));
 </script>
 
 <svelte:window on:scroll={onProgress ? scrollHandler : null} />
@@ -84,7 +142,9 @@
 
 <div class="scrollyteller" bind:this={scrollytellerRef}>
 	<div class="graphic">
-		<slot />
+		{#if isInViewport || discardSlot === false}
+			<slot />
+		{/if}
 	</div>
 	<div class="content">
 		{#each panels as panel, i}

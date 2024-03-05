@@ -43,7 +43,8 @@
 	},
 	"dependencies": {
 		"@abcnews/alternating-case-to-object": "^3.0.2",
-		"@abcnews/mount-utils": "^3.0.0"
+		"@abcnews/mount-utils": "^3.0.0",
+		"debounce-throttle": "^1.0.4"
 	},
 	"type": "module",
 	"main": "./dist/index.js",
