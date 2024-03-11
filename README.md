@@ -3,6 +3,25 @@
 A scrollyteller component for Svelte.
 Svelte port of the ABC News [React Scrollyteller](https://github.com/abcnews/scrollyteller).
 
+## Installation
+`npm install @abcnews/svelte-scrollyteller`
+
+Add aunty config to `package.json`: 
+
+```json
+"aunty": {
+  "type": "svelte",
+  "build": {
+    "entry": [
+      "index"
+    ],
+    "includedDependencies": [
+      "@abcnews/svelte-scrollyteller"
+    ]
+  }
+}
+```
+
 ## Usage
 
 The scrollyteller takes a series of **panels** of content nodes and turns them into a series of elements which scroll over the `<Scrollyteller>` component's children.
@@ -28,7 +47,7 @@ When a new box comes into view `onMarker` will be called with the `data` of the 
 
 ```html
 <script lang="ts">
-	import Scrollyteller from 'svelte-scrollyteller/Scrollyteller.svelte';
+	import Scrollyteller from '@abcnews/svelte-scrollyteller';
 	import UpdatableGraphic from 'UpdatableGraphic.svelte';
 
 	export let panels;
@@ -83,7 +102,7 @@ This is another paragraph
 JS Code:
 
 ```js
-import { loadScrollyteller } from 'svelte-scrollyteller/utils';
+import { loadScrollyteller } from '@abcnews/svelte-scrollyteller';
 import App from 'App.svelte';
 
 const scrollyData = loadScrollyteller(
