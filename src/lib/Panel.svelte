@@ -42,6 +42,9 @@
 
 		pointer-events: none;
 
+		/* // Chrome fix https://stackoverflow.com/a/28906246/955917 */
+		-webkit-transform: translate3d(0, 0, 0);
+
 		&.first {
 			margin-top: 100vh;
 		}
@@ -104,11 +107,6 @@
 			display: block;
 			margin: auto;
 			height: auto;
-		}
-
-		& {
-			/* // Chrome fix https://stackoverflow.com/a/28906246/955917 */
-			-webkit-transform: translate3d(0, 0, 0);
 		}
 	}
 
