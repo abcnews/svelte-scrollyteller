@@ -166,13 +166,13 @@ export const getScrollSpeed = (callback: (speed: number) => void) => {
 
 		callback(scrollSpeed);
 	};
-	window.addEventListener("scroll", onScroll, { passive: true });
+	window.addEventListener('scroll', onScroll, { passive: true });
 
 	const onEndScroll = () => callback(0);
-	window.addEventListener("scrollend", onEndScroll, { passive: true });
+	window.addEventListener('scrollend', onEndScroll, { passive: true });
 
 	return () => {
 		window.removeEventListener('scroll', onScroll);
 		window.removeEventListener('scrollend', onEndScroll);
-	}
-}
+	};
+};
