@@ -4,9 +4,10 @@ A scrollyteller component for Svelte.
 Svelte port of the ABC News [React Scrollyteller](https://github.com/abcnews/scrollyteller).
 
 ## Installation
+
 `npm install @abcnews/svelte-scrollyteller`
 
-Add aunty config to `package.json`: 
+Add aunty config to `package.json`:
 
 ```json
 "aunty": {
