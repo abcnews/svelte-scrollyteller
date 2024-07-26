@@ -120,13 +120,13 @@ new App({
 
 ## Usage with other non-Svelte frameworks
 
-The scrollyteller is available as a web component for use in other frameworks. See [README.WebComponent.md](README.WebComponent.md) for more info.
+The scrollyteller is available as a Web Component for use in other frameworks. See [README.WebComponent.md](README.WebComponent.md) for more info.
 
 ## Development
 
 The Svelte components are [packaged using SvelteKit svelte-package](https://kit.svelte.dev/docs/packaging).
 
-The web components are built separately using Vite with the `vite-webcomponents.config.js` config.
+The Web Component is built separately using Vite with the `vite-webcomponents.config.js` config.
 
 ### Get started
 

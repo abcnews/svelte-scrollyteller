@@ -1,12 +1,12 @@
 # Svelte Scrollyteller Web Component
 
-While the Svelte Scrollyteller is provided for use in Svelte projects, a web component build is provided for use in non-svelte projects like React or native JS.
+While the Svelte Scrollyteller is provided for use in Svelte projects, a Web Component build is provided for use in non-svelte projects like React or native JS.
 
 This documentation assumes you know how to bootstrap a Svelte Scrollyteller in a Svelte project (see [README.md](README.md));
 
 ## Low level usage
 
-Import the web component into your project with:
+Import the Web Component into your project with:
 
 ```js
 /** @ts-ignore import self-executes so abcnews-scrollyteller available as an element */
@@ -24,7 +24,7 @@ Then use the component like so:
     theme="light" />
 ```
 
-Since we can't pass complex types to web components, we must set panels manually with Javascript:
+Since we can't pass complex types to Web Components, we must set panels manually with Javascript:
 
 ```js
 const current = document.querySelector('abcnews-scrollyteller');
@@ -42,7 +42,7 @@ current.panels = [
 ];
 ```
 
-For backward compatibility the web component doesn't use shadow dom, so your app can override styles. This means slots don't work as expected, so you must manually insert child nodes into the `graphicRootEl`.
+For backward compatibility the Web Component doesn't use shadow dom, so your app can override styles. This means slots don't work as expected, so you must manually insert child nodes into the `graphicRootEl`.
 
 The component emits a `load` and `marker` event, so you can use both to initialise and update child nodes:
 
@@ -51,7 +51,7 @@ current.addEventListener('load', () => current.graphicRootEl.appendChild(myGraph
 current.addEventListener('marker', e => myGraphics.style.background = e.detail.customData);
 ```
 
-Custom panels are not supported in the web component.
+Custom panels are not supported in the Web Component.
 
 ## Usage in React
 
