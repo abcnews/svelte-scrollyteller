@@ -2,11 +2,9 @@
 	"name": "@abcnews/svelte-scrollyteller",
 	"version": "2.1.0",
 	"scripts": {
-		"dev": "concurrently \"vite dev\" \"svelte-package --watch\"",
-		"build": "vite build",
-		"preview": "vite preview",
-		"package": "svelte-package",
-		"test": "",
+		"dev": "concurrently \"vite dev\" \"svelte-package --watch\" 'vite build --watch --config vite.webcomponents.config.js'",
+		"package": "svelte-package && npm run package-webcomponent",
+		"package-webcomponent": "npx vite build --config vite.webcomponents.config.js",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. .",
@@ -53,6 +51,9 @@
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js",
 			"default": "./dist/index.js"
+		},
+		"./wc": {
+			"default": "./dist-wc/svelte-scrollyteller.js"
 		}
 	},
 	"files": [
