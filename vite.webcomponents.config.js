@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import dts from "vite-plugin-dts";
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import path from 'path';
 
