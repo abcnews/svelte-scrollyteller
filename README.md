@@ -82,7 +82,20 @@ For a more complete example using Typescript see the [examples](examples).
 | customPanel     | Svelte Component         | Component to replace the default panel component                                                                                       | Panel.svelte     |
 | observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | {threshold: 0.5} |
 
-### Usage with Odyssey
+## Changing styles
+
+You can choose to override CSS using a `panelClass: 'my-class-name'` prop.
+
+The Svelte Scrollyteller also uses the following CSS variables that you can set anywhere above the scrollyteller:
+
+Attribute            | Variable to use      | Fallback value      
+---------------------|----------------------|---------------------
+`background-color`   | `--color-panel-background` | `var(--od-colour-theme-surface-over-image)`
+Text `colour`        | `--color-panel-text` | `var(--od-colour-text-primary)`
+Background `opacity` | `--color-panel-opacity` | `.7`                
+Background CSS `filter` | `--color-panel-filter` | `blur(0.3125rem)`   
+
+## Usage with Odyssey
 
 When developing [ABC News](https://www.abc.net.au) stories with [Odyssey](https://github.com/abcnews/odyssey) you can use the `loadScrollyteller` function to gather `panels` within a CoreMedia article.
 

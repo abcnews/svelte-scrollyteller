@@ -25,6 +25,17 @@
 	$breakpoint: 61.25rem;
 
 	.st-panel {
+		--panel-radius: 0.75rem;
+		--panel-background: var(--color-panel-background, var(--od-colour-theme-surface-over-image));
+		--panel-color: var(--color-panel-text, var(--od-colour-text-primary));
+		--panel-opacity: var(--color-panel-opacity, 0.75);
+		--panel-filter: var(--color-panel-filter, blur(0.3125rem));
+
+		-webkit-backdrop-filter: var(--panel-filter);
+		backdrop-filter: var(--panel-filter);
+
+		color: var(--panel-color);
+
 		box-sizing: border-box;
 
 		padding-top: 2.25rem;
@@ -35,7 +46,10 @@
 		margin-left: auto;
 		margin-right: auto;
 
-		width: 100%;
+		padding-left: 3.875rem;
+		padding-right: 3.875rem;
+		width: calc(66.66667% + 3rem);
+		border-radius: var(--panel-radius);
 
 		position: relative;
 		z-index: 1;
@@ -44,6 +58,14 @@
 
 		/* // Chrome fix https://stackoverflow.com/a/28906246/955917 */
 		-webkit-transform: translate3d(0, 0, 0);
+
+		:global(:where(.is-legacy)) & {
+			--panel-radius: 2px;
+			--panel-opacity: var(--color-panel-opacity, 1);
+			--panel-background: var(--color-panel-background, rgba(0, 0, 0, 0.6));
+			--panel-color: var(--color-panel-text, #fefefe);
+			--panel-filter: var(--color-panel-filter, none);
+		}
 
 		&.first {
 			margin-top: 100vh;
@@ -56,16 +78,15 @@
 		&::before {
 			content: '';
 
-			background-color: var(--color-panel-background, rgba(0, 0, 0, 0.6));
-			border-radius: 2px;
+			background-color: var(--panel-background);
+			opacity: var(--panel-opacity);
+			border-radius: var(--panel-radius);
 
 			position: absolute;
 			z-index: -1;
 			top: 0;
-			left: 50%;
-			transform: translateX(-50%);
-
-			width: calc(66.66667% + 3rem);
+			left: 0;
+			width: 100%;
 			height: 100%;
 		}
 
@@ -84,16 +105,11 @@
 				serif;
 			font-size: 1.375rem;
 			line-height: 1.666666667;
-			color: var(--color-panel-text, #fefefe);
-
-			padding-left: 0.875rem;
-			padding-right: 0.875rem;
+			color: var(--panel-color);
 
 			margin-top: 0;
 			margin-left: auto !important;
 			margin-right: auto !important;
-
-			width: 66.666667%;
 
 			pointer-events: all;
 
