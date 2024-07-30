@@ -20,8 +20,7 @@ Then use the component like so:
     className="someClass"
     panelClassName="panelClass"
     firstPanelClassName="firstPanelClass"
-    lastPanelClassName="lastPanelClass"
-    theme="light" />
+    lastPanelClassName="lastPanelClass" />
 ```
 
 Since we can't pass complex types to Web Components, we must set panels manually with Javascript:
