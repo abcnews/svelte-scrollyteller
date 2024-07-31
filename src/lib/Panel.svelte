@@ -126,34 +126,25 @@
 		}
 	}
 
-	@media only screen and (min-width: 1023px) {
+	@media only screen and (min-width: 63.9375rem) {
 		:global(.right) {
-			margin-right: calc(30% - 24.75rem) !important;
-			width: 49.5rem !important;
+			margin-right: calc(30% - 16rem) !important;
+			width: 32rem !important;
 		}
 
 		:global(.left) {
-			margin-left: calc(30% - 24.75rem) !important;
-			width: 49.5rem !important;
+			margin-left: calc(30% - 16rem) !important;
+			width: 32rem !important;
 		}
 	}
 
 	@media only screen and (max-width: $breakpoint) {
 		.st-panel {
-			padding-top: 1.5rem;
-			padding-bottom: 1.5rem;
-
-			margin-right: auto !important;
-			margin-left: auto !important;
-
-			width: 100% !important;
-
-			&::before {
-				width: calc(83.3333% + 0.75rem);
-			}
-
+			width: auto !important;
+			padding: 1rem;
+			margin-left: 1rem;
+			margin-right: 1rem;
 			:global(p) {
-				width: 83.333333%;
 				font-size: 1.125rem;
 				line-height: 1.555555556;
 			}
