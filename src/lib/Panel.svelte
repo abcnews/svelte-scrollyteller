@@ -126,7 +126,7 @@
 		}
 	}
 
-	@media only screen and (min-width: 63.9375rem) {
+	@media only screen and (min-width: calc($breakpoint + 1px)) {
 		:global(.right) {
 			margin-right: calc(30% - 16rem) !important;
 			width: 32rem !important;
