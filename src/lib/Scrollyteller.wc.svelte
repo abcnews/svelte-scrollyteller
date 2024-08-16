@@ -28,7 +28,7 @@
 </script>
 
 {#if panels.length}
-	<Scrollyteller {panels} {...$$restProps}>
+	<Scrollyteller {panels} {...$$restProps} on:progress on:marker>
 		<div bind:this={graphicRootEl}></div>
 	</Scrollyteller>
 {/if}
