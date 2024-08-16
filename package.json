@@ -57,7 +57,8 @@
 		}
 	},
 	"files": [
-		"dist"
+		"dist",
+		"dist-wc"
 	],
 	"svelte": "./dist/index.js"
 }
