@@ -26,7 +26,7 @@
 
 	.st-panel {
 		--panel-radius: 0.75rem;
-		--panel-background: var(--color-panel-background, var(--od-colour-theme-surface-over-image));
+		--panel-background: var(--color-panel-background, var(--bg, var(--od-colour-theme-surface-over-image)));
 		--panel-color: var(--color-panel-text, var(--od-colour-text-primary));
 		--panel-opacity: var(--color-panel-opacity, 0.75);
 		--panel-filter: var(--color-panel-filter, blur(0.3125rem));
@@ -62,10 +62,10 @@
 		:global(:where(.is-legacy)) & {
 			--panel-radius: 2px;
 			--panel-opacity: var(--color-panel-opacity, 1);
-			--panel-background: var(--color-panel-background, rgba(0, 0, 0, 0.6));
-			--panel-color: var(--color-panel-text, #fefefe);
 			--panel-filter: var(--color-panel-filter, none);
 		}
+
+
 
 		&.first {
 			margin-top: 100vh;

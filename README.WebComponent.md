@@ -10,17 +10,13 @@ Import the Web Component into your project with:
 
 ```js
 /** @ts-ignore import self-executes so abcnews-scrollyteller available as an element */
-import { Scrollyteller, loadScrollyteller} from '@abcnews/svelte-scrollyteller/wc';
+import { Scrollyteller, loadScrollyteller } from '@abcnews/svelte-scrollyteller/wc';
 ```
 
 Then use the component like so:
 
 ```html
-<abcnews-scrollyteller
-    className="someClass"
-    panelClassName="panelClass"
-    firstPanelClassName="firstPanelClass"
-    lastPanelClassName="lastPanelClass" />
+<abcnews-scrollyteller className="someClass" />
 ```
 
 Since we can't pass complex types to Web Components, we must set panels manually with Javascript:
@@ -30,14 +26,14 @@ const current = document.querySelector('abcnews-scrollyteller');
 
 // In Odyssey these would be generated with `loadScrollyteller()`
 current.panels = [
-    {
-        data: {customData: 'red'},
-        nodes: Object.assign(document.createElement('p'), {innerText: 'Hello world'}),
-    },
-    {
-        data: {customData: 'green'},
-        nodes: Object.assign(document.createElement('p'), {innerText: 'This is the second panel'}),
-    },
+	{
+		data: { customData: 'red' },
+		nodes: Object.assign(document.createElement('p'), { innerText: 'Hello world' })
+	},
+	{
+		data: { customData: 'green' },
+		nodes: Object.assign(document.createElement('p'), { innerText: 'This is the second panel' })
+	}
 ];
 ```
 
@@ -47,7 +43,7 @@ The component emits a `load` and `marker` event, so you can use both to initiali
 
 ```js
 current.addEventListener('load', () => current.graphicRootEl.appendChild(myGraphics));
-current.addEventListener('marker', e => myGraphics.style.background = e.detail.customData);
+current.addEventListener('marker', (e) => (myGraphics.style.background = e.detail.customData));
 ```
 
 Custom panels are not supported in the Web Component.
@@ -63,34 +59,29 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 function ScrollytellerPortalChild({ domNode, children }) {
-  if (!domNode) {
-    return null;
-  }
-  return createPortal(children, domNode);
+	if (!domNode) {
+		return null;
+	}
+	return createPortal(children, domNode);
 }
 
 export default function ScrollytellerWebComponent({ children, panels, styles, onMarker }) {
-  const scrollyEl: typeof Scrollyteller.element = useRef();
-  const [scrollyPortal, setScrollyPortal] = useState();
+	const scrollyEl: typeof Scrollyteller.element = useRef();
+	const [scrollyPortal, setScrollyPortal] = useState();
 
-  useEffect(() => {
-    const { current } = scrollyEl;
-    if (!current) return;
-    current.panels = panels;
-    current.addEventListener('load', () => setScrollyPortal(current.graphicRootEl));
-    current.addEventListener('marker', e => onMarker(e.detail));
-  }, [scrollyEl]);
+	useEffect(() => {
+		const { current } = scrollyEl;
+		if (!current) return;
+		current.panels = panels;
+		current.addEventListener('load', () => setScrollyPortal(current.graphicRootEl));
+		current.addEventListener('marker', (e) => onMarker(e.detail));
+	}, [scrollyEl]);
 
-  return (<>
-    <ScrollytellerPortalChild domNode={scrollyPortal}>
-      {children}
-    </ScrollytellerPortalChild>
-    <abcnews-scrollyteller
-      ref={scrollyEl}
-      className={styles.scrollyteller}
-      panelClassName={styles.panel}
-      firstPanelClassName={styles.firstPanel}
-      lastPanelClassName={styles.lastPanel} />
-  </>);
+	return (
+		<>
+			<ScrollytellerPortalChild domNode={scrollyPortal}>{children}</ScrollytellerPortalChild>
+			<abcnews-scrollyteller ref={scrollyEl} className={styles.scrollyteller} />
+		</>
+	);
 }
 ```

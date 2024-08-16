@@ -4,6 +4,9 @@
 	import Panel from './Panel.svelte';
 	import type { IntersectionEntries, PanelDefinition, PanelRef } from './types.js';
 	import { getScrollSpeed } from './utils';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
 
 	enum ScrollPositions {
 		FULL = 'FULL',
@@ -13,8 +16,10 @@
 
 	export let customPanel: ComponentType | null = null;
 	export let panels: PanelDefinition[];
-	export let onProgress: ((progress: any) => void) | null = null;
-	export let onMarker: (marker: any) => void;
+	/** Whether to enable the on:progress event. This is a somewhat heavy operation, so we don't enable it by default. */
+	export let onProgress: boolean=false;
+	/** @deprecated please use on:marker instead */
+	export let onMarker: () => void=null;
 	export let observerOptions: IntersectionObserverInit = {
 		threshold: 0.5
 	};
@@ -116,14 +121,25 @@
 	const scrollHandler = () => {
 		const rootRect = scrollytellerRef.getBoundingClientRect();
 
-		onProgress({
+		dispatch('progress', ({
 			boundingRect: rootRect,
 			rootPct: 1 - rootRect.bottom / (rootRect.height + window.innerHeight),
 			scrollPct: 1 - (rootRect.bottom - window.innerHeight) / (rootRect.height - window.innerHeight)
-		});
+		}));
 	};
 
-	$: marker && onMarker && deferUntilScrollSettles(() => onMarker(marker));
+	$:{
+		// 2024-08 : This block checks for deprecated usage & throws helpful errors.
+		// Please remove it after a suitable time has passed.
+		if(typeof onProgress === 'function'){
+			throw new Error('the onProgress callback is deprecated. Please use on:progress');
+		}
+		if(typeof onMarker === 'function'){
+			throw new Error('the onMarker callback is deprecated. Please use on:marker');
+		}
+	}
+
+	$: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
 </script>
 
 <svelte:window on:scroll={onProgress ? scrollHandler : null} />

@@ -32,19 +32,21 @@ The `panels` prop is in the format of:
     [
       {
         data: {
-          info: 'Some kind of config that is given when this marker is active'
+          info: 'Any arbitrary data, returned to you when this marker is active'
         },
+        align: 'left', // optional: align the panels to the left or right
+        panelClass: 'my-custom-target', // optional: in case you want to style it manually
         nodes: [<DOM elements for this panel>]
       },
       {
         data: {
-          thing: 'This will be given when the second marker is hit'
+          thing: 'Config when this second marker is hit'
         },
         nodes: [<DOM elements for this panel>]
       }
     ]
 
-When a new box comes into view `onMarker` will be called with the `data` of the incoming panel.
+When a new box comes into view the `on:marker` event will fire with the `data` of the incoming panel.
 
 ```html
 <script lang="ts">
@@ -56,16 +58,21 @@ When a new box comes into view `onMarker` will be called with the `data` of the 
 	let marker = 0;
 	let progress;
 
-	const markerChangeHandler = (data) => {
-		marker = data;
+	const markerChangeHandler = ({ detail }) => {
+		marker = detail;
 	};
 
-	const progressChangeHandler = (data) => {
-		progress = data;
+	const progressChangeHandler = ({ detail }) => {
+		progress = detail;
 	};
 </script>
 
-<Scrollyteller {panels} onMarker="{markerChangeHandler}" onProgress="{progressChangeHandler}">
+<Scrollyteller
+	{panels}
+	on:marker="{markerChangeHandler}"
+	onProgress="{true}"
+	on:progress="{progressChangeHandler}"
+>
 	<UpdatableGraphic marker="{marker}" />
 </Scrollyteller>
 ```
@@ -77,23 +84,26 @@ For a more complete example using Typescript see the [examples](examples).
 | Property        | Type                     | Description                                                                                                                            | Default          |
 | --------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
 | panels          | Refer to **Usage**       | **required** Array of nodes and data which dictate the markers                                                                         |
-| onMarker        | (marker) => void         | **required** Function which fires when a marker intersects and returns that markers data                                               |                  |
-| onProgress      | (progress) => void       | Function which fires when a on scroll and returns the scrollyteller progress                                                           |                  |
+| on:marker       | event emitter            | **required** Called when a marker intersects and returns that markers `data`                                                           |                  |
+| on:progress     | event emitter            | Event fires on scroll and returns the scrollyteller progress                                                                           |                  |
+| onProgress      | boolean                  | Boolean to enable the on:progress event. This is a somewhat heavy operation, so we don't enable it by default.                         |                  |
 | customPanel     | Svelte Component         | Component to replace the default panel component                                                                                       | Panel.svelte     |
 | observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | {threshold: 0.5} |
 
 ## Changing styles
 
-You can choose to override CSS using a `panelClass: 'my-class-name'` prop.
+The scrollyteller inherits the [light/dark colour scheme from Odyssey](https://master-news-web.news-web-developer.presentation-layer.abc-prod.net.au/news/2024-08-16/odyssey-producers-documentation--everything-else/8676886), and applies the background colour set with the `--bg` variable.
 
-The Svelte Scrollyteller also uses the following CSS variables that you can set anywhere above the scrollyteller:
+The Svelte Scrollyteller also uses the following CSS variables that you can set anywhere in the DOM above the scrollyteller:
 
-Attribute            | Variable to use      | Fallback value      
----------------------|----------------------|---------------------
-`background-color`   | `--color-panel-background` | `var(--od-colour-theme-surface-over-image)`
-Text `colour`        | `--color-panel-text` | `var(--od-colour-text-primary)`
-Background `opacity` | `--color-panel-opacity` | `.7`                
-Background CSS `filter` | `--color-panel-filter` | `blur(0.3125rem)`   
+| Attribute               | Variable to use            | Fallback value                              |
+| ----------------------- | -------------------------- | ------------------------------------------- |
+| `background-color`      | `--color-panel-background` | `var(--od-colour-theme-surface-over-image)` |
+| Text `colour`           | `--color-panel-text`       | `var(--od-colour-text-primary)`             |
+| Background `opacity`    | `--color-panel-opacity`    | `.7`                                        |
+| Background CSS `filter` | `--color-panel-filter`     | `blur(0.3125rem)`                           |
+
+You can also specify a panelClass class and style the panels manually (see Usage above).
 
 ## Usage with Odyssey
 
