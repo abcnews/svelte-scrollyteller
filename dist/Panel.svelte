@@ -21,6 +21,7 @@ onMount(() => {
   --panel-color: var(--color-panel-text, var(--od-colour-text-primary));
   --panel-opacity: var(--color-panel-opacity, 0.75);
   --panel-filter: var(--color-panel-filter, blur(0.3125rem));
+  --panel-border: var(--color-panel-border, none);
   -webkit-backdrop-filter: var(--panel-filter);
   backdrop-filter: var(--panel-filter);
   color: var(--panel-color);
@@ -57,6 +58,7 @@ onMount(() => {
   background-color: var(--panel-background);
   opacity: var(--panel-opacity);
   border-radius: var(--panel-radius);
+  border: var(--panel-border);
   position: absolute;
   z-index: -1;
   top: 0;

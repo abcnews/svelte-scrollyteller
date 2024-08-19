@@ -81,14 +81,14 @@ For a more complete example using Typescript see the [examples](examples).
 
 ## Props
 
-| Property        | Type                     | Description                                                                                                                            | Default          |
-| --------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| Property        | Type                     | Description                                                                                                                            | Default            |
+| --------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
 | panels          | Refer to **Usage**       | **required** Array of nodes and data which dictate the markers                                                                         |
-| on:marker       | event emitter            | **required** Called when a marker intersects and returns that markers `data`                                                           |                  |
-| on:progress     | event emitter            | Event fires on scroll and returns the scrollyteller progress                                                                           |                  |
-| onProgress      | boolean                  | Boolean to enable the on:progress event. This is a somewhat heavy operation, so we don't enable it by default.                         |                  |
-| customPanel     | Svelte Component         | Component to replace the default panel component                                                                                       | Panel.svelte     |
-| observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | {threshold: 0.5} |
+| on:marker       | event emitter            | **required** Called when a marker intersects and returns that markers `data`                                                           |                    |
+| on:progress     | event emitter            | Event fires on scroll and returns the scrollyteller progress                                                                           |                    |
+| onProgress      | boolean                  | Boolean to enable the on:progress event. This is a somewhat heavy operation, so we don't enable it by default.                         |                    |
+| customPanel     | Svelte Component         | Component to replace the default panel component                                                                                       | Panel.svelte       |
+| observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | `{threshold: 0.5}` |
 
 ## Changing styles
 
@@ -102,6 +102,7 @@ The Svelte Scrollyteller also uses the following CSS variables that you can set 
 | Text `colour`           | `--color-panel-text`       | `var(--od-colour-text-primary)`             |
 | Background `opacity`    | `--color-panel-opacity`    | `.7`                                        |
 | Background CSS `filter` | `--color-panel-filter`     | `blur(0.3125rem)`                           |
+| Background `border`     | `--color-panel-border`     | `none`                                      |
 
 You can also specify a panelClass class and style the panels manually (see Usage above).
 
