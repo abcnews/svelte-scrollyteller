@@ -14,12 +14,33 @@
 		BELOW = 'BELOW'
 	}
 
+	type Style = {
+		/**
+		 * What styles to apply to panels.
+		 * - `centre` - centre panels, default
+		 * - `left` - float panels to the left and slot to the right
+		 * - `right` - float panels to the right and slot to the left
+		 * - `none` - don't apply styles other than font-size. You are responsible for all styling.
+		 */
+		align?: string;
+		/**
+		 * Disable block background when panels go left/right. Default true when
+		 * global is left/right.
+		 */
+		transparentFloat?: boolean;
+
+		/**
+		 * Resize the interactive to fit the left/right dimensions
+		 */
+		resizeInteractive?: boolean;
+	};
+
 	export let customPanel: ComponentType | null = null;
 	export let panels: PanelDefinition[];
 	/** Whether to enable the on:progress event. This is a somewhat heavy operation, so we don't enable it by default. */
-	export let onProgress: boolean=false;
+	export let onProgress: boolean = false;
 	/** @deprecated please use on:marker instead */
-	export let onMarker: () => void=null;
+	export let onMarker: () => void = null;
 	export let observerOptions: IntersectionObserverInit = {
 		threshold: 0.5
 	};
@@ -36,6 +57,15 @@
 	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload mdn preload docs}
 	 */
 	export let discardSlot = false;
+
+	export let layout: Style = {};
+	$: _layout = {
+		align: layout.align || 'centre',
+		resizeInteractive: layout.resizeInteractive ?? true,
+		transparentFloat: layout.transparentFloat ?? ['left', 'right'].includes(layout.align)
+	};
+
+	$: console.log('yes but', { layout, _layout });
 
 	/**
 	 * When the user is scrolling at a speed greater than this, don't mount
@@ -121,20 +151,20 @@
 	const scrollHandler = () => {
 		const rootRect = scrollytellerRef.getBoundingClientRect();
 
-		dispatch('progress', ({
+		dispatch('progress', {
 			boundingRect: rootRect,
 			rootPct: 1 - rootRect.bottom / (rootRect.height + window.innerHeight),
 			scrollPct: 1 - (rootRect.bottom - window.innerHeight) / (rootRect.height - window.innerHeight)
-		}));
+		});
 	};
 
-	$:{
+	$: {
 		// 2024-08 : This block checks for deprecated usage & throws helpful errors.
 		// Please remove it after a suitable time has passed.
-		if(typeof onProgress === 'function'){
+		if (typeof onProgress === 'function') {
 			throw new Error('the onProgress callback is deprecated. Please use on:progress');
 		}
-		if(typeof onMarker === 'function'){
+		if (typeof onMarker === 'function') {
 			throw new Error('the onMarker callback is deprecated. Please use on:marker');
 		}
 	}
@@ -156,13 +186,23 @@
 	{/if}
 </svelte:head>
 
-<div class="scrollyteller" bind:this={scrollytellerRef}>
-	<div class="graphic">
+<div
+	class="scrollyteller"
+	class:scrollyteller--resized={_layout.resizeInteractive}
+	bind:this={scrollytellerRef}
+>
+	<div
+		class="graphic"
+		class:graphic--resized={_layout.resizeInteractive}
+		class:graphic--right={_layout.resizeInteractive && _layout.align === 'left'}
+		class:graphic--left={_layout.resizeInteractive && _layout.align === 'right'}
+		class:graphic--centre={_layout.resizeInteractive && _layout.align === 'centre'}
+	>
 		{#if isInViewport || discardSlot === false}
 			<slot />
 		{/if}
 	</div>
-	<div class="content">
+	<div class="content" class:content--resized={!_layout.resizeInteractive}>
 		{#each panels as panel, i}
 			{@const panelClass =
 				(panel.panelClass ?? '') +
@@ -171,15 +211,28 @@
 			{#if customPanel}
 				<svelte:component this={customPanel} {...panel} {steps} {panelClass} />
 			{:else}
-				<Panel props={{ ...panel, steps, panelClass }} />
+				<Panel
+					props={{
+						...panel,
+						align: panel.align || _layout.align,
+						transparentFloat: _layout.transparentFloat,
+						steps,
+						panelClass
+					}}
+				/>
 			{/if}
 		{/each}
 	</div>
 </div>
 
 <style lang="scss">
+	@import './breakpoints.scss';
 	.scrollyteller {
 		position: relative;
+		&--resized {
+			max-width: 2040px;
+			margin: 0 auto;
+		}
 	}
 	.graphic {
 		transform: translate3d(0, 0, 0);
@@ -190,14 +243,90 @@
 		left: 0;
 		z-index: 1;
 	}
+
+	.graphic--resized {
+		height: 60dvh;
+		top: 10dvh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 0 auto;
+		width: auto;
+		--margin: 1.5rem;
+		margin: 0 auto;
+		width: calc(100% - calc(var(--margin) * 2));
+		@media (min-width: $breakpointTablet) {
+			--margin: 3rem;
+			top: 8dvh;
+			height: 62dvh;
+		}
+
+		&.graphic--left,
+		&.graphic--right {
+			@media (min-width: $breakpointLargeTablet) {
+				--marginCentre: 1rem;
+				--marginOuter: 2rem;
+				height: 84dvh;
+				top: 8dvh;
+				--maxWidth: 55%;
+				max-width: calc(var(--maxWidth) - calc(var(--marginCentre) + var(--marginOuter)));
+			}
+			@media (min-width: $breakpointDesktop) {
+				--marginCentre: 1.5rem;
+				--marginOuter: 3rem;
+				--maxWidth: 60%;
+				height: 76dvh;
+				top: 12dvh;
+			}
+			@media (min-width: $breakpointLargeDesktop) {
+				--marginCentre: 2rem;
+				--marginOuter: 4rem;
+				--maxWidth: 60%;
+				top: 10dvh;
+				height: 80dvh;
+			}
+		}
+		&.graphic--left {
+			@media (min-width: $breakpointLargeTablet) {
+				margin: 0 auto 0 var(--marginOuter);
+			}
+		}
+		&.graphic--right {
+			@media (min-width: $breakpointLargeTablet) {
+				margin: 0 var(--marginOuter) 0 auto;
+			}
+		}
+		&.graphic--centre {
+			@media (min-width: $breakpointLargeTablet) {
+				--margin: 3rem;
+				top: 8dvh;
+				height: 62dvh;
+			}
+			@media (min-width: $breakpointDesktop) {
+				--margin: 4rem;
+				top: 12dvh;
+				height: 58dvh;
+			}
+			@media (min-width: $breakpointLargeDesktop) {
+				--margin: 6rem;
+				top: 12dvh;
+				height: 58dvh;
+			}
+		}
+	}
 	.content {
-		margin-top: -100dvh;
+		margin: -100dvh auto 0;
 		position: relative;
 		z-index: 2;
-		overflow: hidden;
-		min-height: 100dvh;
-		display: flex;
-		flex-direction: column;
-		pointer-events: none;
+		&--resized {
+			max-width: 2040px;
+		}
+		// position: relative;
+		// z-index: 2;
+		// overflow: hidden;
+		// min-height: 100dvh;
+		// display: flex;
+		// flex-direction: column;
+		// pointer-events: none;
 	}
 </style>

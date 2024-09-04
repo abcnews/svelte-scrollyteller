@@ -161,6 +161,9 @@ function attr(node, attribute, value) {
 function children$1(element2) {
   return Array.from(element2.childNodes);
 }
+function toggle_class(element2, name, toggle) {
+  element2.classList.toggle(name, !!toggle);
+}
 function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
   return new CustomEvent(type, { detail, bubbles, cancelable });
 }
@@ -745,8 +748,8 @@ const children = (el, children2) => {
     }
   };
 };
-function add_css$1(target) {
-  append_styles(target, "svelte-1b1qasq", '.st-panel.svelte-1b1qasq{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, var(--bg, var(--od-colour-theme-surface-over-image)));--panel-color:var(--color-panel-text, var(--od-colour-text-primary));--panel-opacity:var(--color-panel-opacity, 0.75);--panel-filter:var(--color-panel-filter, blur(0.3125rem));--panel-border:var(--color-panel-border, none);-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);box-sizing:border-box;padding-top:2.25rem;padding-bottom:2.25rem;margin-bottom:40vh;margin-top:40vh;margin-left:auto;margin-right:auto;padding-left:3.875rem;padding-right:3.875rem;width:calc(66.66667% + 3rem);border-radius:var(--panel-radius);position:relative;z-index:1;pointer-events:none;-webkit-transform:translate3d(0, 0, 0)}:where(.is-legacy) .st-panel.svelte-1b1qasq{--panel-radius:2px;--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, none)}.st-panel.first.svelte-1b1qasq{margin-top:100vh}.st-panel.last.svelte-1b1qasq{margin-bottom:100vh}.st-panel.svelte-1b1qasq::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-1b1qasq::after{content:"";display:table;clear:both}.st-panel.svelte-1b1qasq > *{font-family:ABCSerif, Book Antiqua, Palatino Linotype, Palatino, serif;font-size:1.375rem;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-1b1qasq > *:last-child{margin-bottom:0}.st-panel.svelte-1b1qasq>img{max-width:66%;display:block;margin:auto;height:auto}@media only screen and (min-width: calc(61.25rem + 1px)){.right{margin-right:calc(30% - 16rem) !important;width:32rem !important}.left{margin-left:calc(30% - 16rem) !important;width:32rem !important}}@media only screen and (max-width: 61.25rem){.st-panel.svelte-1b1qasq{width:auto !important;padding:1rem;margin-left:1rem;margin-right:1rem}.st-panel.svelte-1b1qasq p{font-size:1.125rem;line-height:1.555555556}}');
+function add_css$2(target) {
+  append_styles(target, "svelte-uenwmw", '.st-panel.svelte-uenwmw{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(245, 245, 245, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, none);-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);box-sizing:border-box;margin:80vh auto;width:calc(100% - 2rem);position:relative;z-index:1;pointer-events:none;font-size:18px;padding:1rem;max-width:660px}[data-scheme="dark"] .st-panel.svelte-uenwmw,.is-dark-mode .st-panel.svelte-uenwmw{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb)}.st-panel.first.svelte-uenwmw{margin-top:100vh}.st-panel.last.svelte-uenwmw{margin-bottom:100vh}@media(min-width: 744px){.st-panel--centre.svelte-uenwmw{padding:2rem;max-width:720px}}@media(min-width: 992px){.st-panel--centre.svelte-uenwmw{padding:2rem;max-width:780px;font-size:20px}}@media(min-width: 1440px){.st-panel--centre.svelte-uenwmw{max-width:900px;font-size:24px}}@media(min-width: 992px){.st-panel--left.svelte-uenwmw,.st-panel--right.svelte-uenwmw{--marginLeft:2rem;--marginRight:1rem;--maxWidth:45%;max-width:calc(var(--maxWidth) - (var(--marginLeft) + var(--marginRight)));margin:30vh 0 30vh calc(var(--marginLeft) - 1rem);font-size:18px}.st-panel--left.st-panel--transparent-blocks.svelte-uenwmw,.st-panel--right.st-panel--transparent-blocks.svelte-uenwmw{--panel-filter:none;--panel-background:none}}@media(min-width: 1200px){.st-panel--left.svelte-uenwmw,.st-panel--right.svelte-uenwmw{--marginLeft:3rem;--marginRight:1.5rem;--maxWidth:40%;font-size:18px}}@media(min-width: 1440px){.st-panel--left.svelte-uenwmw,.st-panel--right.svelte-uenwmw{--marginLeft:4rem;--marginRight:2rem;--maxWidth:40%;font-size:18px}}@media(min-width: 992px){.st-panel--right.svelte-uenwmw{margin:15vh calc(var(--marginLeft) - 1rem) 15vh auto}}.st-panel.svelte-uenwmw::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-uenwmw::after{content:"";display:table;clear:both}.st-panel.svelte-uenwmw > *{font-family:ABCSerif, Book Antiqua, Palatino Linotype, Palatino, serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-uenwmw > *:last-child{margin-bottom:0}.st-panel.svelte-uenwmw>img{max-width:66%;display:block;margin:auto;height:auto}');
 }
 function create_fragment$2(ctx) {
   let div;
@@ -755,19 +758,48 @@ function create_fragment$2(ctx) {
   return {
     c() {
       div = element("div");
-      attr(div, "class", null_to_empty(`st-panel ${/*align*/
-      ctx[1] || ""} ${/*panelClass*/
-      ctx[2] || ""}`) + " svelte-1b1qasq");
+      attr(
+        div,
+        "data-align",
+        /*align*/
+        ctx[1]
+      );
+      attr(div, "class", null_to_empty(`st-panel ${/*panelClass*/
+      ctx[3] || ""}`) + " svelte-uenwmw");
+      toggle_class(
+        div,
+        "st-panel--left",
+        /*align*/
+        ctx[1] === "left"
+      );
+      toggle_class(
+        div,
+        "st-panel--right",
+        /*align*/
+        ctx[1] === "right"
+      );
+      toggle_class(
+        div,
+        "st-panel--centre",
+        /*align*/
+        ctx[1] === "centre"
+      );
+      toggle_class(
+        div,
+        "st-panel--transparent-blocks",
+        /*transparentFloat*/
+        ctx[2]
+      );
     },
     m(target, anchor) {
       insert(target, div, anchor);
-      ctx[5](div);
+      ctx[6](div);
       if (!mounted) {
         dispose = action_destroyer(children.call(
           null,
           div,
           /*nodes*/
-          ctx[3]
+          ctx[4]
         ));
         mounted = true;
       }
@@ -779,7 +811,7 @@ function create_fragment$2(ctx) {
       if (detaching) {
         detach(div);
       }
-      ctx[5](null);
+      ctx[6](null);
       mounted = false;
       dispose();
     }
@@ -787,7 +819,7 @@ function create_fragment$2(ctx) {
 }
 function instance$2($$self, $$props, $$invalidate) {
   let { props } = $$props;
-  const { align, panelClass, data, nodes = [], steps = [] } = props;
+  const { align, transparentFloat, panelClass, data, nodes = [], steps = [] } = props;
   let panelRef;
   onMount(() => {
     $$invalidate(0, panelRef.scrollyData = data, panelRef);
@@ -800,17 +832,17 @@ function instance$2($$self, $$props, $$invalidate) {
     });
   }
   $$self.$$set = ($$props2) => {
-    if ("props" in $$props2) $$invalidate(4, props = $$props2.props);
+    if ("props" in $$props2) $$invalidate(5, props = $$props2.props);
   };
-  return [panelRef, align, panelClass, nodes, props, div_binding];
+  return [panelRef, align, transparentFloat, panelClass, nodes, props, div_binding];
 }
 class Panel extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$2, create_fragment$2, safe_not_equal, { props: 4 }, add_css$1);
+    init(this, options, instance$2, create_fragment$2, safe_not_equal, { props: 5 }, add_css$2);
   }
   get props() {
-    return this.$$.ctx[4];
+    return this.$$.ctx[5];
   }
   set props(props) {
     this.$$set({ props });
@@ -1038,21 +1070,21 @@ const getScrollSpeed = (callback) => {
   };
 };
 const { window: window_1 } = globals;
-function add_css(target) {
-  append_styles(target, "svelte-lmgln3", ".scrollyteller.svelte-lmgln3{position:relative}.graphic.svelte-lmgln3{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.content.svelte-lmgln3{margin-top:-100dvh;position:relative;z-index:2;overflow:hidden;min-height:100dvh;display:flex;flex-direction:column;pointer-events:none}");
+function add_css$1(target) {
+  append_styles(target, "svelte-13cs1pw", ".scrollyteller.svelte-13cs1pw{position:relative}.scrollyteller--resized.svelte-13cs1pw{max-width:2040px;margin:0 auto}.graphic.svelte-13cs1pw{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-13cs1pw{height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:center;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 744px){.graphic--resized.svelte-13cs1pw{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-13cs1pw,.graphic--resized.graphic--right.svelte-13cs1pw{--marginCentre:1rem;--marginOuter:2rem;height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 1200px){.graphic--resized.graphic--left.svelte-13cs1pw,.graphic--resized.graphic--right.svelte-13cs1pw{--marginCentre:1.5rem;--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 1440px){.graphic--resized.graphic--left.svelte-13cs1pw,.graphic--resized.graphic--right.svelte-13cs1pw{--marginCentre:2rem;--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-13cs1pw{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 992px){.graphic--resized.graphic--right.svelte-13cs1pw{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 992px){.graphic--resized.graphic--centre.svelte-13cs1pw{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 1200px){.graphic--resized.graphic--centre.svelte-13cs1pw{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 1440px){.graphic--resized.graphic--centre.svelte-13cs1pw{--margin:6rem;top:12dvh;height:58dvh}}.content.svelte-13cs1pw{margin:-100dvh auto 0;position:relative;z-index:2}.content--resized.svelte-13cs1pw{max-width:2040px}");
 }
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[27] = list[i];
-  child_ctx[30] = i;
+  child_ctx[29] = list[i];
+  child_ctx[32] = i;
   const constants_0 = (
     /*panel*/
-    (child_ctx[27].panelClass ?? "") + /*i*/
-    (child_ctx[30] === 0 ? " first" : "") + /*i*/
-    (child_ctx[30] === /*panels*/
+    (child_ctx[29].panelClass ?? "") + /*i*/
+    (child_ctx[32] === 0 ? " first" : "") + /*i*/
+    (child_ctx[32] === /*panels*/
     child_ctx[1].length - 1 ? " last" : "")
   );
-  child_ctx[28] = constants_0;
+  child_ctx[30] = constants_0;
   return child_ctx;
 }
 function create_if_block_2(ctx) {
@@ -1076,13 +1108,13 @@ function create_if_block_1(ctx) {
   let current;
   const default_slot_template = (
     /*#slots*/
-    ctx[13].default
+    ctx[15].default
   );
   const default_slot = create_slot(
     default_slot_template,
     ctx,
     /*$$scope*/
-    ctx[12],
+    ctx[14],
     null
   );
   return {
@@ -1097,21 +1129,21 @@ function create_if_block_1(ctx) {
     },
     p(ctx2, dirty) {
       if (default_slot) {
-        if (default_slot.p && (!current || dirty & /*$$scope*/
-        4096)) {
+        if (default_slot.p && (!current || dirty[0] & /*$$scope*/
+        16384)) {
           update_slot_base(
             default_slot,
             default_slot_template,
             ctx2,
             /*$$scope*/
-            ctx2[12],
+            ctx2[14],
             !current ? get_all_dirty_from_scope(
               /*$$scope*/
-              ctx2[12]
+              ctx2[14]
             ) : get_slot_changes(
               default_slot_template,
               /*$$scope*/
-              ctx2[12],
+              ctx2[14],
               dirty,
               null
             ),
@@ -1141,14 +1173,23 @@ function create_else_block(ctx) {
     props: {
       props: {
         .../*panel*/
-        ctx[27],
+        ctx[29],
+        align: (
+          /*panel*/
+          ctx[29].align || /*_layout*/
+          ctx[4].align
+        ),
+        transparentFloat: (
+          /*_layout*/
+          ctx[4].transparentFloat
+        ),
         steps: (
           /*steps*/
-          ctx[7]
+          ctx[8]
         ),
         panelClass: (
           /*panelClass*/
-          ctx[28]
+          ctx[30]
         )
       }
     }
@@ -1163,17 +1204,26 @@ function create_else_block(ctx) {
     },
     p(ctx2, dirty) {
       const panel_1_changes = {};
-      if (dirty & /*panels*/
-      2) panel_1_changes.props = {
+      if (dirty[0] & /*panels, _layout*/
+      18) panel_1_changes.props = {
         .../*panel*/
-        ctx2[27],
+        ctx2[29],
+        align: (
+          /*panel*/
+          ctx2[29].align || /*_layout*/
+          ctx2[4].align
+        ),
+        transparentFloat: (
+          /*_layout*/
+          ctx2[4].transparentFloat
+        ),
         steps: (
           /*steps*/
-          ctx2[7]
+          ctx2[8]
         ),
         panelClass: (
           /*panelClass*/
-          ctx2[28]
+          ctx2[30]
         )
       };
       panel_1.$set(panel_1_changes);
@@ -1198,14 +1248,14 @@ function create_if_block$1(ctx) {
   let current;
   const switch_instance_spread_levels = [
     /*panel*/
-    ctx[27],
+    ctx[29],
     { steps: (
       /*steps*/
-      ctx[7]
+      ctx[8]
     ) },
     { panelClass: (
       /*panelClass*/
-      ctx[28]
+      ctx[30]
     ) }
   ];
   var switch_value = (
@@ -1217,23 +1267,23 @@ function create_if_block$1(ctx) {
     for (let i = 0; i < switch_instance_spread_levels.length; i += 1) {
       switch_instance_props = assign(switch_instance_props, switch_instance_spread_levels[i]);
     }
-    if (dirty !== void 0 && dirty & /*panels, steps*/
-    130) {
+    if (dirty !== void 0 && dirty[0] & /*panels, steps*/
+    258) {
       switch_instance_props = assign(switch_instance_props, get_spread_update(switch_instance_spread_levels, [
-        dirty & /*panels*/
+        dirty[0] & /*panels*/
         2 && get_spread_object(
           /*panel*/
-          ctx2[27]
+          ctx2[29]
         ),
-        dirty & /*steps*/
-        128 && { steps: (
+        dirty[0] & /*steps*/
+        256 && { steps: (
           /*steps*/
-          ctx2[7]
+          ctx2[8]
         ) },
-        dirty & /*panels*/
+        dirty[0] & /*panels*/
         2 && { panelClass: (
           /*panelClass*/
-          ctx2[28]
+          ctx2[30]
         ) }
       ]));
     }
@@ -1253,7 +1303,7 @@ function create_if_block$1(ctx) {
       current = true;
     },
     p(ctx2, dirty) {
-      if (dirty & /*customPanel*/
+      if (dirty[0] & /*customPanel*/
       1 && switch_value !== (switch_value = /*customPanel*/
       ctx2[0])) {
         if (switch_instance) {
@@ -1273,22 +1323,22 @@ function create_if_block$1(ctx) {
           switch_instance = null;
         }
       } else if (switch_value) {
-        const switch_instance_changes = dirty & /*panels, steps*/
-        130 ? get_spread_update(switch_instance_spread_levels, [
-          dirty & /*panels*/
+        const switch_instance_changes = dirty[0] & /*panels, steps*/
+        258 ? get_spread_update(switch_instance_spread_levels, [
+          dirty[0] & /*panels*/
           2 && get_spread_object(
             /*panel*/
-            ctx2[27]
+            ctx2[29]
           ),
-          dirty & /*steps*/
-          128 && { steps: (
+          dirty[0] & /*steps*/
+          256 && { steps: (
             /*steps*/
-            ctx2[7]
+            ctx2[8]
           ) },
-          dirty & /*panels*/
+          dirty[0] & /*panels*/
           2 && { panelClass: (
             /*panelClass*/
-            ctx2[28]
+            ctx2[30]
           ) }
         ]) : {};
         switch_instance.$set(switch_instance_changes);
@@ -1388,11 +1438,11 @@ function create_fragment$1(ctx) {
   let dispose;
   let if_block0 = (
     /*isOdyssey*/
-    ctx[6] && create_if_block_2()
+    ctx[7] && create_if_block_2()
   );
   let if_block1 = (
     /*isInViewport*/
-    (ctx[5] || /*discardSlot*/
+    (ctx[6] || /*discardSlot*/
     ctx[3] === false) && create_if_block_1(ctx)
   );
   let each_value = ensure_array_like(
@@ -1419,9 +1469,44 @@ function create_fragment$1(ctx) {
       for (let i = 0; i < each_blocks.length; i += 1) {
         each_blocks[i].c();
       }
-      attr(div0, "class", "graphic svelte-lmgln3");
-      attr(div1, "class", "content svelte-lmgln3");
-      attr(div2, "class", "scrollyteller svelte-lmgln3");
+      attr(div0, "class", "graphic svelte-13cs1pw");
+      toggle_class(
+        div0,
+        "graphic--resized",
+        /*_layout*/
+        ctx[4].resizeInteractive
+      );
+      toggle_class(
+        div0,
+        "graphic--right",
+        /*_layout*/
+        ctx[4].resizeInteractive && /*_layout*/
+        ctx[4].align === "left"
+      );
+      toggle_class(
+        div0,
+        "graphic--left",
+        /*_layout*/
+        ctx[4].resizeInteractive && /*_layout*/
+        ctx[4].align === "right"
+      );
+      toggle_class(
+        div0,
+        "graphic--centre",
+        /*_layout*/
+        ctx[4].resizeInteractive && /*_layout*/
+        ctx[4].align === "centre"
+      );
+      attr(div1, "class", "content svelte-13cs1pw");
+      toggle_class(div1, "content--resized", !/*_layout*/
+      ctx[4].resizeInteractive);
+      attr(div2, "class", "scrollyteller svelte-13cs1pw");
+      toggle_class(
+        div2,
+        "scrollyteller--resized",
+        /*_layout*/
+        ctx[4].resizeInteractive
+      );
     },
     m(target, anchor) {
       if (if_block0) if_block0.m(document.head, null);
@@ -1437,7 +1522,7 @@ function create_fragment$1(ctx) {
           each_blocks[i].m(div1, null);
         }
       }
-      ctx[14](div2);
+      ctx[16](div2);
       current = true;
       if (!mounted) {
         dispose = listen(window_1, "scroll", function() {
@@ -1445,28 +1530,28 @@ function create_fragment$1(ctx) {
             /*onProgress*/
             ctx[2] ? (
               /*scrollHandler*/
-              ctx[8]
+              ctx[9]
             ) : null
           )) /*onProgress*/
           (ctx[2] ? (
             /*scrollHandler*/
-            ctx[8]
+            ctx[9]
           ) : null).apply(this, arguments);
         });
         mounted = true;
       }
     },
-    p(new_ctx, [dirty]) {
+    p(new_ctx, dirty) {
       ctx = new_ctx;
       if (
         /*isInViewport*/
-        ctx[5] || /*discardSlot*/
+        ctx[6] || /*discardSlot*/
         ctx[3] === false
       ) {
         if (if_block1) {
           if_block1.p(ctx, dirty);
-          if (dirty & /*isInViewport, discardSlot*/
-          40) {
+          if (dirty[0] & /*isInViewport, discardSlot*/
+          72) {
             transition_in(if_block1, 1);
           }
         } else {
@@ -1482,8 +1567,47 @@ function create_fragment$1(ctx) {
         });
         check_outros();
       }
-      if (dirty & /*customPanel, panels, steps*/
-      131) {
+      if (!current || dirty[0] & /*_layout*/
+      16) {
+        toggle_class(
+          div0,
+          "graphic--resized",
+          /*_layout*/
+          ctx[4].resizeInteractive
+        );
+      }
+      if (!current || dirty[0] & /*_layout*/
+      16) {
+        toggle_class(
+          div0,
+          "graphic--right",
+          /*_layout*/
+          ctx[4].resizeInteractive && /*_layout*/
+          ctx[4].align === "left"
+        );
+      }
+      if (!current || dirty[0] & /*_layout*/
+      16) {
+        toggle_class(
+          div0,
+          "graphic--left",
+          /*_layout*/
+          ctx[4].resizeInteractive && /*_layout*/
+          ctx[4].align === "right"
+        );
+      }
+      if (!current || dirty[0] & /*_layout*/
+      16) {
+        toggle_class(
+          div0,
+          "graphic--centre",
+          /*_layout*/
+          ctx[4].resizeInteractive && /*_layout*/
+          ctx[4].align === "centre"
+        );
+      }
+      if (dirty[0] & /*customPanel, panels, steps, _layout*/
+      275) {
         each_value = ensure_array_like(
           /*panels*/
           ctx[1]
@@ -1506,6 +1630,20 @@ function create_fragment$1(ctx) {
           out(i);
         }
         check_outros();
+      }
+      if (!current || dirty[0] & /*_layout*/
+      16) {
+        toggle_class(div1, "content--resized", !/*_layout*/
+        ctx[4].resizeInteractive);
+      }
+      if (!current || dirty[0] & /*_layout*/
+      16) {
+        toggle_class(
+          div2,
+          "scrollyteller--resized",
+          /*_layout*/
+          ctx[4].resizeInteractive
+        );
       }
     },
     i(local) {
@@ -1533,13 +1671,14 @@ function create_fragment$1(ctx) {
       detach(if_block0_anchor);
       if (if_block1) if_block1.d();
       destroy_each(each_blocks, detaching);
-      ctx[14](null);
+      ctx[16](null);
       mounted = false;
       dispose();
     }
   };
 }
 function instance$1($$self, $$props, $$invalidate) {
+  let _layout;
   let maxScrollSpeed;
   let { $$slots: slots = {}, $$scope } = $$props;
   const dispatch = createEventDispatcher();
@@ -1555,6 +1694,7 @@ function instance$1($$self, $$props, $$invalidate) {
   let { onMarker = null } = $$props;
   let { observerOptions = { threshold: 0.5 } } = $$props;
   let { discardSlot = false } = $$props;
+  let { layout = {} } = $$props;
   const isOdyssey = window.__IS_ODYSSEY_FORMAT__;
   let scrollytellerRef;
   let steps = [];
@@ -1576,13 +1716,13 @@ function instance$1($$self, $$props, $$invalidate) {
   const panelIntersectionObserverCallback = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        $$invalidate(11, marker = entry.target.scrollyData);
+        $$invalidate(13, marker = entry.target.scrollyData);
       }
     });
   };
   const panelObserver = new IntersectionObserver(panelIntersectionObserverCallback, observerOptions);
   const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
-    $$invalidate(5, isInViewport = scrollytellerEntry.isIntersecting);
+    $$invalidate(6, isInViewport = scrollytellerEntry.isIntersecting);
   }));
   const deferUntilScrollSettles = (fn) => {
     if (scrollSpeed < maxScrollSpeed) {
@@ -1601,8 +1741,8 @@ function instance$1($$self, $$props, $$invalidate) {
   };
   onMount(() => {
     scrollingPos = getScrollingPos();
-    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(11, marker = panels[0].data);
-    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(11, marker = panels[panels.length - 1].data);
+    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(13, marker = panels[0].data);
+    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(13, marker = panels[panels.length - 1].data);
     steps.forEach((step, i) => {
       panelObserver.observe(step);
     });
@@ -1625,25 +1765,38 @@ function instance$1($$self, $$props, $$invalidate) {
   function div2_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       scrollytellerRef = $$value;
-      $$invalidate(4, scrollytellerRef);
+      $$invalidate(5, scrollytellerRef);
     });
   }
   $$self.$$set = ($$props2) => {
     if ("customPanel" in $$props2) $$invalidate(0, customPanel = $$props2.customPanel);
     if ("panels" in $$props2) $$invalidate(1, panels = $$props2.panels);
     if ("onProgress" in $$props2) $$invalidate(2, onProgress = $$props2.onProgress);
-    if ("onMarker" in $$props2) $$invalidate(9, onMarker = $$props2.onMarker);
-    if ("observerOptions" in $$props2) $$invalidate(10, observerOptions = $$props2.observerOptions);
+    if ("onMarker" in $$props2) $$invalidate(10, onMarker = $$props2.onMarker);
+    if ("observerOptions" in $$props2) $$invalidate(11, observerOptions = $$props2.observerOptions);
     if ("discardSlot" in $$props2) $$invalidate(3, discardSlot = $$props2.discardSlot);
-    if ("$$scope" in $$props2) $$invalidate(12, $$scope = $$props2.$$scope);
+    if ("layout" in $$props2) $$invalidate(12, layout = $$props2.layout);
+    if ("$$scope" in $$props2) $$invalidate(14, $$scope = $$props2.$$scope);
   };
   $$self.$$.update = () => {
-    if ($$self.$$.dirty & /*discardSlot*/
+    if ($$self.$$.dirty[0] & /*layout*/
+    4096) {
+      $$invalidate(4, _layout = {
+        align: layout.align || "centre",
+        resizeInteractive: layout.resizeInteractive ?? true,
+        transparentFloat: layout.transparentFloat ?? ["left", "right"].includes(layout.align)
+      });
+    }
+    if ($$self.$$.dirty[0] & /*layout, _layout*/
+    4112) {
+      console.log("yes but", { layout, _layout });
+    }
+    if ($$self.$$.dirty[0] & /*discardSlot*/
     8) {
       maxScrollSpeed = discardSlot ? 0.5 : Infinity;
     }
-    if ($$self.$$.dirty & /*onProgress, onMarker*/
-    516) {
+    if ($$self.$$.dirty[0] & /*onProgress, onMarker*/
+    1028) {
       {
         if (typeof onProgress === "function") {
           throw new Error("the onProgress callback is deprecated. Please use on:progress");
@@ -1653,8 +1806,8 @@ function instance$1($$self, $$props, $$invalidate) {
         }
       }
     }
-    if ($$self.$$.dirty & /*marker*/
-    2048) {
+    if ($$self.$$.dirty[0] & /*marker*/
+    8192) {
       marker && deferUntilScrollSettles(() => dispatch("marker", marker));
     }
   };
@@ -1663,6 +1816,7 @@ function instance$1($$self, $$props, $$invalidate) {
     panels,
     onProgress,
     discardSlot,
+    _layout,
     scrollytellerRef,
     isInViewport,
     isOdyssey,
@@ -1670,6 +1824,7 @@ function instance$1($$self, $$props, $$invalidate) {
     scrollHandler,
     onMarker,
     observerOptions,
+    layout,
     marker,
     $$scope,
     slots,
@@ -1689,11 +1844,13 @@ class Scrollyteller extends SvelteComponent {
         customPanel: 0,
         panels: 1,
         onProgress: 2,
-        onMarker: 9,
-        observerOptions: 10,
-        discardSlot: 3
+        onMarker: 10,
+        observerOptions: 11,
+        discardSlot: 3,
+        layout: 12
       },
-      add_css
+      add_css$1,
+      [-1, -1]
     );
   }
   get customPanel() {
@@ -1718,14 +1875,14 @@ class Scrollyteller extends SvelteComponent {
     flush();
   }
   get onMarker() {
-    return this.$$.ctx[9];
+    return this.$$.ctx[10];
   }
   set onMarker(onMarker) {
     this.$$set({ onMarker });
     flush();
   }
   get observerOptions() {
-    return this.$$.ctx[10];
+    return this.$$.ctx[11];
   }
   set observerOptions(observerOptions) {
     this.$$set({ observerOptions });
@@ -1738,8 +1895,18 @@ class Scrollyteller extends SvelteComponent {
     this.$$set({ discardSlot });
     flush();
   }
+  get layout() {
+    return this.$$.ctx[12];
+  }
+  set layout(layout) {
+    this.$$set({ layout });
+    flush();
+  }
 }
-create_custom_element(Scrollyteller, { "customPanel": {}, "panels": {}, "onProgress": { "type": "Boolean" }, "onMarker": {}, "observerOptions": {}, "discardSlot": { "type": "Boolean" } }, ["default"], [], true);
+create_custom_element(Scrollyteller, { "customPanel": {}, "panels": {}, "onProgress": { "type": "Boolean" }, "onMarker": {}, "observerOptions": {}, "discardSlot": { "type": "Boolean" }, "layout": {} }, ["default"], [], true);
+function add_css(target) {
+  append_styles(target, "svelte-z693mv", ".wc-root.svelte-z693mv{width:100%;position:relative}");
+}
 function create_if_block(ctx) {
   let scrollyteller;
   let current;
@@ -1748,8 +1915,12 @@ function create_if_block(ctx) {
       /*panels*/
       ctx[1]
     ) },
+    { layout: (
+      /*layout*/
+      ctx[2]
+    ) },
     /*$$restProps*/
-    ctx[2]
+    ctx[3]
   ];
   let scrollyteller_props = {
     $$slots: { default: [create_default_slot] },
@@ -1762,12 +1933,12 @@ function create_if_block(ctx) {
   scrollyteller.$on(
     "progress",
     /*progress_handler*/
-    ctx[4]
+    ctx[5]
   );
   scrollyteller.$on(
     "marker",
     /*marker_handler*/
-    ctx[5]
+    ctx[6]
   );
   return {
     c() {
@@ -1778,21 +1949,26 @@ function create_if_block(ctx) {
       current = true;
     },
     p(ctx2, dirty) {
-      const scrollyteller_changes = dirty & /*panels, $$restProps*/
-      6 ? get_spread_update(scrollyteller_spread_levels, [
+      const scrollyteller_changes = dirty & /*panels, layout, $$restProps*/
+      14 ? get_spread_update(scrollyteller_spread_levels, [
         dirty & /*panels*/
         2 && { panels: (
           /*panels*/
           ctx2[1]
         ) },
-        dirty & /*$$restProps*/
-        4 && get_spread_object(
-          /*$$restProps*/
+        dirty & /*layout*/
+        4 && { layout: (
+          /*layout*/
           ctx2[2]
+        ) },
+        dirty & /*$$restProps*/
+        8 && get_spread_object(
+          /*$$restProps*/
+          ctx2[3]
         )
       ]) : {};
       if (dirty & /*$$scope, graphicRootEl*/
-      129) {
+      257) {
         scrollyteller_changes.$$scope = { dirty, ctx: ctx2 };
       }
       scrollyteller.$set(scrollyteller_changes);
@@ -1816,17 +1992,18 @@ function create_default_slot(ctx) {
   return {
     c() {
       div = element("div");
+      attr(div, "class", "wc-root svelte-z693mv");
     },
     m(target, anchor) {
       insert(target, div, anchor);
-      ctx[3](div);
+      ctx[4](div);
     },
     p: noop,
     d(detaching) {
       if (detaching) {
         detach(div);
       }
-      ctx[3](null);
+      ctx[4](null);
     }
   };
 }
@@ -1890,11 +2067,12 @@ function create_fragment(ctx) {
   };
 }
 function instance($$self, $$props, $$invalidate) {
-  const omit_props_names = ["panels", "graphicRootEl"];
+  const omit_props_names = ["panels", "graphicRootEl", "layout"];
   let $$restProps = compute_rest_props($$props, omit_props_names);
   const dispatch = createEventDispatcher();
   let { panels = [] } = $$props;
   let { graphicRootEl } = $$props;
+  let { layout } = $$props;
   function div_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       graphicRootEl = $$value;
@@ -1909,9 +2087,10 @@ function instance($$self, $$props, $$invalidate) {
   }
   $$self.$$set = ($$new_props) => {
     $$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
-    $$invalidate(2, $$restProps = compute_rest_props($$props, omit_props_names));
+    $$invalidate(3, $$restProps = compute_rest_props($$props, omit_props_names));
     if ("panels" in $$new_props) $$invalidate(1, panels = $$new_props.panels);
     if ("graphicRootEl" in $$new_props) $$invalidate(0, graphicRootEl = $$new_props.graphicRootEl);
+    if ("layout" in $$new_props) $$invalidate(2, layout = $$new_props.layout);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty & /*graphicRootEl*/
@@ -1926,6 +2105,7 @@ function instance($$self, $$props, $$invalidate) {
   return [
     graphicRootEl,
     panels,
+    layout,
     $$restProps,
     div_binding,
     progress_handler,
@@ -1935,7 +2115,7 @@ function instance($$self, $$props, $$invalidate) {
 class Scrollyteller_wc extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance, create_fragment, safe_not_equal, { panels: 1, graphicRootEl: 0 });
+    init(this, options, instance, create_fragment, safe_not_equal, { panels: 1, graphicRootEl: 0, layout: 2 }, add_css);
   }
   get panels() {
     return this.$$.ctx[1];
@@ -1951,8 +2131,15 @@ class Scrollyteller_wc extends SvelteComponent {
     this.$$set({ graphicRootEl });
     flush();
   }
+  get layout() {
+    return this.$$.ctx[2];
+  }
+  set layout(layout) {
+    this.$$set({ layout });
+    flush();
+  }
 }
-customElements.define("abcnews-scrollyteller", create_custom_element(Scrollyteller_wc, { "panels": {}, "graphicRootEl": {} }, [], [], false));
+customElements.define("abcnews-scrollyteller", create_custom_element(Scrollyteller_wc, { "panels": {}, "graphicRootEl": {}, "layout": {} }, [], [], false));
 export {
   Scrollyteller_wc as default,
   loadScrollyteller

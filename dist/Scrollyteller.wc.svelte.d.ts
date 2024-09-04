@@ -13,6 +13,9 @@ export default class Scrollyteller extends SvelteComponent<{
     /**accessor*/
     set graphicRootEl(_: any);
     get graphicRootEl(): any;
+    /**accessor*/
+    set layout(_: any);
+    get layout(): any;
 }
 export type ScrollytellerProps = typeof __propDef.props;
 export type ScrollytellerEvents = typeof __propDef.events;

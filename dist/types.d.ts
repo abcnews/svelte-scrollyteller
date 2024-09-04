@@ -4,10 +4,10 @@ export interface PanelRef extends Element {
 export interface IntersectionEntries extends IntersectionObserverEntry {
     target: PanelRef;
 }
-export type PanelAlignment = 'left' | 'right';
 /** Config options to control an individual panel */
 export type PanelDefinition = {
-    align?: PanelAlignment;
+    align?: string;
+    transparentFloat?: boolean;
     panelClass?: string;
     data: any;
     nodes: Element[];

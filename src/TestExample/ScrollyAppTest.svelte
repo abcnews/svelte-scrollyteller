@@ -2,7 +2,7 @@
 	import Scrollyteller, { loadScrollyteller } from '$lib/index.js';
 	import PercentageIndicators from './PercentageIndicators.svelte';
 	import Worm from './Worm/Worm.svelte';
-    export let name = "test";
+	export let name = 'test';
 
 	const scrollyData = loadScrollyteller(
 		name, // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
@@ -13,56 +13,23 @@
 	let number = 0;
 	let stProgress;
 
-	const onMarker = ({detail}) => {
+	const onMarker = ({ detail }) => {
 		number = detail.number;
 	};
 
-	const onProgress = ({detail}) => {
+	const onProgress = ({ detail }) => {
 		stProgress = detail;
 	};
 </script>
-
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
-<p>Before</p>
 
 <Scrollyteller
 	panels={scrollyData.panels}
 	onProgress={true}
 	on:marker={onMarker}
 	on:progress={onProgress}
-
+	{...$$restProps}
 >
-	<div class="graphic">
+	<div class="example-graphic">
 		<Worm />
 		<span class="number">{number}</span>
 		<PercentageIndicators percentage={Math.round(stProgress?.scrollPct * 100)} />
@@ -102,13 +69,25 @@
 <p>After</p>
 <p>After</p>
 
-
 <style lang="scss">
-	.graphic {
+	@import '../lib/breakpoints.scss';
+	.example-graphic {
 		height: 100%;
 		width: 100%;
 		display: flex;
 		position: relative;
+		@media (min-width: $breakpointTablet) {
+			background: pink;
+		}
+		@media (min-width: $breakpointLargeTablet) {
+			background: orange;
+		}
+		@media (min-width: $breakpointDesktop) {
+			background: red;
+		}
+		@media (min-width: $breakpointLargeDesktop) {
+			background: purple;
+		}
 	}
 
 	.number {

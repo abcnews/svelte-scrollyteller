@@ -20,6 +20,7 @@
 	const dispatch = createEventDispatcher();
 	export let panels = [];
 	export let graphicRootEl;
+	export let layout;
 	$: {
 		if (graphicRootEl) {
 			dispatch('load', graphicRootEl);
@@ -28,7 +29,14 @@
 </script>
 
 {#if panels.length}
-	<Scrollyteller {panels} {...$$restProps} on:progress on:marker>
-		<div bind:this={graphicRootEl}></div>
+	<Scrollyteller {panels} {layout} {...$$restProps} on:progress on:marker>
+		<div bind:this={graphicRootEl} class="wc-root"></div>
 	</Scrollyteller>
 {/if}
+
+<style>
+	.wc-root {
+		width: 100%;
+		position: relative;
+	}
+</style>

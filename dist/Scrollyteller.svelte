@@ -31,6 +31,13 @@ export let observerOptions = {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload mdn preload docs}
  */
 export let discardSlot = false;
+export let layout = {};
+$: _layout = {
+    align: layout.align || 'centre',
+    resizeInteractive: layout.resizeInteractive ?? true,
+    transparentFloat: layout.transparentFloat ?? ['left', 'right'].includes(layout.align)
+};
+$: console.log('yes but', { layout, _layout });
 /**
  * When the user is scrolling at a speed greater than this, don't mount
  * new components or update markers.
@@ -100,11 +107,11 @@ onMount(() => {
 });
 const scrollHandler = () => {
     const rootRect = scrollytellerRef.getBoundingClientRect();
-    dispatch('progress', ({
+    dispatch('progress', {
         boundingRect: rootRect,
         rootPct: 1 - rootRect.bottom / (rootRect.height + window.innerHeight),
         scrollPct: 1 - (rootRect.bottom - window.innerHeight) / (rootRect.height - window.innerHeight)
-    }));
+    });
 };
 $: {
     // 2024-08 : This block checks for deprecated usage & throws helpful errors.
@@ -133,13 +140,23 @@ $: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
 	{/if}
 </svelte:head>
 
-<div class="scrollyteller" bind:this={scrollytellerRef}>
-	<div class="graphic">
+<div
+	class="scrollyteller"
+	class:scrollyteller--resized={_layout.resizeInteractive}
+	bind:this={scrollytellerRef}
+>
+	<div
+		class="graphic"
+		class:graphic--resized={_layout.resizeInteractive}
+		class:graphic--right={_layout.resizeInteractive && _layout.align === 'left'}
+		class:graphic--left={_layout.resizeInteractive && _layout.align === 'right'}
+		class:graphic--centre={_layout.resizeInteractive && _layout.align === 'centre'}
+	>
 		{#if isInViewport || discardSlot === false}
 			<slot />
 		{/if}
 	</div>
-	<div class="content">
+	<div class="content" class:content--resized={!_layout.resizeInteractive}>
 		{#each panels as panel, i}
 			{@const panelClass =
 				(panel.panelClass ?? '') +
@@ -148,7 +165,15 @@ $: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
 			{#if customPanel}
 				<svelte:component this={customPanel} {...panel} {steps} {panelClass} />
 			{:else}
-				<Panel props={{ ...panel, steps, panelClass }} />
+				<Panel
+					props={{
+						...panel,
+						align: panel.align || _layout.align,
+						transparentFloat: _layout.transparentFloat,
+						steps,
+						panelClass
+					}}
+				/>
 			{/if}
 		{/each}
 	</div>
@@ -156,6 +181,10 @@ $: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
 
 <style>.scrollyteller {
   position: relative;
+}
+.scrollyteller--resized {
+  max-width: 2040px;
+  margin: 0 auto;
 }
 
 .graphic {
@@ -168,13 +197,90 @@ $: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
   z-index: 1;
 }
 
+.graphic--resized {
+  height: 60dvh;
+  top: 10dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: auto;
+  --margin: 1.5rem;
+  margin: 0 auto;
+  width: calc(100% - var(--margin) * 2);
+}
+@media (min-width: 744px) {
+  .graphic--resized {
+    --margin: 3rem;
+    top: 8dvh;
+    height: 62dvh;
+  }
+}
+@media (min-width: 992px) {
+  .graphic--resized.graphic--left, .graphic--resized.graphic--right {
+    --marginCentre: 1rem;
+    --marginOuter: 2rem;
+    height: 84dvh;
+    top: 8dvh;
+    --maxWidth: 55%;
+    max-width: calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)));
+  }
+}
+@media (min-width: 1200px) {
+  .graphic--resized.graphic--left, .graphic--resized.graphic--right {
+    --marginCentre: 1.5rem;
+    --marginOuter: 3rem;
+    --maxWidth: 60%;
+    height: 76dvh;
+    top: 12dvh;
+  }
+}
+@media (min-width: 1440px) {
+  .graphic--resized.graphic--left, .graphic--resized.graphic--right {
+    --marginCentre: 2rem;
+    --marginOuter: 4rem;
+    --maxWidth: 60%;
+    top: 10dvh;
+    height: 80dvh;
+  }
+}
+@media (min-width: 992px) {
+  .graphic--resized.graphic--left {
+    margin: 0 auto 0 var(--marginOuter);
+  }
+}
+@media (min-width: 992px) {
+  .graphic--resized.graphic--right {
+    margin: 0 var(--marginOuter) 0 auto;
+  }
+}
+@media (min-width: 992px) {
+  .graphic--resized.graphic--centre {
+    --margin: 3rem;
+    top: 8dvh;
+    height: 62dvh;
+  }
+}
+@media (min-width: 1200px) {
+  .graphic--resized.graphic--centre {
+    --margin: 4rem;
+    top: 12dvh;
+    height: 58dvh;
+  }
+}
+@media (min-width: 1440px) {
+  .graphic--resized.graphic--centre {
+    --margin: 6rem;
+    top: 12dvh;
+    height: 58dvh;
+  }
+}
+
 .content {
-  margin-top: -100dvh;
+  margin: -100dvh auto 0;
   position: relative;
   z-index: 2;
-  overflow: hidden;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  pointer-events: none;
+}
+.content--resized {
+  max-width: 2040px;
 }</style>

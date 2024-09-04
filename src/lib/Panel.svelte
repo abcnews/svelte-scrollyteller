@@ -5,7 +5,7 @@
 
 	export let props: PanelDefinition;
 
-	const { align, panelClass, data, nodes = [], steps = [] } = props;
+	const { align, transparentFloat, panelClass, data, nodes = [], steps = [] } = props;
 
 	let panelRef: PanelRef;
 
@@ -16,57 +16,44 @@
 </script>
 
 <div
-	class={`st-panel ${align || ''} ${panelClass || ''}`}
+	data-align={align}
+	class={`st-panel ${panelClass || ''}`}
+	class:st-panel--left={align === 'left'}
+	class:st-panel--right={align === 'right'}
+	class:st-panel--centre={align === 'centre'}
+	class:st-panel--transparent-blocks={transparentFloat}
 	bind:this={panelRef}
 	use:children={nodes}
 />
 
 <style lang="scss">
-	$breakpoint: 61.25rem;
+	@import './breakpoints.scss';
 
 	.st-panel {
 		--panel-radius: 0.75rem;
-		--panel-background: var(--color-panel-background, var(--bg, var(--od-colour-theme-surface-over-image)));
-		--panel-color: var(--color-panel-text, var(--od-colour-text-primary));
-		--panel-opacity: var(--color-panel-opacity, 0.75);
-		--panel-filter: var(--color-panel-filter, blur(0.3125rem));
+		--panel-background: var(--color-panel-background, rgba(245, 245, 245, 0.95));
+		--panel-color: var(--color-panel-text, #000);
+		--panel-opacity: var(--color-panel-opacity, 1);
+		--panel-filter: var(--color-panel-filter, blur(2.5px));
 		--panel-border: var(--color-panel-border, none);
+
+		:global([data-scheme='dark']) &,
+		:global(.is-dark-mode) & {
+			--panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));
+			--panel-color: var(--color-panel-text, #ebebeb);
+		}
 
 		-webkit-backdrop-filter: var(--panel-filter);
 		backdrop-filter: var(--panel-filter);
-
 		color: var(--panel-color);
-
-		box-sizing: border-box;
-
-		padding-top: 2.25rem;
-		padding-bottom: 2.25rem;
-
-		margin-bottom: 40vh;
-		margin-top: 40vh;
-		margin-left: auto;
-		margin-right: auto;
-
-		padding-left: 3.875rem;
-		padding-right: 3.875rem;
-		width: calc(66.66667% + 3rem);
 		border-radius: var(--panel-radius);
-
+		box-sizing: border-box;
+		margin: 80vh auto;
+		width: calc(100% - 2rem);
 		position: relative;
 		z-index: 1;
-
 		pointer-events: none;
-
-		/* // Chrome fix https://stackoverflow.com/a/28906246/955917 */
-		-webkit-transform: translate3d(0, 0, 0);
-
-		:global(:where(.is-legacy)) & {
-			--panel-radius: 2px;
-			--panel-opacity: var(--color-panel-opacity, 1);
-			--panel-filter: var(--color-panel-filter, none);
-		}
-
-
+		font-size: 18px;
 
 		&.first {
 			margin-top: 100vh;
@@ -74,6 +61,65 @@
 
 		&.last {
 			margin-bottom: 100vh;
+		}
+
+		padding: 1rem;
+		max-width: 660px;
+
+		&--centre {
+			@media (min-width: $breakpointTablet) {
+				padding: 2rem;
+				max-width: 720px;
+			}
+
+			@media (min-width: $breakpointLargeTablet) {
+				padding: 2rem;
+				max-width: 780px;
+				font-size: 20px;
+			}
+
+			@media (min-width: $breakpointDesktop) {
+			}
+
+			@media (min-width: $breakpointLargeDesktop) {
+				max-width: 900px;
+				font-size: 24px;
+			}
+		}
+
+		&--left,
+		&--right {
+			@media (min-width: $breakpointLargeTablet) {
+				--marginLeft: 2rem;
+				--marginRight: 1rem;
+				--maxWidth: 45%;
+				max-width: calc(var(--maxWidth) - calc(var(--marginLeft) + var(--marginRight)));
+				margin: 30vh 0 30vh calc(var(--marginLeft) - 1rem);
+				font-size: 18px;
+
+				&.st-panel--transparent-blocks {
+					--panel-filter: none;
+					--panel-background: none;
+				}
+			}
+			@media (min-width: $breakpointDesktop) {
+				--marginLeft: 3rem;
+				--marginRight: 1.5rem;
+				--maxWidth: 40%;
+				font-size: 18px;
+			}
+			@media (min-width: $breakpointLargeDesktop) {
+				--marginLeft: 4rem;
+				--marginRight: 2rem;
+				--maxWidth: 40%;
+				font-size: 18px;
+			}
+		}
+
+		&--right {
+			@media (min-width: $breakpointLargeTablet) {
+				margin: 15vh calc(var(--marginLeft) - 1rem) 15vh auto;
+			}
 		}
 
 		&::before {
@@ -105,7 +151,7 @@
 				Palatino Linotype,
 				Palatino,
 				serif;
-			font-size: 1.375rem;
+			font-size: inherit;
 			line-height: 1.666666667;
 			color: var(--panel-color);
 
@@ -128,28 +174,15 @@
 		}
 	}
 
-	@media only screen and (min-width: calc($breakpoint + 1px)) {
-		:global(.right) {
-			margin-right: calc(30% - 16rem) !important;
-			width: 32rem !important;
-		}
+	// @media only screen and (min-width: calc($breakpoint + 1px)) {
+	// 	:global(.right) {
+	// 		margin-right: calc(30% - 16rem) !important;
+	// 		width: 32rem !important;
+	// 	}
 
-		:global(.left) {
-			margin-left: calc(30% - 16rem) !important;
-			width: 32rem !important;
-		}
-	}
-
-	@media only screen and (max-width: $breakpoint) {
-		.st-panel {
-			width: auto !important;
-			padding: 1rem;
-			margin-left: 1rem;
-			margin-right: 1rem;
-			:global(p) {
-				font-size: 1.125rem;
-				line-height: 1.555555556;
-			}
-		}
-	}
+	// 	:global(.left) {
+	// 		margin-left: calc(30% - 16rem) !important;
+	// 		width: 32rem !important;
+	// 	}
+	// }
 </style>
