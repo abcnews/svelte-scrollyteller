@@ -249,7 +249,7 @@
 		top: 10dvh;
 		display: flex;
 		justify-content: center;
-		align-items: center;
+		align-items: flex-start;
 		margin: 0 auto;
 		width: auto;
 		--margin: 1.5rem;
@@ -264,6 +264,7 @@
 		&.graphic--left,
 		&.graphic--right {
 			@media (min-width: $breakpointLargeTablet) {
+				align-items: center;
 				--marginCentre: 1rem;
 				--marginOuter: 2rem;
 				height: 84dvh;

@@ -202,7 +202,7 @@ $: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
   top: 10dvh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   margin: 0 auto;
   width: auto;
   --margin: 1.5rem;
@@ -218,6 +218,7 @@ $: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
 }
 @media (min-width: 992px) {
   .graphic--resized.graphic--left, .graphic--resized.graphic--right {
+    align-items: center;
     --marginCentre: 1rem;
     --marginOuter: 2rem;
     height: 84dvh;

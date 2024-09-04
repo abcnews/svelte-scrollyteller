@@ -1071,7 +1071,7 @@ const getScrollSpeed = (callback) => {
 };
 const { window: window_1 } = globals;
 function add_css$1(target) {
-  append_styles(target, "svelte-13cs1pw", ".scrollyteller.svelte-13cs1pw{position:relative}.scrollyteller--resized.svelte-13cs1pw{max-width:2040px;margin:0 auto}.graphic.svelte-13cs1pw{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-13cs1pw{height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:center;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 744px){.graphic--resized.svelte-13cs1pw{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-13cs1pw,.graphic--resized.graphic--right.svelte-13cs1pw{--marginCentre:1rem;--marginOuter:2rem;height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 1200px){.graphic--resized.graphic--left.svelte-13cs1pw,.graphic--resized.graphic--right.svelte-13cs1pw{--marginCentre:1.5rem;--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 1440px){.graphic--resized.graphic--left.svelte-13cs1pw,.graphic--resized.graphic--right.svelte-13cs1pw{--marginCentre:2rem;--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-13cs1pw{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 992px){.graphic--resized.graphic--right.svelte-13cs1pw{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 992px){.graphic--resized.graphic--centre.svelte-13cs1pw{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 1200px){.graphic--resized.graphic--centre.svelte-13cs1pw{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 1440px){.graphic--resized.graphic--centre.svelte-13cs1pw{--margin:6rem;top:12dvh;height:58dvh}}.content.svelte-13cs1pw{margin:-100dvh auto 0;position:relative;z-index:2}.content--resized.svelte-13cs1pw{max-width:2040px}");
+  append_styles(target, "svelte-m6cbxn", ".scrollyteller.svelte-m6cbxn{position:relative}.scrollyteller--resized.svelte-m6cbxn{max-width:2040px;margin:0 auto}.graphic.svelte-m6cbxn{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-m6cbxn{height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 744px){.graphic--resized.svelte-m6cbxn{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-m6cbxn,.graphic--resized.graphic--right.svelte-m6cbxn{align-items:center;--marginCentre:1rem;--marginOuter:2rem;height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 1200px){.graphic--resized.graphic--left.svelte-m6cbxn,.graphic--resized.graphic--right.svelte-m6cbxn{--marginCentre:1.5rem;--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 1440px){.graphic--resized.graphic--left.svelte-m6cbxn,.graphic--resized.graphic--right.svelte-m6cbxn{--marginCentre:2rem;--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-m6cbxn{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 992px){.graphic--resized.graphic--right.svelte-m6cbxn{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 992px){.graphic--resized.graphic--centre.svelte-m6cbxn{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 1200px){.graphic--resized.graphic--centre.svelte-m6cbxn{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 1440px){.graphic--resized.graphic--centre.svelte-m6cbxn{--margin:6rem;top:12dvh;height:58dvh}}.content.svelte-m6cbxn{margin:-100dvh auto 0;position:relative;z-index:2}.content--resized.svelte-m6cbxn{max-width:2040px}");
 }
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
@@ -1469,7 +1469,7 @@ function create_fragment$1(ctx) {
       for (let i = 0; i < each_blocks.length; i += 1) {
         each_blocks[i].c();
       }
-      attr(div0, "class", "graphic svelte-13cs1pw");
+      attr(div0, "class", "graphic svelte-m6cbxn");
       toggle_class(
         div0,
         "graphic--resized",
@@ -1497,10 +1497,10 @@ function create_fragment$1(ctx) {
         ctx[4].resizeInteractive && /*_layout*/
         ctx[4].align === "centre"
       );
-      attr(div1, "class", "content svelte-13cs1pw");
+      attr(div1, "class", "content svelte-m6cbxn");
       toggle_class(div1, "content--resized", !/*_layout*/
       ctx[4].resizeInteractive);
-      attr(div2, "class", "scrollyteller svelte-13cs1pw");
+      attr(div2, "class", "scrollyteller svelte-m6cbxn");
       toggle_class(
         div2,
         "scrollyteller--resized",
