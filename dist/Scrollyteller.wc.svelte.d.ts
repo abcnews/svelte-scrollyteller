@@ -11,9 +11,6 @@ export default class Scrollyteller extends SvelteComponent<{
     set panels(_: any);
     get panels(): any;
     /**accessor*/
-    set graphicRootEl(_: any);
-    get graphicRootEl(): any;
-    /**accessor*/
     set layout(_: any);
     get layout(): any;
 }

@@ -41,6 +41,7 @@ declare const __propDef: {
         };
     };
     events: {
+        load: CustomEvent<any>;
         progress: CustomEvent<any>;
         marker: CustomEvent<any>;
     } & {

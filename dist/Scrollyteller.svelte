@@ -52,6 +52,12 @@
 	let isInViewport = false;
 	let scrollSpeed = 0;
 	let deferUntilScrollSettlesActions = [];
+	// emit an event with the graphic root, because the web component doesn't
+	// support slots & must insert content  manually.
+	let graphicRootEl;
+	$: if (graphicRootEl) {
+		dispatch('load', graphicRootEl);
+	}
 	const getScrollingPos = () => {
 		const boundingRect = scrollytellerRef.getBoundingClientRect();
 		if (boundingRect.bottom - window.innerHeight < 0) {
@@ -156,6 +162,7 @@
 		class:graphic--right={_layout.resizeInteractive && _layout.align === 'left'}
 		class:graphic--left={_layout.resizeInteractive && _layout.align === 'right'}
 		class:graphic--centre={_layout.resizeInteractive && _layout.align === 'centre'}
+		bind:this={graphicRootEl}
 	>
 		{#if isInViewport || discardSlot === false}
 			<slot />
@@ -234,6 +241,7 @@
 	}
 
 	.graphic--resized {
+		container-type: size;
 		height: 60dvh;
 		top: 10dvh;
 		display: flex;
@@ -323,6 +331,7 @@
 		margin: -100dvh auto 0;
 		position: relative;
 		z-index: 2;
+		pointer-events: none;
 	}
 	.content--resized {
 		max-width: 2040px;

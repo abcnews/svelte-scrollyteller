@@ -15,30 +15,10 @@
 	 * codebases that can't be updated.
 	 */
 	import Scrollyteller from './Scrollyteller.svelte';
-	import { createEventDispatcher } from 'svelte';
-
-	const dispatch = createEventDispatcher();
 	export let panels = [];
-	export let graphicRootEl;
-	export let layout;
-	$: {
-		if (graphicRootEl) {
-			dispatch('load', graphicRootEl);
-		}
-	}
+	export let layout = {};
 </script>
 
 {#if panels.length}
-	<Scrollyteller {panels} {layout} {...$$restProps} on:progress on:marker>
-		<div bind:this={graphicRootEl} class="wc-root"></div>
-	</Scrollyteller>
+	<Scrollyteller {panels} {layout} {...$$restProps} on:progress on:marker on:load></Scrollyteller>
 {/if}
-
-<style>.wc-root {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-:global(.scrollyteller--debug) .wc-root {
-  outline: 5px solid green;
-}</style>
