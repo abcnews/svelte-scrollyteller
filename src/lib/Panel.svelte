@@ -42,6 +42,9 @@
 			--panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));
 			--panel-color: var(--color-panel-text, #ebebeb);
 		}
+		:global(.scrollyteller--debug) & {
+			outline: 5px solid limegreen;
+		}
 
 		-webkit-backdrop-filter: var(--panel-filter);
 		backdrop-filter: var(--panel-filter);

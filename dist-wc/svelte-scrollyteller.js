@@ -749,7 +749,7 @@ const children = (el, children2) => {
   };
 };
 function add_css$2(target) {
-  append_styles(target, "svelte-uenwmw", '.st-panel.svelte-uenwmw{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(245, 245, 245, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, none);-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);box-sizing:border-box;margin:80vh auto;width:calc(100% - 2rem);position:relative;z-index:1;pointer-events:none;font-size:18px;padding:1rem;max-width:660px}[data-scheme="dark"] .st-panel.svelte-uenwmw,.is-dark-mode .st-panel.svelte-uenwmw{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb)}.st-panel.first.svelte-uenwmw{margin-top:100vh}.st-panel.last.svelte-uenwmw{margin-bottom:100vh}@media(min-width: 744px){.st-panel--centre.svelte-uenwmw{padding:2rem;max-width:720px}}@media(min-width: 992px){.st-panel--centre.svelte-uenwmw{padding:2rem;max-width:780px;font-size:20px}}@media(min-width: 1440px){.st-panel--centre.svelte-uenwmw{max-width:900px;font-size:24px}}@media(min-width: 992px){.st-panel--left.svelte-uenwmw,.st-panel--right.svelte-uenwmw{--marginLeft:2rem;--marginRight:1rem;--maxWidth:45%;max-width:calc(var(--maxWidth) - (var(--marginLeft) + var(--marginRight)));margin:30vh 0 30vh calc(var(--marginLeft) - 1rem);font-size:18px}.st-panel--left.st-panel--transparent-blocks.svelte-uenwmw,.st-panel--right.st-panel--transparent-blocks.svelte-uenwmw{--panel-filter:none;--panel-background:none}}@media(min-width: 1200px){.st-panel--left.svelte-uenwmw,.st-panel--right.svelte-uenwmw{--marginLeft:3rem;--marginRight:1.5rem;--maxWidth:40%;font-size:18px}}@media(min-width: 1440px){.st-panel--left.svelte-uenwmw,.st-panel--right.svelte-uenwmw{--marginLeft:4rem;--marginRight:2rem;--maxWidth:40%;font-size:18px}}@media(min-width: 992px){.st-panel--right.svelte-uenwmw{margin:15vh calc(var(--marginLeft) - 1rem) 15vh auto}}.st-panel.svelte-uenwmw::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-uenwmw::after{content:"";display:table;clear:both}.st-panel.svelte-uenwmw > *{font-family:ABCSerif, Book Antiqua, Palatino Linotype, Palatino, serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-uenwmw > *:last-child{margin-bottom:0}.st-panel.svelte-uenwmw>img{max-width:66%;display:block;margin:auto;height:auto}');
+  append_styles(target, "svelte-rf7ghq", '.st-panel.svelte-rf7ghq{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(245, 245, 245, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, none);-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);box-sizing:border-box;margin:80vh auto;width:calc(100% - 2rem);position:relative;z-index:1;pointer-events:none;font-size:18px;padding:1rem;max-width:660px}[data-scheme="dark"] .st-panel.svelte-rf7ghq,.is-dark-mode .st-panel.svelte-rf7ghq{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb)}.scrollyteller--debug .st-panel.svelte-rf7ghq{outline:5px solid limegreen}.st-panel.first.svelte-rf7ghq{margin-top:100vh}.st-panel.last.svelte-rf7ghq{margin-bottom:100vh}@media(min-width: 744px){.st-panel--centre.svelte-rf7ghq{padding:2rem;max-width:720px}}@media(min-width: 992px){.st-panel--centre.svelte-rf7ghq{padding:2rem;max-width:780px;font-size:20px}}@media(min-width: 1440px){.st-panel--centre.svelte-rf7ghq{max-width:900px;font-size:24px}}@media(min-width: 992px){.st-panel--left.svelte-rf7ghq,.st-panel--right.svelte-rf7ghq{--marginLeft:2rem;--marginRight:1rem;--maxWidth:45%;max-width:calc(var(--maxWidth) - (var(--marginLeft) + var(--marginRight)));margin:30vh 0 30vh calc(var(--marginLeft) - 1rem);font-size:18px}.st-panel--left.st-panel--transparent-blocks.svelte-rf7ghq,.st-panel--right.st-panel--transparent-blocks.svelte-rf7ghq{--panel-filter:none;--panel-background:none}}@media(min-width: 1200px){.st-panel--left.svelte-rf7ghq,.st-panel--right.svelte-rf7ghq{--marginLeft:3rem;--marginRight:1.5rem;--maxWidth:40%;font-size:18px}}@media(min-width: 1440px){.st-panel--left.svelte-rf7ghq,.st-panel--right.svelte-rf7ghq{--marginLeft:4rem;--marginRight:2rem;--maxWidth:40%;font-size:18px}}@media(min-width: 992px){.st-panel--right.svelte-rf7ghq{margin:15vh calc(var(--marginLeft) - 1rem) 15vh auto}}.st-panel.svelte-rf7ghq::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-rf7ghq::after{content:"";display:table;clear:both}.st-panel.svelte-rf7ghq > *{font-family:ABCSerif, Book Antiqua, Palatino Linotype, Palatino, serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-rf7ghq > *:last-child{margin-bottom:0}.st-panel.svelte-rf7ghq>img{max-width:66%;display:block;margin:auto;height:auto}');
 }
 function create_fragment$2(ctx) {
   let div;
@@ -765,7 +765,7 @@ function create_fragment$2(ctx) {
         ctx[1]
       );
       attr(div, "class", null_to_empty(`st-panel ${/*panelClass*/
-      ctx[3] || ""}`) + " svelte-uenwmw");
+      ctx[3] || ""}`) + " svelte-rf7ghq");
       toggle_class(
         div,
         "st-panel--left",
@@ -1071,20 +1071,20 @@ const getScrollSpeed = (callback) => {
 };
 const { window: window_1 } = globals;
 function add_css$1(target) {
-  append_styles(target, "svelte-m6cbxn", ".scrollyteller.svelte-m6cbxn{position:relative}.scrollyteller--resized.svelte-m6cbxn{max-width:2040px;margin:0 auto}.graphic.svelte-m6cbxn{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-m6cbxn{height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 744px){.graphic--resized.svelte-m6cbxn{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-m6cbxn,.graphic--resized.graphic--right.svelte-m6cbxn{align-items:center;--marginCentre:1rem;--marginOuter:2rem;height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 1200px){.graphic--resized.graphic--left.svelte-m6cbxn,.graphic--resized.graphic--right.svelte-m6cbxn{--marginCentre:1.5rem;--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 1440px){.graphic--resized.graphic--left.svelte-m6cbxn,.graphic--resized.graphic--right.svelte-m6cbxn{--marginCentre:2rem;--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-m6cbxn{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 992px){.graphic--resized.graphic--right.svelte-m6cbxn{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 992px){.graphic--resized.graphic--centre.svelte-m6cbxn{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 1200px){.graphic--resized.graphic--centre.svelte-m6cbxn{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 1440px){.graphic--resized.graphic--centre.svelte-m6cbxn{--margin:6rem;top:12dvh;height:58dvh}}.content.svelte-m6cbxn{margin:-100dvh auto 0;position:relative;z-index:2}.content--resized.svelte-m6cbxn{max-width:2040px}");
+  append_styles(target, "svelte-kiuvw8", '.scrollyteller.svelte-kiuvw8.svelte-kiuvw8{position:relative}.scrollyteller--resized.svelte-kiuvw8.svelte-kiuvw8{max-width:2040px;margin:0 auto}.scrollyteller--debug.svelte-kiuvw8.svelte-kiuvw8:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;border:5px solid limegreen;border-radius:1rem}@media(min-width: 744px){.scrollyteller--debug.svelte-kiuvw8.svelte-kiuvw8:after{content:"Tablet"}}@media(min-width: 992px){.scrollyteller--debug.svelte-kiuvw8.svelte-kiuvw8:after{content:"LargeTablet"}}@media(min-width: 1200px){.scrollyteller--debug.svelte-kiuvw8.svelte-kiuvw8:after{content:"Desktop"}}@media(min-width: 1440px){.scrollyteller--debug.svelte-kiuvw8.svelte-kiuvw8:after{content:"LargeDesktop"}}.graphic.svelte-kiuvw8.svelte-kiuvw8{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-kiuvw8.svelte-kiuvw8{height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}.scrollyteller--debug.svelte-kiuvw8 .graphic--resized.svelte-kiuvw8{outline:5px solid limegreen}@media(min-width: 744px){.graphic--resized.svelte-kiuvw8.svelte-kiuvw8{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-kiuvw8.svelte-kiuvw8,.graphic--resized.graphic--right.svelte-kiuvw8.svelte-kiuvw8{align-items:center;--marginCentre:1rem;--marginOuter:2rem;height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 1200px){.graphic--resized.graphic--left.svelte-kiuvw8.svelte-kiuvw8,.graphic--resized.graphic--right.svelte-kiuvw8.svelte-kiuvw8{--marginCentre:1.5rem;--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 1440px){.graphic--resized.graphic--left.svelte-kiuvw8.svelte-kiuvw8,.graphic--resized.graphic--right.svelte-kiuvw8.svelte-kiuvw8{--marginCentre:2rem;--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-kiuvw8.svelte-kiuvw8{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 992px){.graphic--resized.graphic--right.svelte-kiuvw8.svelte-kiuvw8{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 992px){.graphic--resized.graphic--centre.svelte-kiuvw8.svelte-kiuvw8{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 1200px){.graphic--resized.graphic--centre.svelte-kiuvw8.svelte-kiuvw8{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 1440px){.graphic--resized.graphic--centre.svelte-kiuvw8.svelte-kiuvw8{--margin:6rem;top:12dvh;height:58dvh}}.content.svelte-kiuvw8.svelte-kiuvw8{margin:-100dvh auto 0;position:relative;z-index:2}.content--resized.svelte-kiuvw8.svelte-kiuvw8{max-width:2040px}');
 }
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[29] = list[i];
-  child_ctx[32] = i;
+  child_ctx[30] = list[i];
+  child_ctx[33] = i;
   const constants_0 = (
     /*panel*/
-    (child_ctx[29].panelClass ?? "") + /*i*/
-    (child_ctx[32] === 0 ? " first" : "") + /*i*/
-    (child_ctx[32] === /*panels*/
+    (child_ctx[30].panelClass ?? "") + /*i*/
+    (child_ctx[33] === 0 ? " first" : "") + /*i*/
+    (child_ctx[33] === /*panels*/
     child_ctx[1].length - 1 ? " last" : "")
   );
-  child_ctx[30] = constants_0;
+  child_ctx[31] = constants_0;
   return child_ctx;
 }
 function create_if_block_2(ctx) {
@@ -1108,13 +1108,13 @@ function create_if_block_1(ctx) {
   let current;
   const default_slot_template = (
     /*#slots*/
-    ctx[15].default
+    ctx[16].default
   );
   const default_slot = create_slot(
     default_slot_template,
     ctx,
     /*$$scope*/
-    ctx[14],
+    ctx[15],
     null
   );
   return {
@@ -1130,20 +1130,20 @@ function create_if_block_1(ctx) {
     p(ctx2, dirty) {
       if (default_slot) {
         if (default_slot.p && (!current || dirty[0] & /*$$scope*/
-        16384)) {
+        32768)) {
           update_slot_base(
             default_slot,
             default_slot_template,
             ctx2,
             /*$$scope*/
-            ctx2[14],
+            ctx2[15],
             !current ? get_all_dirty_from_scope(
               /*$$scope*/
-              ctx2[14]
+              ctx2[15]
             ) : get_slot_changes(
               default_slot_template,
               /*$$scope*/
-              ctx2[14],
+              ctx2[15],
               dirty,
               null
             ),
@@ -1173,10 +1173,10 @@ function create_else_block(ctx) {
     props: {
       props: {
         .../*panel*/
-        ctx[29],
+        ctx[30],
         align: (
           /*panel*/
-          ctx[29].align || /*_layout*/
+          ctx[30].align || /*_layout*/
           ctx[4].align
         ),
         transparentFloat: (
@@ -1185,11 +1185,11 @@ function create_else_block(ctx) {
         ),
         steps: (
           /*steps*/
-          ctx[8]
+          ctx[9]
         ),
         panelClass: (
           /*panelClass*/
-          ctx[30]
+          ctx[31]
         )
       }
     }
@@ -1207,10 +1207,10 @@ function create_else_block(ctx) {
       if (dirty[0] & /*panels, _layout*/
       18) panel_1_changes.props = {
         .../*panel*/
-        ctx2[29],
+        ctx2[30],
         align: (
           /*panel*/
-          ctx2[29].align || /*_layout*/
+          ctx2[30].align || /*_layout*/
           ctx2[4].align
         ),
         transparentFloat: (
@@ -1219,11 +1219,11 @@ function create_else_block(ctx) {
         ),
         steps: (
           /*steps*/
-          ctx2[8]
+          ctx2[9]
         ),
         panelClass: (
           /*panelClass*/
-          ctx2[30]
+          ctx2[31]
         )
       };
       panel_1.$set(panel_1_changes);
@@ -1248,14 +1248,14 @@ function create_if_block$1(ctx) {
   let current;
   const switch_instance_spread_levels = [
     /*panel*/
-    ctx[29],
+    ctx[30],
     { steps: (
       /*steps*/
-      ctx[8]
+      ctx[9]
     ) },
     { panelClass: (
       /*panelClass*/
-      ctx[30]
+      ctx[31]
     ) }
   ];
   var switch_value = (
@@ -1268,22 +1268,22 @@ function create_if_block$1(ctx) {
       switch_instance_props = assign(switch_instance_props, switch_instance_spread_levels[i]);
     }
     if (dirty !== void 0 && dirty[0] & /*panels, steps*/
-    258) {
+    514) {
       switch_instance_props = assign(switch_instance_props, get_spread_update(switch_instance_spread_levels, [
         dirty[0] & /*panels*/
         2 && get_spread_object(
           /*panel*/
-          ctx2[29]
+          ctx2[30]
         ),
         dirty[0] & /*steps*/
-        256 && { steps: (
+        512 && { steps: (
           /*steps*/
-          ctx2[8]
+          ctx2[9]
         ) },
         dirty[0] & /*panels*/
         2 && { panelClass: (
           /*panelClass*/
-          ctx2[30]
+          ctx2[31]
         ) }
       ]));
     }
@@ -1324,21 +1324,21 @@ function create_if_block$1(ctx) {
         }
       } else if (switch_value) {
         const switch_instance_changes = dirty[0] & /*panels, steps*/
-        258 ? get_spread_update(switch_instance_spread_levels, [
+        514 ? get_spread_update(switch_instance_spread_levels, [
           dirty[0] & /*panels*/
           2 && get_spread_object(
             /*panel*/
-            ctx2[29]
+            ctx2[30]
           ),
           dirty[0] & /*steps*/
-          256 && { steps: (
+          512 && { steps: (
             /*steps*/
-            ctx2[8]
+            ctx2[9]
           ) },
           dirty[0] & /*panels*/
           2 && { panelClass: (
             /*panelClass*/
-            ctx2[30]
+            ctx2[31]
           ) }
         ]) : {};
         switch_instance.$set(switch_instance_changes);
@@ -1438,7 +1438,7 @@ function create_fragment$1(ctx) {
   let dispose;
   let if_block0 = (
     /*isOdyssey*/
-    ctx[7] && create_if_block_2()
+    ctx[8] && create_if_block_2()
   );
   let if_block1 = (
     /*isInViewport*/
@@ -1469,7 +1469,7 @@ function create_fragment$1(ctx) {
       for (let i = 0; i < each_blocks.length; i += 1) {
         each_blocks[i].c();
       }
-      attr(div0, "class", "graphic svelte-m6cbxn");
+      attr(div0, "class", "graphic svelte-kiuvw8");
       toggle_class(
         div0,
         "graphic--resized",
@@ -1497,15 +1497,21 @@ function create_fragment$1(ctx) {
         ctx[4].resizeInteractive && /*_layout*/
         ctx[4].align === "centre"
       );
-      attr(div1, "class", "content svelte-m6cbxn");
+      attr(div1, "class", "content svelte-kiuvw8");
       toggle_class(div1, "content--resized", !/*_layout*/
       ctx[4].resizeInteractive);
-      attr(div2, "class", "scrollyteller svelte-m6cbxn");
+      attr(div2, "class", "scrollyteller svelte-kiuvw8");
       toggle_class(
         div2,
         "scrollyteller--resized",
         /*_layout*/
         ctx[4].resizeInteractive
+      );
+      toggle_class(
+        div2,
+        "scrollyteller--debug",
+        /*isDebug*/
+        ctx[7]
       );
     },
     m(target, anchor) {
@@ -1522,7 +1528,7 @@ function create_fragment$1(ctx) {
           each_blocks[i].m(div1, null);
         }
       }
-      ctx[16](div2);
+      ctx[17](div2);
       current = true;
       if (!mounted) {
         dispose = listen(window_1, "scroll", function() {
@@ -1530,12 +1536,12 @@ function create_fragment$1(ctx) {
             /*onProgress*/
             ctx[2] ? (
               /*scrollHandler*/
-              ctx[9]
+              ctx[10]
             ) : null
           )) /*onProgress*/
           (ctx[2] ? (
             /*scrollHandler*/
-            ctx[9]
+            ctx[10]
           ) : null).apply(this, arguments);
         });
         mounted = true;
@@ -1607,7 +1613,7 @@ function create_fragment$1(ctx) {
         );
       }
       if (dirty[0] & /*customPanel, panels, steps, _layout*/
-      275) {
+      531) {
         each_value = ensure_array_like(
           /*panels*/
           ctx[1]
@@ -1645,6 +1651,15 @@ function create_fragment$1(ctx) {
           ctx[4].resizeInteractive
         );
       }
+      if (!current || dirty[0] & /*isDebug*/
+      128) {
+        toggle_class(
+          div2,
+          "scrollyteller--debug",
+          /*isDebug*/
+          ctx[7]
+        );
+      }
     },
     i(local) {
       if (current) return;
@@ -1671,7 +1686,7 @@ function create_fragment$1(ctx) {
       detach(if_block0_anchor);
       if (if_block1) if_block1.d();
       destroy_each(each_blocks, detaching);
-      ctx[16](null);
+      ctx[17](null);
       mounted = false;
       dispose();
     }
@@ -1680,6 +1695,7 @@ function create_fragment$1(ctx) {
 function instance$1($$self, $$props, $$invalidate) {
   let _layout;
   let maxScrollSpeed;
+  let isDebug;
   let { $$slots: slots = {}, $$scope } = $$props;
   const dispatch = createEventDispatcher();
   var ScrollPositions;
@@ -1716,7 +1732,7 @@ function instance$1($$self, $$props, $$invalidate) {
   const panelIntersectionObserverCallback = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        $$invalidate(13, marker = entry.target.scrollyData);
+        $$invalidate(14, marker = entry.target.scrollyData);
       }
     });
   };
@@ -1741,8 +1757,8 @@ function instance$1($$self, $$props, $$invalidate) {
   };
   onMount(() => {
     scrollingPos = getScrollingPos();
-    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(13, marker = panels[0].data);
-    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(13, marker = panels[panels.length - 1].data);
+    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(14, marker = panels[0].data);
+    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(14, marker = panels[panels.length - 1].data);
     steps.forEach((step, i) => {
       panelObserver.observe(step);
     });
@@ -1772,15 +1788,15 @@ function instance$1($$self, $$props, $$invalidate) {
     if ("customPanel" in $$props2) $$invalidate(0, customPanel = $$props2.customPanel);
     if ("panels" in $$props2) $$invalidate(1, panels = $$props2.panels);
     if ("onProgress" in $$props2) $$invalidate(2, onProgress = $$props2.onProgress);
-    if ("onMarker" in $$props2) $$invalidate(10, onMarker = $$props2.onMarker);
-    if ("observerOptions" in $$props2) $$invalidate(11, observerOptions = $$props2.observerOptions);
+    if ("onMarker" in $$props2) $$invalidate(11, onMarker = $$props2.onMarker);
+    if ("observerOptions" in $$props2) $$invalidate(12, observerOptions = $$props2.observerOptions);
     if ("discardSlot" in $$props2) $$invalidate(3, discardSlot = $$props2.discardSlot);
-    if ("layout" in $$props2) $$invalidate(12, layout = $$props2.layout);
-    if ("$$scope" in $$props2) $$invalidate(14, $$scope = $$props2.$$scope);
+    if ("layout" in $$props2) $$invalidate(13, layout = $$props2.layout);
+    if ("$$scope" in $$props2) $$invalidate(15, $$scope = $$props2.$$scope);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty[0] & /*layout*/
-    4096) {
+    8192) {
       $$invalidate(4, _layout = {
         align: layout.align || "centre",
         resizeInteractive: layout.resizeInteractive ?? true,
@@ -1788,7 +1804,7 @@ function instance$1($$self, $$props, $$invalidate) {
       });
     }
     if ($$self.$$.dirty[0] & /*layout, _layout*/
-    4112) {
+    8208) {
       console.log("yes but", { layout, _layout });
     }
     if ($$self.$$.dirty[0] & /*discardSlot*/
@@ -1796,7 +1812,7 @@ function instance$1($$self, $$props, $$invalidate) {
       maxScrollSpeed = discardSlot ? 0.5 : Infinity;
     }
     if ($$self.$$.dirty[0] & /*onProgress, onMarker*/
-    1028) {
+    2052) {
       {
         if (typeof onProgress === "function") {
           throw new Error("the onProgress callback is deprecated. Please use on:progress");
@@ -1807,10 +1823,12 @@ function instance$1($$self, $$props, $$invalidate) {
       }
     }
     if ($$self.$$.dirty[0] & /*marker*/
-    8192) {
+    16384) {
       marker && deferUntilScrollSettles(() => dispatch("marker", marker));
     }
   };
+  $$invalidate(7, isDebug = typeof location !== "undefined" && location.hash === "#debug=true");
+  console.log({ hash: location.hash });
   return [
     customPanel,
     panels,
@@ -1819,6 +1837,7 @@ function instance$1($$self, $$props, $$invalidate) {
     _layout,
     scrollytellerRef,
     isInViewport,
+    isDebug,
     isOdyssey,
     steps,
     scrollHandler,
@@ -1844,10 +1863,10 @@ class Scrollyteller extends SvelteComponent {
         customPanel: 0,
         panels: 1,
         onProgress: 2,
-        onMarker: 10,
-        observerOptions: 11,
+        onMarker: 11,
+        observerOptions: 12,
         discardSlot: 3,
-        layout: 12
+        layout: 13
       },
       add_css$1,
       [-1, -1]
@@ -1875,14 +1894,14 @@ class Scrollyteller extends SvelteComponent {
     flush();
   }
   get onMarker() {
-    return this.$$.ctx[10];
+    return this.$$.ctx[11];
   }
   set onMarker(onMarker) {
     this.$$set({ onMarker });
     flush();
   }
   get observerOptions() {
-    return this.$$.ctx[11];
+    return this.$$.ctx[12];
   }
   set observerOptions(observerOptions) {
     this.$$set({ observerOptions });
@@ -1896,7 +1915,7 @@ class Scrollyteller extends SvelteComponent {
     flush();
   }
   get layout() {
-    return this.$$.ctx[12];
+    return this.$$.ctx[13];
   }
   set layout(layout) {
     this.$$set({ layout });
@@ -1905,7 +1924,7 @@ class Scrollyteller extends SvelteComponent {
 }
 create_custom_element(Scrollyteller, { "customPanel": {}, "panels": {}, "onProgress": { "type": "Boolean" }, "onMarker": {}, "observerOptions": {}, "discardSlot": { "type": "Boolean" }, "layout": {} }, ["default"], [], true);
 function add_css(target) {
-  append_styles(target, "svelte-z693mv", ".wc-root.svelte-z693mv{width:100%;position:relative}");
+  append_styles(target, "svelte-1e106ed", ".wc-root.svelte-1e106ed{width:100%;height:100%;position:relative}.scrollyteller--debug .wc-root.svelte-1e106ed{outline:5px solid green}");
 }
 function create_if_block(ctx) {
   let scrollyteller;
@@ -1992,7 +2011,7 @@ function create_default_slot(ctx) {
   return {
     c() {
       div = element("div");
-      attr(div, "class", "wc-root svelte-z693mv");
+      attr(div, "class", "wc-root svelte-1e106ed");
     },
     m(target, anchor) {
       insert(target, div, anchor);

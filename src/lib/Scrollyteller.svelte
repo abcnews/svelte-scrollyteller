@@ -170,6 +170,9 @@
 	}
 
 	$: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
+
+	$: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
+	$: console.log({ hash: location.hash });
 </script>
 
 <svelte:window on:scroll={onProgress ? scrollHandler : null} />
@@ -189,6 +192,7 @@
 <div
 	class="scrollyteller"
 	class:scrollyteller--resized={_layout.resizeInteractive}
+	class:scrollyteller--debug={isDebug}
 	bind:this={scrollytellerRef}
 >
 	<div
@@ -233,6 +237,28 @@
 			max-width: 2040px;
 			margin: 0 auto;
 		}
+		&--debug:after {
+			content: 'Mobile';
+			position: fixed;
+			right: 0.5rem;
+			top: 0.5rem;
+			padding: 0.5rem 1rem;
+			background: white;
+			border: 5px solid limegreen;
+			border-radius: 1rem;
+			@media (min-width: $breakpointTablet) {
+				content: 'Tablet';
+			}
+			@media (min-width: $breakpointLargeTablet) {
+				content: 'LargeTablet';
+			}
+			@media (min-width: $breakpointDesktop) {
+				content: 'Desktop';
+			}
+			@media (min-width: $breakpointLargeDesktop) {
+				content: 'LargeDesktop';
+			}
+		}
 	}
 	.graphic {
 		transform: translate3d(0, 0, 0);
@@ -245,6 +271,9 @@
 	}
 
 	.graphic--resized {
+		.scrollyteller--debug & {
+			outline: 5px solid limegreen;
+		}
 		height: 60dvh;
 		top: 10dvh;
 		display: flex;

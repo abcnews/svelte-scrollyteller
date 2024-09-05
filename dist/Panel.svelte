@@ -45,6 +45,9 @@ onMount(() => {
   --panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));
   --panel-color: var(--color-panel-text, #ebebeb);
 }
+:global(.scrollyteller--debug) .st-panel {
+  outline: 5px solid limegreen;
+}
 .st-panel.first {
   margin-top: 100vh;
 }

@@ -34,9 +34,11 @@
 	</Scrollyteller>
 {/if}
 
-<style>
-	.wc-root {
-		width: 100%;
-		position: relative;
-	}
-</style>
+<style>.wc-root {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+:global(.scrollyteller--debug) .wc-root {
+  outline: 5px solid green;
+}</style>
