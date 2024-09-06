@@ -83,7 +83,7 @@ When a new box comes into view the `on:marker` event will fire with the `data` o
 
 <style lang="scss">
 // Optionally create a ratio box for your graphic. It will self-centre itself
-//  into the appropriate space when resizeInteractive=true
+// into the appropriate space when resizeInteractive=true
 .myGraphic{
   aspect-ratio: 16/9;
   height: 100%;
@@ -109,7 +109,9 @@ For a more complete example using Typescript see the [examples](examples).
 | customPanel     | Svelte Component         | Component to replace the default panel component                                                                                       | Panel.svelte       |
 | observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | `{threshold: 0.5}` |
 
-The layout prop controls how the scorllyteller is laid out. You can choose to opt into our Scrollyteller defaults, or bail out and use your own styles.
+## Using layouts/styling your own
+
+The `layout={}` prop controls how the scrollyteller is laid out, and has the following options:
 
 | Property          | Type    | Description                                                                                                                                  |
 | ----------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -117,7 +119,13 @@ The layout prop controls how the scorllyteller is laid out. You can choose to op
 | resizeInteractive | boolean | Defaults to `true` if not set. This handles the scrollyteller graphic position according to the current breakpoint.                          |
 | transparentFloat  | boolean | Defaults to `true` if `align` is left or right. Removes the block background for left/right aligned pieces, for a better reading experience. |
 
-## Changing styles
+The resizeInteractive prop lets you opt into predefined graphic sizes and placements. When enabled, the graphic will appear toward the top on mobile, and in the centre when left/right aligned. On mobile this allows the most space for blocks to scroll without hitting the graphic, and looks aesthetically pleasing on desktop/larger portrait tablets like the iPad Pro.
+
+The graphic slot has `position:relative` set, uses flexbox to put its contents into the correct spot, and allows you to use container queries to size your interactive. This works best when your interactive fits itself to its container and reserves only the space it needs. See the examples above for some example code using `aspect-ratio` to fit an interactive to the graphic slot, although you could use any number of methods.
+
+You can opt out of the resizeInteractive behaviour if you want to use your own styles, at which point you can take over the entire screen.
+
+## Changing block styles
 
 The scrollyteller inherits the [light/dark colour scheme from Odyssey](https://master-news-web.news-web-developer.presentation-layer.abc-prod.net.au/news/2024-08-16/odyssey-producers-documentation--everything-else/8676886).
 
