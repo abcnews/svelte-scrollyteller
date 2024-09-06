@@ -134,6 +134,7 @@
 	}
 	$: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
 	$: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
+	$: console.log({ hash: location.hash });
 </script>
 
 <svelte:window on:scroll={onProgress ? scrollHandler : null} />

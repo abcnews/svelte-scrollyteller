@@ -59,7 +59,7 @@
 		font-size: 18px;
 
 		&.first {
-			margin-top: 100vh;
+			margin-top: 50vh;
 		}
 
 		&.last {
@@ -86,7 +86,6 @@
 
 			@media (min-width: $breakpointLargeDesktop) {
 				max-width: 900px;
-				font-size: 24px;
 			}
 		}
 
@@ -115,7 +114,7 @@
 				--marginLeft: 4rem;
 				--marginRight: 2rem;
 				--maxWidth: 40%;
-				font-size: 18px;
+				font-size: 20px;
 			}
 		}
 
@@ -148,12 +147,7 @@
 		}
 
 		:global(> *) {
-			font-family:
-				ABCSerif,
-				Book Antiqua,
-				Palatino Linotype,
-				Palatino,
-				serif;
+			font-family: ABCSans, sans-serif;
 			font-size: inherit;
 			line-height: 1.666666667;
 			color: var(--panel-color);
@@ -176,16 +170,4 @@
 			height: auto;
 		}
 	}
-
-	// @media only screen and (min-width: calc($breakpoint + 1px)) {
-	// 	:global(.right) {
-	// 		margin-right: calc(30% - 16rem) !important;
-	// 		width: 32rem !important;
-	// 	}
-
-	// 	:global(.left) {
-	// 		margin-left: calc(30% - 16rem) !important;
-	// 		width: 32rem !important;
-	// 	}
-	// }
 </style>

@@ -49,7 +49,7 @@ onMount(() => {
   outline: 5px solid limegreen;
 }
 .st-panel.first {
-  margin-top: 100vh;
+  margin-top: 50vh;
 }
 .st-panel.last {
   margin-bottom: 100vh;
@@ -70,7 +70,6 @@ onMount(() => {
 @media (min-width: 1440px) {
   .st-panel--centre {
     max-width: 900px;
-    font-size: 24px;
   }
 }
 @media (min-width: 992px) {
@@ -100,7 +99,7 @@ onMount(() => {
     --marginLeft: 4rem;
     --marginRight: 2rem;
     --maxWidth: 40%;
-    font-size: 18px;
+    font-size: 20px;
   }
 }
 @media (min-width: 992px) {
@@ -127,7 +126,7 @@ onMount(() => {
   clear: both;
 }
 .st-panel :global(> *) {
-  font-family: ABCSerif, Book Antiqua, Palatino Linotype, Palatino, serif;
+  font-family: ABCSans, sans-serif;
   font-size: inherit;
   line-height: 1.666666667;
   color: var(--panel-color);

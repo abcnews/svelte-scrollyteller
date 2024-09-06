@@ -51,7 +51,7 @@ When a new box comes into view the `on:marker` event will fire with the `data` o
 ```html
 <script lang="ts">
 	import Scrollyteller from '@abcnews/svelte-scrollyteller';
-	import UpdatableGraphic from 'UpdatableGraphic.svelte';
+	import MyGraphic from 'MyGraphic.svelte';
 
 	export let panels;
 
@@ -72,9 +72,28 @@ When a new box comes into view the `on:marker` event will fire with the `data` o
 	on:marker="{markerChangeHandler}"
 	onProgress="{true}"
 	on:progress="{progressChangeHandler}"
+  layout={{
+    align: 'left',
+    // resizeInteractive: true
+    // transparentFloat: true
+  }}
 >
-	<UpdatableGraphic marker="{marker}" />
+	<MyGraphic marker="{marker}" />
 </Scrollyteller>
+
+<style lang="scss">
+// Optionally create a ratio box for your graphic. It will self-centre itself
+//  into the appropriate space when resizeInteractive=true
+.myGraphic{
+  aspect-ratio: 16/9;
+  height: 100%;
+  width: unset;
+  @container (max-aspect-ratio:16/9) {
+    width: 100%;
+    height: auto;
+  }
+}
+ </style>
 ```
 
 For a more complete example using Typescript see the [examples](examples).
@@ -90,19 +109,27 @@ For a more complete example using Typescript see the [examples](examples).
 | customPanel     | Svelte Component         | Component to replace the default panel component                                                                                       | Panel.svelte       |
 | observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | `{threshold: 0.5}` |
 
+The layout prop controls how the scorllyteller is laid out. You can choose to opt into our Scrollyteller defaults, or bail out and use your own styles.
+
+| Property          | Type    | Description                                                                                                                                  |
+| ----------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| align             | string  | Alignment for blocks. One of left/right/centre/none. "none" applies no breakpoint styling so you can do your own custom styles.              |
+| resizeInteractive | boolean | Defaults to `true` if not set. This handles the scrollyteller graphic position according to the current breakpoint.                          |
+| transparentFloat  | boolean | Defaults to `true` if `align` is left or right. Removes the block background for left/right aligned pieces, for a better reading experience. |
+
 ## Changing styles
 
-The scrollyteller inherits the [light/dark colour scheme from Odyssey](https://master-news-web.news-web-developer.presentation-layer.abc-prod.net.au/news/2024-08-16/odyssey-producers-documentation--everything-else/8676886), and applies the background colour set with the `--bg` variable.
+The scrollyteller inherits the [light/dark colour scheme from Odyssey](https://master-news-web.news-web-developer.presentation-layer.abc-prod.net.au/news/2024-08-16/odyssey-producers-documentation--everything-else/8676886).
 
 The Svelte Scrollyteller also uses the following CSS variables that you can set anywhere in the DOM above the scrollyteller:
 
-| Attribute               | Variable to use            | Fallback value                              |
-| ----------------------- | -------------------------- | ------------------------------------------- |
-| `background-color`      | `--color-panel-background` | `var(--od-colour-theme-surface-over-image)` |
-| Text `colour`           | `--color-panel-text`       | `var(--od-colour-text-primary)`             |
-| Background `opacity`    | `--color-panel-opacity`    | `.7`                                        |
-| Background CSS `filter` | `--color-panel-filter`     | `blur(0.3125rem)`                           |
-| Background `border`     | `--color-panel-border`     | `none`                                      |
+| Attribute               | Variable to use            | Fallback value          |
+| ----------------------- | -------------------------- | ----------------------- |
+| `background-color`      | `--color-panel-background` | dark/light mode variant |
+| Text `colour`           | `--color-panel-text`       | dark/light mode variant |
+| Background `opacity`    | `--color-panel-opacity`    | `1`                     |
+| Background CSS `filter` | `--color-panel-filter`     | `blur(2.5px)`           |
+| Background `border`     | `--color-panel-border`     | `none`                  |
 
 You can also specify a panelClass class and style the panels manually (see Usage above).
 
