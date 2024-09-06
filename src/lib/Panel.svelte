@@ -59,7 +59,7 @@
 		font-size: 18px;
 
 		&.first {
-			margin-top: 50vh;
+			margin-top: 100dvh;
 		}
 
 		&.last {
@@ -92,6 +92,9 @@
 		&--left,
 		&--right {
 			@media (min-width: $breakpointLargeTablet) {
+				&.first {
+					margin-top: 50dvh;
+				}
 				--marginLeft: 2rem;
 				--marginRight: 1rem;
 				--maxWidth: 45%;

@@ -49,7 +49,7 @@ onMount(() => {
   outline: 5px solid limegreen;
 }
 .st-panel.first {
-  margin-top: 50vh;
+  margin-top: 100dvh;
 }
 .st-panel.last {
   margin-bottom: 100vh;
@@ -80,6 +80,9 @@ onMount(() => {
     max-width: calc(var(--maxWidth) - (var(--marginLeft) + var(--marginRight)));
     margin: 30vh 0 30vh calc(var(--marginLeft) - 1rem);
     font-size: 18px;
+  }
+  .st-panel--left.first, .st-panel--right.first {
+    margin-top: 50dvh;
   }
   .st-panel--left.st-panel--transparent-blocks, .st-panel--right.st-panel--transparent-blocks {
     --panel-filter: none;
