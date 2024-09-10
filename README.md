@@ -25,7 +25,7 @@ Add aunty config to `package.json`:
 
 ## Usage
 
-The scrollyteller takes a series of **panels** of content nodes and turns them into a series of elements which scroll over the `<Scrollyteller>` component's children.
+The scrollyteller takes an array of **panels** of content nodes and turns them into a series of elements which scroll over the `<Scrollyteller>` component's children.
 
 The `panels` prop is in the format of:
 
@@ -186,6 +186,8 @@ The scrollyteller is available as a Web Component for use in other frameworks. S
 The Svelte components are [packaged using SvelteKit svelte-package](https://kit.svelte.dev/docs/packaging).
 
 The Web Component is built separately using Vite with the `vite-webcomponents.config.js` config.
+
+Add `#debug=true` to your story to enable debug mode and clearly outline each section.
 
 ### Get started
 

@@ -2,7 +2,8 @@
 	"name": "@abcnews/svelte-scrollyteller",
 	"version": "2.1.0",
 	"scripts": {
-		"dev": "concurrently \"vite dev\" \"svelte-package --watch\" 'vite build --watch --config vite.webcomponents.config.js'",
+		"start": "concurrently \"vite dev\" \"svelte-package --watch\" 'vite build --watch --config vite.webcomponents.config.js'",
+		"dev": "npm start",
 		"package": "svelte-package && npm run package-webcomponent",
 		"package-webcomponent": "npx vite build --config vite.webcomponents.config.js",
 		"check": "svelte-check --tsconfig ./tsconfig.json",

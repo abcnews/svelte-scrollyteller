@@ -65,8 +65,6 @@
 		transparentFloat: layout.transparentFloat ?? ['left', 'right'].includes(layout.align)
 	};
 
-	$: console.log('yes but', { layout, _layout });
-
 	/**
 	 * When the user is scrolling at a speed greater than this, don't mount
 	 * new components or update markers.
@@ -178,8 +176,8 @@
 
 	$: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
 
+	// Debug mode should highlight blocks, graphic & show which breakpoint we're at
 	$: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
-	$: console.log({ hash: location.hash });
 </script>
 
 <svelte:window on:scroll={onProgress ? scrollHandler : null} />
@@ -279,9 +277,6 @@
 	}
 
 	.graphic--resized {
-		.scrollyteller--debug & {
-			outline: 5px solid limegreen;
-		}
 		container-type: size;
 		height: 60dvh;
 		top: 10dvh;
@@ -352,15 +347,18 @@
 				height: 58dvh;
 			}
 		}
+		.scrollyteller--debug & {
+			outline: 5px solid limegreen;
+		}
 	}
 	.content {
 		margin: -100dvh auto 0;
 		position: relative;
 		z-index: 2;
+		// This style doesn't apply to child blocks, just the container
+		pointer-events: none;
 		&--resized {
 			max-width: 2040px;
 		}
-		// This doesn't apply to child blocks
-		pointer-events: none;
 	}
 </style>

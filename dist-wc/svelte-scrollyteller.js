@@ -749,7 +749,7 @@ const children = (el, children2) => {
   };
 };
 function add_css$1(target) {
-  append_styles(target, "svelte-19drxju", '.st-panel.svelte-19drxju{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(245, 245, 245, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, none);-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);box-sizing:border-box;margin:80vh auto;width:calc(100% - 2rem);position:relative;z-index:1;pointer-events:none;font-size:18px;padding:1rem;max-width:660px}[data-scheme="dark"] .st-panel.svelte-19drxju,.is-dark-mode .st-panel.svelte-19drxju{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb)}.scrollyteller--debug .st-panel.svelte-19drxju{outline:5px solid limegreen}.st-panel.first.svelte-19drxju{margin-top:100dvh}.st-panel.last.svelte-19drxju{margin-bottom:100vh}@media(min-width: 744px){.st-panel--centre.svelte-19drxju{padding:2rem;max-width:720px}}@media(min-width: 992px){.st-panel--centre.svelte-19drxju{padding:2rem;max-width:780px;font-size:20px}}@media(min-width: 1440px){.st-panel--centre.svelte-19drxju{max-width:900px}}@media(min-width: 992px){.st-panel--left.svelte-19drxju,.st-panel--right.svelte-19drxju{--marginLeft:2rem;--marginRight:1rem;--maxWidth:45%;max-width:calc(var(--maxWidth) - (var(--marginLeft) + var(--marginRight)));margin:30vh 0 30vh calc(var(--marginLeft) - 1rem);font-size:18px}.st-panel--left.first.svelte-19drxju,.st-panel--right.first.svelte-19drxju{margin-top:50dvh}.st-panel--left.st-panel--transparent-blocks.svelte-19drxju,.st-panel--right.st-panel--transparent-blocks.svelte-19drxju{--panel-filter:none;--panel-background:none}}@media(min-width: 1200px){.st-panel--left.svelte-19drxju,.st-panel--right.svelte-19drxju{--marginLeft:3rem;--marginRight:1.5rem;--maxWidth:40%;font-size:18px}}@media(min-width: 1440px){.st-panel--left.svelte-19drxju,.st-panel--right.svelte-19drxju{--marginLeft:4rem;--marginRight:2rem;--maxWidth:40%;font-size:20px}}@media(min-width: 992px){.st-panel--right.svelte-19drxju{margin:15vh calc(var(--marginLeft) - 1rem) 15vh auto}}.st-panel.svelte-19drxju::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-19drxju::after{content:"";display:table;clear:both}.st-panel.svelte-19drxju > *{font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-19drxju > *:last-child{margin-bottom:0}.st-panel.svelte-19drxju>img{max-width:66%;display:block;margin:auto;height:auto}');
+  append_styles(target, "svelte-gjjyp8", '.st-panel.svelte-gjjyp8{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(245, 245, 245, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, none);-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);box-sizing:border-box;margin:80vh auto;width:calc(100% - 2rem);position:relative;z-index:1;pointer-events:none;font-size:18px;padding:1rem;max-width:660px}[data-scheme="dark"] .st-panel.svelte-gjjyp8,.is-dark-mode .st-panel.svelte-gjjyp8{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb)}.scrollyteller--debug .st-panel.svelte-gjjyp8{outline:5px solid limegreen}.st-panel.first.svelte-gjjyp8{margin-top:100dvh}.st-panel.last.svelte-gjjyp8{margin-bottom:100vh}@media(min-width: 744px){.st-panel--centre.svelte-gjjyp8{padding:2rem;max-width:720px}}@media(min-width: 992px){.st-panel--centre.svelte-gjjyp8{padding:2rem;max-width:780px;font-size:20px}}@media(min-width: 1440px){.st-panel--centre.svelte-gjjyp8{max-width:900px}}@media(min-width: 992px){.st-panel--left.svelte-gjjyp8,.st-panel--right.svelte-gjjyp8{--marginLeft:2rem;--marginRight:1rem;--maxWidth:45%;max-width:calc(var(--maxWidth) - (var(--marginLeft) + var(--marginRight)));margin:30vh 0 30vh calc(var(--marginLeft) - 1rem);font-size:18px}.st-panel--left.st-panel--transparent-blocks.svelte-gjjyp8,.st-panel--right.st-panel--transparent-blocks.svelte-gjjyp8{--panel-filter:none;--panel-background:none}.st-panel--left.first.svelte-gjjyp8,.st-panel--right.first.svelte-gjjyp8{margin-top:50dvh}}@media(min-width: 1200px){.st-panel--left.svelte-gjjyp8,.st-panel--right.svelte-gjjyp8{--marginLeft:3rem;--marginRight:1.5rem;--maxWidth:40%;font-size:18px}}@media(min-width: 1440px){.st-panel--left.svelte-gjjyp8,.st-panel--right.svelte-gjjyp8{--marginLeft:4rem;--marginRight:2rem;--maxWidth:40%;font-size:20px}}@media(min-width: 992px){.st-panel--right.svelte-gjjyp8{margin:15vh calc(var(--marginLeft) - 1rem) 15vh auto}}.st-panel.svelte-gjjyp8::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-gjjyp8::after{content:"";display:table;clear:both}.st-panel.svelte-gjjyp8 > *{font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-gjjyp8 > *:last-child{margin-bottom:0}.st-panel.svelte-gjjyp8>img{max-width:66%;display:block;margin:auto;height:auto}');
 }
 function create_fragment$2(ctx) {
   let div;
@@ -765,7 +765,7 @@ function create_fragment$2(ctx) {
         ctx[1]
       );
       attr(div, "class", null_to_empty(`st-panel ${/*panelClass*/
-      ctx[3] || ""}`) + " svelte-19drxju");
+      ctx[3] || ""}`) + " svelte-gjjyp8");
       toggle_class(
         div,
         "st-panel--left",
@@ -1071,7 +1071,7 @@ const getScrollSpeed = (callback) => {
 };
 const { window: window_1 } = globals;
 function add_css(target) {
-  append_styles(target, "svelte-dyubcg", '.scrollyteller.svelte-dyubcg.svelte-dyubcg{position:relative}.scrollyteller--resized.svelte-dyubcg.svelte-dyubcg{max-width:2040px;margin:0 auto}.scrollyteller--debug.svelte-dyubcg.svelte-dyubcg:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;border:5px solid limegreen;border-radius:1rem}@media(min-width: 744px){.scrollyteller--debug.svelte-dyubcg.svelte-dyubcg:after{content:"Tablet"}}@media(min-width: 992px){.scrollyteller--debug.svelte-dyubcg.svelte-dyubcg:after{content:"LargeTablet"}}@media(min-width: 1200px){.scrollyteller--debug.svelte-dyubcg.svelte-dyubcg:after{content:"Desktop"}}@media(min-width: 1440px){.scrollyteller--debug.svelte-dyubcg.svelte-dyubcg:after{content:"LargeDesktop"}}.graphic.svelte-dyubcg.svelte-dyubcg{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-dyubcg.svelte-dyubcg{container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}.scrollyteller--debug.svelte-dyubcg .graphic--resized.svelte-dyubcg{outline:5px solid limegreen}@media(min-width: 744px){.graphic--resized.svelte-dyubcg.svelte-dyubcg{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-dyubcg.svelte-dyubcg,.graphic--resized.graphic--right.svelte-dyubcg.svelte-dyubcg{align-items:center;--marginCentre:1rem;--marginOuter:2rem;height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 1200px){.graphic--resized.graphic--left.svelte-dyubcg.svelte-dyubcg,.graphic--resized.graphic--right.svelte-dyubcg.svelte-dyubcg{--marginCentre:1.5rem;--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 1440px){.graphic--resized.graphic--left.svelte-dyubcg.svelte-dyubcg,.graphic--resized.graphic--right.svelte-dyubcg.svelte-dyubcg{--marginCentre:2rem;--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-dyubcg.svelte-dyubcg{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 992px){.graphic--resized.graphic--right.svelte-dyubcg.svelte-dyubcg{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 992px){.graphic--resized.graphic--centre.svelte-dyubcg.svelte-dyubcg{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 1200px){.graphic--resized.graphic--centre.svelte-dyubcg.svelte-dyubcg{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 1440px){.graphic--resized.graphic--centre.svelte-dyubcg.svelte-dyubcg{--margin:6rem;top:12dvh;height:58dvh}}.content.svelte-dyubcg.svelte-dyubcg{margin:-100dvh auto 0;position:relative;z-index:2;pointer-events:none}.content--resized.svelte-dyubcg.svelte-dyubcg{max-width:2040px}');
+  append_styles(target, "svelte-y0ypss", '.scrollyteller.svelte-y0ypss.svelte-y0ypss{position:relative}.scrollyteller--resized.svelte-y0ypss.svelte-y0ypss{max-width:2040px;margin:0 auto}.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;border:5px solid limegreen;border-radius:1rem}@media(min-width: 744px){.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"Tablet"}}@media(min-width: 992px){.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"LargeTablet"}}@media(min-width: 1200px){.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"Desktop"}}@media(min-width: 1440px){.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"LargeDesktop"}}.graphic.svelte-y0ypss.svelte-y0ypss{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-y0ypss.svelte-y0ypss{container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 744px){.graphic--resized.svelte-y0ypss.svelte-y0ypss{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-y0ypss.svelte-y0ypss,.graphic--resized.graphic--right.svelte-y0ypss.svelte-y0ypss{align-items:center;--marginCentre:1rem;--marginOuter:2rem;height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 1200px){.graphic--resized.graphic--left.svelte-y0ypss.svelte-y0ypss,.graphic--resized.graphic--right.svelte-y0ypss.svelte-y0ypss{--marginCentre:1.5rem;--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 1440px){.graphic--resized.graphic--left.svelte-y0ypss.svelte-y0ypss,.graphic--resized.graphic--right.svelte-y0ypss.svelte-y0ypss{--marginCentre:2rem;--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-y0ypss.svelte-y0ypss{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 992px){.graphic--resized.graphic--right.svelte-y0ypss.svelte-y0ypss{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 992px){.graphic--resized.graphic--centre.svelte-y0ypss.svelte-y0ypss{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 1200px){.graphic--resized.graphic--centre.svelte-y0ypss.svelte-y0ypss{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 1440px){.graphic--resized.graphic--centre.svelte-y0ypss.svelte-y0ypss{--margin:6rem;top:12dvh;height:58dvh}}.scrollyteller--debug.svelte-y0ypss .graphic--resized.svelte-y0ypss{outline:5px solid limegreen}.content.svelte-y0ypss.svelte-y0ypss{margin:-100dvh auto 0;position:relative;z-index:2;pointer-events:none}.content--resized.svelte-y0ypss.svelte-y0ypss{max-width:2040px}');
 }
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
@@ -1177,11 +1177,11 @@ function create_else_block(ctx) {
         align: (
           /*panel*/
           ctx[32].align || /*_layout*/
-          ctx[5].align
+          ctx[8].align
         ),
         transparentFloat: (
           /*_layout*/
-          ctx[5].transparentFloat
+          ctx[8].transparentFloat
         ),
         steps: (
           /*steps*/
@@ -1205,17 +1205,17 @@ function create_else_block(ctx) {
     p(ctx2, dirty) {
       const panel_1_changes = {};
       if (dirty[0] & /*panels, _layout*/
-      34) panel_1_changes.props = {
+      258) panel_1_changes.props = {
         .../*panel*/
         ctx2[32],
         align: (
           /*panel*/
           ctx2[32].align || /*_layout*/
-          ctx2[5].align
+          ctx2[8].align
         ),
         transparentFloat: (
           /*_layout*/
-          ctx2[5].transparentFloat
+          ctx2[8].transparentFloat
         ),
         steps: (
           /*steps*/
@@ -1442,7 +1442,7 @@ function create_fragment$1(ctx) {
   );
   let if_block1 = (
     /*isInViewport*/
-    (ctx[7] || /*discardSlot*/
+    (ctx[6] || /*discardSlot*/
     ctx[3] === false) && create_if_block_1(ctx)
   );
   let each_value = ensure_array_like(
@@ -1469,49 +1469,49 @@ function create_fragment$1(ctx) {
       for (let i = 0; i < each_blocks.length; i += 1) {
         each_blocks[i].c();
       }
-      attr(div0, "class", "graphic svelte-dyubcg");
+      attr(div0, "class", "graphic svelte-y0ypss");
       toggle_class(
         div0,
         "graphic--resized",
         /*_layout*/
-        ctx[5].resizeInteractive
+        ctx[8].resizeInteractive
       );
       toggle_class(
         div0,
         "graphic--right",
         /*_layout*/
-        ctx[5].resizeInteractive && /*_layout*/
-        ctx[5].align === "left"
+        ctx[8].resizeInteractive && /*_layout*/
+        ctx[8].align === "left"
       );
       toggle_class(
         div0,
         "graphic--left",
         /*_layout*/
-        ctx[5].resizeInteractive && /*_layout*/
-        ctx[5].align === "right"
+        ctx[8].resizeInteractive && /*_layout*/
+        ctx[8].align === "right"
       );
       toggle_class(
         div0,
         "graphic--centre",
         /*_layout*/
-        ctx[5].resizeInteractive && /*_layout*/
-        ctx[5].align === "centre"
+        ctx[8].resizeInteractive && /*_layout*/
+        ctx[8].align === "centre"
       );
-      attr(div1, "class", "content svelte-dyubcg");
+      attr(div1, "class", "content svelte-y0ypss");
       toggle_class(div1, "content--resized", !/*_layout*/
-      ctx[5].resizeInteractive);
-      attr(div2, "class", "scrollyteller svelte-dyubcg");
+      ctx[8].resizeInteractive);
+      attr(div2, "class", "scrollyteller svelte-y0ypss");
       toggle_class(
         div2,
         "scrollyteller--resized",
         /*_layout*/
-        ctx[5].resizeInteractive
+        ctx[8].resizeInteractive
       );
       toggle_class(
         div2,
         "scrollyteller--debug",
         /*isDebug*/
-        ctx[8]
+        ctx[7]
       );
     },
     m(target, anchor) {
@@ -1552,13 +1552,13 @@ function create_fragment$1(ctx) {
       ctx = new_ctx;
       if (
         /*isInViewport*/
-        ctx[7] || /*discardSlot*/
+        ctx[6] || /*discardSlot*/
         ctx[3] === false
       ) {
         if (if_block1) {
           if_block1.p(ctx, dirty);
           if (dirty[0] & /*isInViewport, discardSlot*/
-          136) {
+          72) {
             transition_in(if_block1, 1);
           }
         } else {
@@ -1575,46 +1575,46 @@ function create_fragment$1(ctx) {
         check_outros();
       }
       if (!current || dirty[0] & /*_layout*/
-      32) {
+      256) {
         toggle_class(
           div0,
           "graphic--resized",
           /*_layout*/
-          ctx[5].resizeInteractive
+          ctx[8].resizeInteractive
         );
       }
       if (!current || dirty[0] & /*_layout*/
-      32) {
+      256) {
         toggle_class(
           div0,
           "graphic--right",
           /*_layout*/
-          ctx[5].resizeInteractive && /*_layout*/
-          ctx[5].align === "left"
+          ctx[8].resizeInteractive && /*_layout*/
+          ctx[8].align === "left"
         );
       }
       if (!current || dirty[0] & /*_layout*/
-      32) {
+      256) {
         toggle_class(
           div0,
           "graphic--left",
           /*_layout*/
-          ctx[5].resizeInteractive && /*_layout*/
-          ctx[5].align === "right"
+          ctx[8].resizeInteractive && /*_layout*/
+          ctx[8].align === "right"
         );
       }
       if (!current || dirty[0] & /*_layout*/
-      32) {
+      256) {
         toggle_class(
           div0,
           "graphic--centre",
           /*_layout*/
-          ctx[5].resizeInteractive && /*_layout*/
-          ctx[5].align === "centre"
+          ctx[8].resizeInteractive && /*_layout*/
+          ctx[8].align === "centre"
         );
       }
       if (dirty[0] & /*customPanel, panels, steps, _layout*/
-      1059) {
+      1283) {
         each_value = ensure_array_like(
           /*panels*/
           ctx[1]
@@ -1639,26 +1639,26 @@ function create_fragment$1(ctx) {
         check_outros();
       }
       if (!current || dirty[0] & /*_layout*/
-      32) {
+      256) {
         toggle_class(div1, "content--resized", !/*_layout*/
-        ctx[5].resizeInteractive);
+        ctx[8].resizeInteractive);
       }
       if (!current || dirty[0] & /*_layout*/
-      32) {
+      256) {
         toggle_class(
           div2,
           "scrollyteller--resized",
           /*_layout*/
-          ctx[5].resizeInteractive
+          ctx[8].resizeInteractive
         );
       }
       if (!current || dirty[0] & /*isDebug*/
-      256) {
+      128) {
         toggle_class(
           div2,
           "scrollyteller--debug",
           /*isDebug*/
-          ctx[8]
+          ctx[7]
         );
       }
     },
@@ -1741,7 +1741,7 @@ function instance$1($$self, $$props, $$invalidate) {
   };
   const panelObserver = new IntersectionObserver(panelIntersectionObserverCallback, observerOptions);
   const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
-    $$invalidate(7, isInViewport = scrollytellerEntry.isIntersecting);
+    $$invalidate(6, isInViewport = scrollytellerEntry.isIntersecting);
   }));
   const deferUntilScrollSettles = (fn) => {
     if (scrollSpeed < maxScrollSpeed) {
@@ -1790,7 +1790,7 @@ function instance$1($$self, $$props, $$invalidate) {
   function div2_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       scrollytellerRef = $$value;
-      $$invalidate(6, scrollytellerRef);
+      $$invalidate(5, scrollytellerRef);
     });
   }
   $$self.$$set = ($$props2) => {
@@ -1806,15 +1806,11 @@ function instance$1($$self, $$props, $$invalidate) {
   $$self.$$.update = () => {
     if ($$self.$$.dirty[0] & /*layout*/
     16384) {
-      $$invalidate(5, _layout = {
+      $$invalidate(8, _layout = {
         align: layout.align || "centre",
         resizeInteractive: layout.resizeInteractive ?? true,
         transparentFloat: layout.transparentFloat ?? ["left", "right"].includes(layout.align)
       });
-    }
-    if ($$self.$$.dirty[0] & /*layout, _layout*/
-    16416) {
-      console.log("yes but", { layout, _layout });
     }
     if ($$self.$$.dirty[0] & /*discardSlot*/
     8) {
@@ -1842,18 +1838,17 @@ function instance$1($$self, $$props, $$invalidate) {
       marker && deferUntilScrollSettles(() => dispatch("marker", marker));
     }
   };
-  $$invalidate(8, isDebug = typeof location !== "undefined" && location.hash === "#debug=true");
-  console.log({ hash: location.hash });
+  $$invalidate(7, isDebug = typeof location !== "undefined" && location.hash === "#debug=true");
   return [
     customPanel,
     panels,
     onProgress,
     discardSlot,
     graphicRootEl,
-    _layout,
     scrollytellerRef,
     isInViewport,
     isDebug,
+    _layout,
     isOdyssey,
     steps,
     scrollHandler,

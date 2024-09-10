@@ -37,15 +37,6 @@
 		--panel-filter: var(--color-panel-filter, blur(2.5px));
 		--panel-border: var(--color-panel-border, none);
 
-		:global([data-scheme='dark']) &,
-		:global(.is-dark-mode) & {
-			--panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));
-			--panel-color: var(--color-panel-text, #ebebeb);
-		}
-		:global(.scrollyteller--debug) & {
-			outline: 5px solid limegreen;
-		}
-
 		-webkit-backdrop-filter: var(--panel-filter);
 		backdrop-filter: var(--panel-filter);
 		color: var(--panel-color);
@@ -57,6 +48,17 @@
 		z-index: 1;
 		pointer-events: none;
 		font-size: 18px;
+		padding: 1rem;
+		max-width: 660px;
+
+		:global([data-scheme='dark']) &,
+		:global(.is-dark-mode) & {
+			--panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));
+			--panel-color: var(--color-panel-text, #ebebeb);
+		}
+		:global(.scrollyteller--debug) & {
+			outline: 5px solid limegreen;
+		}
 
 		&.first {
 			margin-top: 100dvh;
@@ -65,9 +67,6 @@
 		&.last {
 			margin-bottom: 100vh;
 		}
-
-		padding: 1rem;
-		max-width: 660px;
 
 		&--centre {
 			@media (min-width: $breakpointTablet) {
@@ -92,9 +91,6 @@
 		&--left,
 		&--right {
 			@media (min-width: $breakpointLargeTablet) {
-				&.first {
-					margin-top: 50dvh;
-				}
 				--marginLeft: 2rem;
 				--marginRight: 1rem;
 				--maxWidth: 45%;
@@ -105,6 +101,9 @@
 				&.st-panel--transparent-blocks {
 					--panel-filter: none;
 					--panel-background: none;
+				}
+				&.first {
+					margin-top: 50dvh;
 				}
 			}
 			@media (min-width: $breakpointDesktop) {
