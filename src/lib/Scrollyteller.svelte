@@ -250,8 +250,10 @@
 			top: 0.5rem;
 			padding: 0.5rem 1rem;
 			background: white;
+			color: black;
 			border: 5px solid limegreen;
 			border-radius: 1rem;
+			z-index: 110;
 			@media (min-width: $breakpointTablet) {
 				content: 'Tablet';
 			}
@@ -298,22 +300,20 @@
 		&.graphic--right {
 			@media (min-width: $breakpointLargeTablet) {
 				align-items: center;
-				--marginCentre: 1rem;
 				--marginOuter: 2rem;
+				--marginCentre: calc(var(--marginOuter) / 2);
 				height: 84dvh;
 				top: 8dvh;
 				--maxWidth: 55%;
 				max-width: calc(var(--maxWidth) - calc(var(--marginCentre) + var(--marginOuter)));
 			}
 			@media (min-width: $breakpointDesktop) {
-				--marginCentre: 1.5rem;
 				--marginOuter: 3rem;
 				--maxWidth: 60%;
 				height: 76dvh;
 				top: 12dvh;
 			}
 			@media (min-width: $breakpointLargeDesktop) {
-				--marginCentre: 2rem;
 				--marginOuter: 4rem;
 				--maxWidth: 60%;
 				top: 10dvh;

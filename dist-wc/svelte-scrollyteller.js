@@ -749,55 +749,59 @@ const children = (el, children2) => {
   };
 };
 function add_css$1(target) {
-  append_styles(target, "svelte-gjjyp8", '.st-panel.svelte-gjjyp8{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(245, 245, 245, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, none);-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);box-sizing:border-box;margin:80vh auto;width:calc(100% - 2rem);position:relative;z-index:1;pointer-events:none;font-size:18px;padding:1rem;max-width:660px}[data-scheme="dark"] .st-panel.svelte-gjjyp8,.is-dark-mode .st-panel.svelte-gjjyp8{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb)}.scrollyteller--debug .st-panel.svelte-gjjyp8{outline:5px solid limegreen}.st-panel.first.svelte-gjjyp8{margin-top:100dvh}.st-panel.last.svelte-gjjyp8{margin-bottom:100vh}@media(min-width: 744px){.st-panel--centre.svelte-gjjyp8{padding:2rem;max-width:720px}}@media(min-width: 992px){.st-panel--centre.svelte-gjjyp8{padding:2rem;max-width:780px;font-size:20px}}@media(min-width: 1440px){.st-panel--centre.svelte-gjjyp8{max-width:900px}}@media(min-width: 992px){.st-panel--left.svelte-gjjyp8,.st-panel--right.svelte-gjjyp8{--marginLeft:2rem;--marginRight:1rem;--maxWidth:45%;max-width:calc(var(--maxWidth) - (var(--marginLeft) + var(--marginRight)));margin:30vh 0 30vh calc(var(--marginLeft) - 1rem);font-size:18px}.st-panel--left.st-panel--transparent-blocks.svelte-gjjyp8,.st-panel--right.st-panel--transparent-blocks.svelte-gjjyp8{--panel-filter:none;--panel-background:none}.st-panel--left.first.svelte-gjjyp8,.st-panel--right.first.svelte-gjjyp8{margin-top:50dvh}}@media(min-width: 1200px){.st-panel--left.svelte-gjjyp8,.st-panel--right.svelte-gjjyp8{--marginLeft:3rem;--marginRight:1.5rem;--maxWidth:40%;font-size:18px}}@media(min-width: 1440px){.st-panel--left.svelte-gjjyp8,.st-panel--right.svelte-gjjyp8{--marginLeft:4rem;--marginRight:2rem;--maxWidth:40%;font-size:20px}}@media(min-width: 992px){.st-panel--right.svelte-gjjyp8{margin:15vh calc(var(--marginLeft) - 1rem) 15vh auto}}.st-panel.svelte-gjjyp8::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-gjjyp8::after{content:"";display:table;clear:both}.st-panel.svelte-gjjyp8 > *{font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-gjjyp8 > *:last-child{margin-bottom:0}.st-panel.svelte-gjjyp8>img{max-width:66%;display:block;margin:auto;height:auto}');
+  append_styles(target, "svelte-1g9ylr3", '.st-panel-root.svelte-1g9ylr3{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding:1rem;--panel-margin:1rem;box-sizing:border-box;margin:80vh auto;width:calc(100% - var(--panel-margin) * 2);position:relative;z-index:1;pointer-events:none;font-size:18px;max-width:660px}@media(min-width: 744px){.st-panel-root.svelte-1g9ylr3{--panel-padding:2rem;--panel-margin:2rem;max-width:720px}}[data-scheme="dark"] .st-panel-root.svelte-1g9ylr3,.is-dark-mode .st-panel-root.svelte-1g9ylr3{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb);--panel-border:var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15))}.scrollyteller--debug .st-panel-root.svelte-1g9ylr3{outline:5px solid limegreen}.st-panel-root.first.svelte-1g9ylr3{margin-top:100dvh}.st-panel-root.last.svelte-1g9ylr3{margin-bottom:100vh}@media(min-width: 992px){.st-panel-root--centre.svelte-1g9ylr3{max-width:780px;font-size:20px}}@media(min-width: 1440px){.st-panel-root--centre.svelte-1g9ylr3{max-width:900px}}@media(min-width: 992px){.st-panel-root--left.svelte-1g9ylr3,.st-panel-root--right.svelte-1g9ylr3{--maxWidth:45%;--panel-margin:2rem;--panel-margin-inner:calc(var(--panel-margin) / 2);max-width:calc(var(--maxWidth) - (var(--panel-margin) + var(--panel-margin-inner)));margin:30vh 0 30vh var(--panel-margin);font-size:18px}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-1g9ylr3,.st-panel-root--right.st-panel-root--transparent-blocks.svelte-1g9ylr3{--panel-filter:none;--panel-background:none;--panel-border:none;--panel-padding:0}.st-panel-root--left.first.svelte-1g9ylr3,.st-panel-root--right.first.svelte-1g9ylr3{margin-top:50dvh}}@media(min-width: 1200px){.st-panel-root--left.svelte-1g9ylr3,.st-panel-root--right.svelte-1g9ylr3{--panel-margin:3rem;--maxWidth:40%;font-size:18px}}@media(min-width: 1440px){.st-panel-root--left.svelte-1g9ylr3,.st-panel-root--right.svelte-1g9ylr3{--panel-margin:4rem;--maxWidth:40%;font-size:20px}}@media(min-width: 992px){.st-panel-root--right.svelte-1g9ylr3{margin:15vh calc(var(--marginLeft) - 1rem) 15vh auto}}.st-panel.svelte-1g9ylr3{-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding)}.st-panel.svelte-1g9ylr3::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-1g9ylr3::after{content:"";display:table;clear:both}.st-panel.svelte-1g9ylr3 > *{font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-1g9ylr3 > *:last-child{margin-bottom:0}.st-panel.svelte-1g9ylr3>img{max-width:66%;display:block;margin:auto;height:auto}');
 }
 function create_fragment$2(ctx) {
-  let div;
+  let div1;
+  let div0;
   let mounted;
   let dispose;
   return {
     c() {
-      div = element("div");
+      div1 = element("div");
+      div0 = element("div");
+      attr(div0, "class", "st-panel svelte-1g9ylr3");
       attr(
-        div,
+        div1,
         "data-align",
         /*align*/
         ctx[1]
       );
-      attr(div, "class", null_to_empty(`st-panel ${/*panelClass*/
-      ctx[3] || ""}`) + " svelte-gjjyp8");
+      attr(div1, "class", null_to_empty(`st-panel-root ${/*panelClass*/
+      ctx[3] || ""}`) + " svelte-1g9ylr3");
       toggle_class(
-        div,
-        "st-panel--left",
+        div1,
+        "st-panel-root--left",
         /*align*/
         ctx[1] === "left"
       );
       toggle_class(
-        div,
-        "st-panel--right",
+        div1,
+        "st-panel-root--right",
         /*align*/
         ctx[1] === "right"
       );
       toggle_class(
-        div,
-        "st-panel--centre",
+        div1,
+        "st-panel-root--centre",
         /*align*/
         ctx[1] === "centre"
       );
       toggle_class(
-        div,
-        "st-panel--transparent-blocks",
+        div1,
+        "st-panel-root--transparent-blocks",
         /*transparentFloat*/
         ctx[2]
       );
     },
     m(target, anchor) {
-      insert(target, div, anchor);
-      ctx[6](div);
+      insert(target, div1, anchor);
+      append(div1, div0);
+      ctx[6](div1);
       if (!mounted) {
         dispose = action_destroyer(children.call(
           null,
-          div,
+          div0,
           /*nodes*/
           ctx[4]
         ));
@@ -809,7 +813,7 @@ function create_fragment$2(ctx) {
     o: noop,
     d(detaching) {
       if (detaching) {
-        detach(div);
+        detach(div1);
       }
       ctx[6](null);
       mounted = false;
@@ -825,7 +829,7 @@ function instance$2($$self, $$props, $$invalidate) {
     $$invalidate(0, panelRef.scrollyData = data, panelRef);
     steps.push(panelRef);
   });
-  function div_binding($$value) {
+  function div1_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       panelRef = $$value;
       $$invalidate(0, panelRef);
@@ -834,7 +838,7 @@ function instance$2($$self, $$props, $$invalidate) {
   $$self.$$set = ($$props2) => {
     if ("props" in $$props2) $$invalidate(5, props = $$props2.props);
   };
-  return [panelRef, align, transparentFloat, panelClass, nodes, props, div_binding];
+  return [panelRef, align, transparentFloat, panelClass, nodes, props, div1_binding];
 }
 class Panel extends SvelteComponent {
   constructor(options) {
@@ -1071,7 +1075,7 @@ const getScrollSpeed = (callback) => {
 };
 const { window: window_1 } = globals;
 function add_css(target) {
-  append_styles(target, "svelte-y0ypss", '.scrollyteller.svelte-y0ypss.svelte-y0ypss{position:relative}.scrollyteller--resized.svelte-y0ypss.svelte-y0ypss{max-width:2040px;margin:0 auto}.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;border:5px solid limegreen;border-radius:1rem}@media(min-width: 744px){.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"Tablet"}}@media(min-width: 992px){.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"LargeTablet"}}@media(min-width: 1200px){.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"Desktop"}}@media(min-width: 1440px){.scrollyteller--debug.svelte-y0ypss.svelte-y0ypss:after{content:"LargeDesktop"}}.graphic.svelte-y0ypss.svelte-y0ypss{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-y0ypss.svelte-y0ypss{container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 744px){.graphic--resized.svelte-y0ypss.svelte-y0ypss{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-y0ypss.svelte-y0ypss,.graphic--resized.graphic--right.svelte-y0ypss.svelte-y0ypss{align-items:center;--marginCentre:1rem;--marginOuter:2rem;height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 1200px){.graphic--resized.graphic--left.svelte-y0ypss.svelte-y0ypss,.graphic--resized.graphic--right.svelte-y0ypss.svelte-y0ypss{--marginCentre:1.5rem;--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 1440px){.graphic--resized.graphic--left.svelte-y0ypss.svelte-y0ypss,.graphic--resized.graphic--right.svelte-y0ypss.svelte-y0ypss{--marginCentre:2rem;--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-y0ypss.svelte-y0ypss{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 992px){.graphic--resized.graphic--right.svelte-y0ypss.svelte-y0ypss{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 992px){.graphic--resized.graphic--centre.svelte-y0ypss.svelte-y0ypss{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 1200px){.graphic--resized.graphic--centre.svelte-y0ypss.svelte-y0ypss{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 1440px){.graphic--resized.graphic--centre.svelte-y0ypss.svelte-y0ypss{--margin:6rem;top:12dvh;height:58dvh}}.scrollyteller--debug.svelte-y0ypss .graphic--resized.svelte-y0ypss{outline:5px solid limegreen}.content.svelte-y0ypss.svelte-y0ypss{margin:-100dvh auto 0;position:relative;z-index:2;pointer-events:none}.content--resized.svelte-y0ypss.svelte-y0ypss{max-width:2040px}');
+  append_styles(target, "svelte-11kgef2", '.scrollyteller.svelte-11kgef2.svelte-11kgef2{position:relative}.scrollyteller--resized.svelte-11kgef2.svelte-11kgef2{max-width:2040px;margin:0 auto}.scrollyteller--debug.svelte-11kgef2.svelte-11kgef2:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110}@media(min-width: 744px){.scrollyteller--debug.svelte-11kgef2.svelte-11kgef2:after{content:"Tablet"}}@media(min-width: 992px){.scrollyteller--debug.svelte-11kgef2.svelte-11kgef2:after{content:"LargeTablet"}}@media(min-width: 1200px){.scrollyteller--debug.svelte-11kgef2.svelte-11kgef2:after{content:"Desktop"}}@media(min-width: 1440px){.scrollyteller--debug.svelte-11kgef2.svelte-11kgef2:after{content:"LargeDesktop"}}.graphic.svelte-11kgef2.svelte-11kgef2{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-11kgef2.svelte-11kgef2{container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 744px){.graphic--resized.svelte-11kgef2.svelte-11kgef2{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-11kgef2.svelte-11kgef2,.graphic--resized.graphic--right.svelte-11kgef2.svelte-11kgef2{align-items:center;--marginOuter:2rem;--marginCentre:calc(var(--marginOuter) / 2);height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 1200px){.graphic--resized.graphic--left.svelte-11kgef2.svelte-11kgef2,.graphic--resized.graphic--right.svelte-11kgef2.svelte-11kgef2{--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 1440px){.graphic--resized.graphic--left.svelte-11kgef2.svelte-11kgef2,.graphic--resized.graphic--right.svelte-11kgef2.svelte-11kgef2{--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 992px){.graphic--resized.graphic--left.svelte-11kgef2.svelte-11kgef2{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 992px){.graphic--resized.graphic--right.svelte-11kgef2.svelte-11kgef2{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 992px){.graphic--resized.graphic--centre.svelte-11kgef2.svelte-11kgef2{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 1200px){.graphic--resized.graphic--centre.svelte-11kgef2.svelte-11kgef2{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 1440px){.graphic--resized.graphic--centre.svelte-11kgef2.svelte-11kgef2{--margin:6rem;top:12dvh;height:58dvh}}.scrollyteller--debug.svelte-11kgef2 .graphic--resized.svelte-11kgef2{outline:5px solid limegreen}.content.svelte-11kgef2.svelte-11kgef2{margin:-100dvh auto 0;position:relative;z-index:2;pointer-events:none}.content--resized.svelte-11kgef2.svelte-11kgef2{max-width:2040px}');
 }
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
@@ -1469,7 +1473,7 @@ function create_fragment$1(ctx) {
       for (let i = 0; i < each_blocks.length; i += 1) {
         each_blocks[i].c();
       }
-      attr(div0, "class", "graphic svelte-y0ypss");
+      attr(div0, "class", "graphic svelte-11kgef2");
       toggle_class(
         div0,
         "graphic--resized",
@@ -1497,10 +1501,10 @@ function create_fragment$1(ctx) {
         ctx[8].resizeInteractive && /*_layout*/
         ctx[8].align === "centre"
       );
-      attr(div1, "class", "content svelte-y0ypss");
+      attr(div1, "class", "content svelte-11kgef2");
       toggle_class(div1, "content--resized", !/*_layout*/
       ctx[8].resizeInteractive);
-      attr(div2, "class", "scrollyteller svelte-y0ypss");
+      attr(div2, "class", "scrollyteller svelte-11kgef2");
       toggle_class(
         div2,
         "scrollyteller--resized",

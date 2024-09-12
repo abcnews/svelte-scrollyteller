@@ -202,8 +202,10 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
   top: 0.5rem;
   padding: 0.5rem 1rem;
   background: white;
+  color: black;
   border: 5px solid limegreen;
   border-radius: 1rem;
+  z-index: 110;
 }
 @media (min-width: 744px) {
   .scrollyteller--debug:after {
@@ -259,8 +261,8 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 @media (min-width: 992px) {
   .graphic--resized.graphic--left, .graphic--resized.graphic--right {
     align-items: center;
-    --marginCentre: 1rem;
     --marginOuter: 2rem;
+    --marginCentre: calc(var(--marginOuter) / 2);
     height: 84dvh;
     top: 8dvh;
     --maxWidth: 55%;
@@ -269,7 +271,6 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 }
 @media (min-width: 1200px) {
   .graphic--resized.graphic--left, .graphic--resized.graphic--right {
-    --marginCentre: 1.5rem;
     --marginOuter: 3rem;
     --maxWidth: 60%;
     height: 76dvh;
@@ -278,7 +279,6 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 }
 @media (min-width: 1440px) {
   .graphic--resized.graphic--left, .graphic--resized.graphic--right {
-    --marginCentre: 2rem;
     --marginOuter: 4rem;
     --maxWidth: 60%;
     top: 10dvh;

@@ -17,44 +17,49 @@
 
 <div
 	data-align={align}
-	class={`st-panel ${panelClass || ''}`}
-	class:st-panel--left={align === 'left'}
-	class:st-panel--right={align === 'right'}
-	class:st-panel--centre={align === 'centre'}
-	class:st-panel--transparent-blocks={transparentFloat}
+	class={`st-panel-root ${panelClass || ''}`}
+	class:st-panel-root--left={align === 'left'}
+	class:st-panel-root--right={align === 'right'}
+	class:st-panel-root--centre={align === 'centre'}
+	class:st-panel-root--transparent-blocks={transparentFloat}
 	bind:this={panelRef}
-	use:children={nodes}
-/>
+>
+	<div class="st-panel" use:children={nodes}></div>
+</div>
 
 <style lang="scss">
 	@import './breakpoints.scss';
 
-	.st-panel {
+	.st-panel-root {
 		--panel-radius: 0.75rem;
-		--panel-background: var(--color-panel-background, rgba(245, 245, 245, 0.95));
+		--panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));
 		--panel-color: var(--color-panel-text, #000);
 		--panel-opacity: var(--color-panel-opacity, 1);
 		--panel-filter: var(--color-panel-filter, blur(2.5px));
-		--panel-border: var(--color-panel-border, none);
+		--panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));
+		--panel-padding: 1rem;
+		--panel-margin: 1rem;
 
-		-webkit-backdrop-filter: var(--panel-filter);
-		backdrop-filter: var(--panel-filter);
-		color: var(--panel-color);
-		border-radius: var(--panel-radius);
 		box-sizing: border-box;
 		margin: 80vh auto;
-		width: calc(100% - 2rem);
+		width: calc(100% - calc(var(--panel-margin) * 2));
 		position: relative;
 		z-index: 1;
 		pointer-events: none;
 		font-size: 18px;
-		padding: 1rem;
 		max-width: 660px;
+
+		@media (min-width: $breakpointTablet) {
+			--panel-padding: 2rem;
+			--panel-margin: 2rem;
+			max-width: 720px;
+		}
 
 		:global([data-scheme='dark']) &,
 		:global(.is-dark-mode) & {
 			--panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));
 			--panel-color: var(--color-panel-text, #ebebeb);
+			--panel-border: var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15));
 		}
 		:global(.scrollyteller--debug) & {
 			outline: 5px solid limegreen;
@@ -69,13 +74,7 @@
 		}
 
 		&--centre {
-			@media (min-width: $breakpointTablet) {
-				padding: 2rem;
-				max-width: 720px;
-			}
-
 			@media (min-width: $breakpointLargeTablet) {
-				padding: 2rem;
 				max-width: 780px;
 				font-size: 20px;
 			}
@@ -91,30 +90,33 @@
 		&--left,
 		&--right {
 			@media (min-width: $breakpointLargeTablet) {
-				--marginLeft: 2rem;
-				--marginRight: 1rem;
 				--maxWidth: 45%;
-				max-width: calc(var(--maxWidth) - calc(var(--marginLeft) + var(--marginRight)));
-				margin: 30vh 0 30vh calc(var(--marginLeft) - 1rem);
+				// outer margin
+				--panel-margin: 2rem;
+				// inner margin divided by 2 because the vis also adds half a margin
+				--panel-margin-inner: calc(var(--panel-margin) / 2);
+
+				max-width: calc(var(--maxWidth) - calc(var(--panel-margin) + var(--panel-margin-inner)));
+				margin: 30vh 0 30vh var(--panel-margin);
 				font-size: 18px;
 
-				&.st-panel--transparent-blocks {
+				&.st-panel-root--transparent-blocks {
 					--panel-filter: none;
 					--panel-background: none;
+					--panel-border: none;
+					--panel-padding: 0;
 				}
 				&.first {
 					margin-top: 50dvh;
 				}
 			}
 			@media (min-width: $breakpointDesktop) {
-				--marginLeft: 3rem;
-				--marginRight: 1.5rem;
+				--panel-margin: 3rem;
 				--maxWidth: 40%;
 				font-size: 18px;
 			}
 			@media (min-width: $breakpointLargeDesktop) {
-				--marginLeft: 4rem;
-				--marginRight: 2rem;
+				--panel-margin: 4rem;
 				--maxWidth: 40%;
 				font-size: 20px;
 			}
@@ -125,7 +127,13 @@
 				margin: 15vh calc(var(--marginLeft) - 1rem) 15vh auto;
 			}
 		}
-
+	}
+	.st-panel {
+		-webkit-backdrop-filter: var(--panel-filter);
+		backdrop-filter: var(--panel-filter);
+		color: var(--panel-color);
+		border-radius: var(--panel-radius);
+		padding: var(--panel-padding);
 		&::before {
 			content: '';
 
