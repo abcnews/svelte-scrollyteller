@@ -192,7 +192,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
   position: relative;
 }
 .scrollyteller--resized {
-  max-width: 2040px;
+  max-width: 127.5rem;
   margin: 0 auto;
 }
 .scrollyteller--debug:after {
@@ -207,22 +207,22 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
   border-radius: 1rem;
   z-index: 110;
 }
-@media (min-width: 744px) {
+@media (min-width: 46.5rem) {
   .scrollyteller--debug:after {
     content: "Tablet";
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 62rem) {
   .scrollyteller--debug:after {
     content: "LargeTablet";
   }
 }
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
   .scrollyteller--debug:after {
     content: "Desktop";
   }
 }
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
   .scrollyteller--debug:after {
     content: "LargeDesktop";
   }
@@ -251,14 +251,14 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
   margin: 0 auto;
   width: calc(100% - var(--margin) * 2);
 }
-@media (min-width: 744px) {
+@media (min-width: 46.5rem) {
   .graphic--resized {
-    --margin: 3rem;
+    --margin: 4rem;
     top: 8dvh;
     height: 62dvh;
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 62rem) {
   .graphic--resized.graphic--left, .graphic--resized.graphic--right {
     align-items: center;
     --marginOuter: 2rem;
@@ -269,7 +269,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
     max-width: calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)));
   }
 }
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
   .graphic--resized.graphic--left, .graphic--resized.graphic--right {
     --marginOuter: 3rem;
     --maxWidth: 60%;
@@ -277,7 +277,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
     top: 12dvh;
   }
 }
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
   .graphic--resized.graphic--left, .graphic--resized.graphic--right {
     --marginOuter: 4rem;
     --maxWidth: 60%;
@@ -285,31 +285,31 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
     height: 80dvh;
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 62rem) {
   .graphic--resized.graphic--left {
     margin: 0 auto 0 var(--marginOuter);
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 62rem) {
   .graphic--resized.graphic--right {
     margin: 0 var(--marginOuter) 0 auto;
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 62rem) {
   .graphic--resized.graphic--centre {
     --margin: 3rem;
     top: 8dvh;
     height: 62dvh;
   }
 }
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
   .graphic--resized.graphic--centre {
     --margin: 4rem;
     top: 12dvh;
     height: 58dvh;
   }
 }
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
   .graphic--resized.graphic--centre {
     --margin: 6rem;
     top: 12dvh;
@@ -327,5 +327,5 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
   pointer-events: none;
 }
 .content--resized {
-  max-width: 2040px;
+  max-width: 127.5rem;
 }</style>

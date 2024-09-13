@@ -36,14 +36,12 @@ onMount(() => {
   position: relative;
   z-index: 1;
   pointer-events: none;
-  font-size: 18px;
-  max-width: 660px;
+  font-size: 1.125rem;
 }
-@media (min-width: 744px) {
+@media (min-width: 46.5rem) {
   .st-panel-root {
     --panel-padding: 2rem;
     --panel-margin: 2rem;
-    max-width: 720px;
   }
 }
 :global([data-scheme="dark"]) .st-panel-root, :global(.is-dark-mode) .st-panel-root {
@@ -60,25 +58,25 @@ onMount(() => {
 .st-panel-root.last {
   margin-bottom: 100vh;
 }
-@media (min-width: 992px) {
+@media (min-width: 62rem) {
   .st-panel-root--centre {
-    max-width: 780px;
-    font-size: 20px;
+    max-width: 48.75rem;
+    font-size: 1.875;
   }
 }
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
   .st-panel-root--centre {
-    max-width: 900px;
+    max-width: 56.25rem;
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 62rem) {
   .st-panel-root--left, .st-panel-root--right {
     --maxWidth: 45%;
     --panel-margin: 2rem;
     --panel-margin-inner: calc(var(--panel-margin) / 2);
     max-width: calc(var(--maxWidth) - (var(--panel-margin) + var(--panel-margin-inner)));
     margin: 30vh 0 30vh var(--panel-margin);
-    font-size: 18px;
+    font-size: 1.125rem;
   }
   .st-panel-root--left.st-panel-root--transparent-blocks, .st-panel-root--right.st-panel-root--transparent-blocks {
     --panel-filter: none;
@@ -90,21 +88,21 @@ onMount(() => {
     margin-top: 50dvh;
   }
 }
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
   .st-panel-root--left, .st-panel-root--right {
     --panel-margin: 3rem;
     --maxWidth: 40%;
-    font-size: 18px;
+    font-size: 1.125rem;
   }
 }
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
   .st-panel-root--left, .st-panel-root--right {
     --panel-margin: 4rem;
     --maxWidth: 40%;
-    font-size: 20px;
+    font-size: 1.25rem;
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 62rem) {
   .st-panel-root--right {
     margin: 15vh calc(var(--marginLeft) - 1rem) 15vh auto;
   }

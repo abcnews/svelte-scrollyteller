@@ -46,13 +46,13 @@
 		position: relative;
 		z-index: 1;
 		pointer-events: none;
-		font-size: 18px;
-		max-width: 660px;
+		font-size: 1.125rem;
+		// max-width: 41.25rem; // Removed pending discussion with Ben
 
 		@media (min-width: $breakpointTablet) {
 			--panel-padding: 2rem;
 			--panel-margin: 2rem;
-			max-width: 720px;
+			// max-width: 45rem; // Removed pending discussion with Ben
 		}
 
 		:global([data-scheme='dark']) &,
@@ -75,15 +75,15 @@
 
 		&--centre {
 			@media (min-width: $breakpointLargeTablet) {
-				max-width: 780px;
-				font-size: 20px;
+				max-width: 48.75rem;
+				font-size: 1.875;
 			}
 
 			@media (min-width: $breakpointDesktop) {
 			}
 
 			@media (min-width: $breakpointLargeDesktop) {
-				max-width: 900px;
+				max-width: 56.25rem;
 			}
 		}
 
@@ -98,7 +98,7 @@
 
 				max-width: calc(var(--maxWidth) - calc(var(--panel-margin) + var(--panel-margin-inner)));
 				margin: 30vh 0 30vh var(--panel-margin);
-				font-size: 18px;
+				font-size: 1.125rem;
 
 				&.st-panel-root--transparent-blocks {
 					--panel-filter: none;
@@ -113,12 +113,12 @@
 			@media (min-width: $breakpointDesktop) {
 				--panel-margin: 3rem;
 				--maxWidth: 40%;
-				font-size: 18px;
+				font-size: 1.125rem;
 			}
 			@media (min-width: $breakpointLargeDesktop) {
 				--panel-margin: 4rem;
 				--maxWidth: 40%;
-				font-size: 20px;
+				font-size: 1.25rem;
 			}
 		}
 

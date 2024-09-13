@@ -240,7 +240,7 @@
 	.scrollyteller {
 		position: relative;
 		&--resized {
-			max-width: 2040px;
+			max-width: 127.5rem;
 			margin: 0 auto;
 		}
 		&--debug:after {
@@ -291,7 +291,7 @@
 		margin: 0 auto;
 		width: calc(100% - calc(var(--margin) * 2));
 		@media (min-width: $breakpointTablet) {
-			--margin: 3rem;
+			--margin: 4rem;
 			top: 8dvh;
 			height: 62dvh;
 		}
@@ -358,7 +358,7 @@
 		// This style doesn't apply to child blocks, just the container
 		pointer-events: none;
 		&--resized {
-			max-width: 2040px;
+			max-width: 127.5rem;
 		}
 	}
 </style>
