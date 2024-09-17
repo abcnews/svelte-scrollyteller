@@ -1,10 +1,10 @@
 <script>import { onMount } from 'svelte';
 import Panel from './Panel.svelte';
-import { getScrollSpeed } from './utils';
 import { createEventDispatcher } from 'svelte';
-import { getScrollingPos, ScrollPositions } from './Scrollyteller/Scrollyteller.util';
+import { getScrollingPos, getScrollSpeed, ScrollPositions } from './Scrollyteller/Scrollyteller.util';
 import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
+import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 const dispatch = createEventDispatcher();
 export let customPanel = null;
 export let panels;
@@ -85,9 +85,6 @@ onMount(() => {
         marker = panels[0].data;
     if (scrollingPos === ScrollPositions.BELOW)
         marker = panels[panels.length - 1].data;
-    steps.forEach((step, i) => {
-        panelObserver.observe(step);
-    });
     if (discardSlot) {
         scrollytellerObserver.observe(scrollytellerRef);
     }
@@ -106,6 +103,8 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 {/if}
 
 <DeprecationNotice {onProgress} {onMarker} />
+
+<PanelObserver bind:marker {steps} {observerOptions} />
 
 <svelte:head>
 	{#if isOdyssey}

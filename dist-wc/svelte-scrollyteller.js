@@ -231,6 +231,9 @@ function schedule_update() {
 function add_render_callback(fn) {
   render_callbacks.push(fn);
 }
+function add_flush_callback(fn) {
+  flush_callbacks.push(fn);
+}
 const seen_callbacks = /* @__PURE__ */ new Set();
 let flushidx = 0;
 function flush() {
@@ -361,6 +364,13 @@ function get_spread_update(levels, updates) {
 }
 function get_spread_object(spread_props) {
   return typeof spread_props === "object" && spread_props !== null ? spread_props : {};
+}
+function bind(component, name, callback) {
+  const index = component.$$.props[name];
+  if (index !== void 0) {
+    component.$$.bound[index] = callback;
+    callback(component.$$.ctx[index]);
+  }
 }
 function create_component(block) {
   block && block.c();
@@ -821,7 +831,7 @@ function create_fragment$3(ctx) {
     }
   };
 }
-function instance$4($$self, $$props, $$invalidate) {
+function instance$5($$self, $$props, $$invalidate) {
   let { props } = $$props;
   const { align, transparentFloat, panelClass, data, nodes = [], steps = [] } = props;
   let panelRef;
@@ -843,7 +853,7 @@ function instance$4($$self, $$props, $$invalidate) {
 class Panel extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$4, create_fragment$3, safe_not_equal, { props: 5 }, add_css$1);
+    init(this, options, instance$5, create_fragment$3, safe_not_equal, { props: 5 }, add_css$1);
   }
   get props() {
     return this.$$.ctx[5];
@@ -854,6 +864,1348 @@ class Panel extends SvelteComponent {
   }
 }
 create_custom_element(Panel, { "props": {} }, [], [], true);
+var ScrollPositions = /* @__PURE__ */ ((ScrollPositions2) => {
+  ScrollPositions2["FULL"] = "FULL";
+  ScrollPositions2["ABOVE"] = "ABOVE";
+  ScrollPositions2["BELOW"] = "BELOW";
+  return ScrollPositions2;
+})(ScrollPositions || {});
+const getScrollingPos = (scrollytellerRef) => {
+  const boundingRect = scrollytellerRef.getBoundingClientRect();
+  if (boundingRect.bottom - window.innerHeight < 0) {
+    return "BELOW";
+  }
+  if (boundingRect.top > 0) {
+    return "ABOVE";
+  }
+  return "FULL";
+};
+const getScrollSpeed = (callback) => {
+  const getScrollTop = () => document.documentElement.scrollTop;
+  let lastOffset = getScrollTop();
+  let lastDate = Date.now();
+  const onScroll = () => {
+    const delayInMs = Date.now() - lastDate;
+    const offset = getScrollTop() - lastOffset;
+    const speedInpxPerMs = offset / delayInMs;
+    const scrollSpeed = Math.abs(speedInpxPerMs);
+    lastDate = Date.now();
+    lastOffset = getScrollTop();
+    callback(scrollSpeed);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  const onEndScroll = () => callback(0);
+  window.addEventListener("scrollend", onEndScroll, { passive: true });
+  return () => {
+    window.removeEventListener("scroll", onScroll);
+    window.removeEventListener("scrollend", onEndScroll);
+  };
+};
+const { window: window_1 } = globals;
+function create_fragment$2(ctx) {
+  let mounted;
+  let dispose;
+  return {
+    c: noop,
+    m(target, anchor) {
+      if (!mounted) {
+        dispose = listen(
+          window_1,
+          "scroll",
+          /*scrollHandler*/
+          ctx[0]
+        );
+        mounted = true;
+      }
+    },
+    p: noop,
+    i: noop,
+    o: noop,
+    d(detaching) {
+      mounted = false;
+      dispose();
+    }
+  };
+}
+function instance$4($$self, $$props, $$invalidate) {
+  const dispatch = createEventDispatcher();
+  let { scrollytellerRef } = $$props;
+  const scrollHandler = () => {
+    const rootRect = scrollytellerRef.getBoundingClientRect();
+    dispatch("progress", {
+      boundingRect: rootRect,
+      rootPct: 1 - rootRect.bottom / (rootRect.height + window.innerHeight),
+      scrollPct: 1 - (rootRect.bottom - window.innerHeight) / (rootRect.height - window.innerHeight)
+    });
+  };
+  $$self.$$set = ($$props2) => {
+    if ("scrollytellerRef" in $$props2) $$invalidate(1, scrollytellerRef = $$props2.scrollytellerRef);
+  };
+  return [scrollHandler, scrollytellerRef];
+}
+class OnProgressHandler extends SvelteComponent {
+  constructor(options) {
+    super();
+    init(this, options, instance$4, create_fragment$2, safe_not_equal, { scrollytellerRef: 1 });
+  }
+  get scrollytellerRef() {
+    return this.$$.ctx[1];
+  }
+  set scrollytellerRef(scrollytellerRef) {
+    this.$$set({ scrollytellerRef });
+    flush();
+  }
+}
+create_custom_element(OnProgressHandler, { "scrollytellerRef": {} }, [], [], true);
+function instance$3($$self, $$props, $$invalidate) {
+  let { onProgress } = $$props;
+  let { onMarker } = $$props;
+  $$self.$$set = ($$props2) => {
+    if ("onProgress" in $$props2) $$invalidate(0, onProgress = $$props2.onProgress);
+    if ("onMarker" in $$props2) $$invalidate(1, onMarker = $$props2.onMarker);
+  };
+  $$self.$$.update = () => {
+    if ($$self.$$.dirty & /*onProgress, onMarker*/
+    3) {
+      {
+        if (typeof onProgress === "function") {
+          throw new Error("the onProgress callback is deprecated. Please use on:progress");
+        }
+        if (typeof onMarker === "function") {
+          throw new Error("the onMarker callback is deprecated. Please use on:marker");
+        }
+      }
+    }
+  };
+  return [onProgress, onMarker];
+}
+class DeprecationNotice extends SvelteComponent {
+  constructor(options) {
+    super();
+    init(this, options, instance$3, null, safe_not_equal, { onProgress: 0, onMarker: 1 });
+  }
+  get onProgress() {
+    return this.$$.ctx[0];
+  }
+  set onProgress(onProgress) {
+    this.$$set({ onProgress });
+    flush();
+  }
+  get onMarker() {
+    return this.$$.ctx[1];
+  }
+  set onMarker(onMarker) {
+    this.$$set({ onMarker });
+    flush();
+  }
+}
+create_custom_element(DeprecationNotice, { "onProgress": {}, "onMarker": {} }, [], [], true);
+function instance$2($$self, $$props, $$invalidate) {
+  let { marker } = $$props;
+  let { steps } = $$props;
+  let { observerOptions } = $$props;
+  const panelObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          $$invalidate(0, marker = entry.target.scrollyData);
+        }
+      });
+    },
+    observerOptions
+  );
+  onMount(() => {
+    steps.forEach((step, i) => {
+      panelObserver.observe(step);
+    });
+  });
+  $$self.$$set = ($$props2) => {
+    if ("marker" in $$props2) $$invalidate(0, marker = $$props2.marker);
+    if ("steps" in $$props2) $$invalidate(1, steps = $$props2.steps);
+    if ("observerOptions" in $$props2) $$invalidate(2, observerOptions = $$props2.observerOptions);
+  };
+  return [marker, steps, observerOptions];
+}
+class PanelObserver extends SvelteComponent {
+  constructor(options) {
+    super();
+    init(this, options, instance$2, null, safe_not_equal, { marker: 0, steps: 1, observerOptions: 2 });
+  }
+  get marker() {
+    return this.$$.ctx[0];
+  }
+  set marker(marker) {
+    this.$$set({ marker });
+    flush();
+  }
+  get steps() {
+    return this.$$.ctx[1];
+  }
+  set steps(steps) {
+    this.$$set({ steps });
+    flush();
+  }
+  get observerOptions() {
+    return this.$$.ctx[2];
+  }
+  set observerOptions(observerOptions) {
+    this.$$set({ observerOptions });
+    flush();
+  }
+}
+create_custom_element(PanelObserver, { "marker": {}, "steps": {}, "observerOptions": {} }, [], [], true);
+function add_css(target) {
+  append_styles(target, "svelte-1h184zu", '.scrollyteller.svelte-1h184zu.svelte-1h184zu{position:relative}.scrollyteller--resized.svelte-1h184zu.svelte-1h184zu{max-width:127.5rem;margin:0 auto}.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110}@media(min-width: 46.5rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"Tablet"}}@media(min-width: 62rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"LargeTablet"}}@media(min-width: 75rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"Desktop"}}@media(min-width: 90rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"LargeDesktop"}}.graphic.svelte-1h184zu.svelte-1h184zu{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-1h184zu.svelte-1h184zu{container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 46.5rem){.graphic--resized.svelte-1h184zu.svelte-1h184zu{--margin:4rem;top:8dvh;height:62dvh}}@media(min-width: 62rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu,.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{align-items:center;--marginOuter:2rem;--marginCentre:calc(var(--marginOuter) / 2);height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 75rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu,.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 90rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu,.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 62rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 62rem){.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 62rem){.graphic--resized.graphic--centre.svelte-1h184zu.svelte-1h184zu{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 75rem){.graphic--resized.graphic--centre.svelte-1h184zu.svelte-1h184zu{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 90rem){.graphic--resized.graphic--centre.svelte-1h184zu.svelte-1h184zu{--margin:6rem;top:12dvh;height:58dvh}}.scrollyteller--debug.svelte-1h184zu .graphic--resized.svelte-1h184zu{outline:5px solid limegreen}.content.svelte-1h184zu.svelte-1h184zu{margin:-100dvh auto 0;position:relative;z-index:2;pointer-events:none}.content--resized.svelte-1h184zu.svelte-1h184zu{max-width:127.5rem}');
+}
+function get_each_context(ctx, list, i) {
+  const child_ctx = ctx.slice();
+  child_ctx[30] = list[i];
+  child_ctx[33] = i;
+  const constants_0 = (
+    /*panel*/
+    (child_ctx[30].panelClass ?? "") + /*i*/
+    (child_ctx[33] === 0 ? " first" : "") + /*i*/
+    (child_ctx[33] === /*panels*/
+    child_ctx[1].length - 1 ? " last" : "")
+  );
+  child_ctx[31] = constants_0;
+  return child_ctx;
+}
+function create_if_block_3(ctx) {
+  let onprogresshandler;
+  let current;
+  onprogresshandler = new OnProgressHandler({
+    props: {
+      scrollytellerRef: (
+        /*scrollytellerRef*/
+        ctx[8]
+      )
+    }
+  });
+  onprogresshandler.$on(
+    "progress",
+    /*progress_handler*/
+    ctx[17]
+  );
+  return {
+    c() {
+      create_component(onprogresshandler.$$.fragment);
+    },
+    m(target, anchor) {
+      mount_component(onprogresshandler, target, anchor);
+      current = true;
+    },
+    p(ctx2, dirty) {
+      const onprogresshandler_changes = {};
+      if (dirty[0] & /*scrollytellerRef*/
+      256) onprogresshandler_changes.scrollytellerRef = /*scrollytellerRef*/
+      ctx2[8];
+      onprogresshandler.$set(onprogresshandler_changes);
+    },
+    i(local) {
+      if (current) return;
+      transition_in(onprogresshandler.$$.fragment, local);
+      current = true;
+    },
+    o(local) {
+      transition_out(onprogresshandler.$$.fragment, local);
+      current = false;
+    },
+    d(detaching) {
+      destroy_component(onprogresshandler, detaching);
+    }
+  };
+}
+function create_if_block_2(ctx) {
+  let style;
+  return {
+    c() {
+      style = element("style");
+      style.textContent = "/* styles required to make position sticky work */\n			/* existing styles on an Odyssey body are preventing position sticky from 'sticking' */\n			body {\n				overflow: visible;\n			}";
+    },
+    m(target, anchor) {
+      insert(target, style, anchor);
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(style);
+      }
+    }
+  };
+}
+function create_if_block_1(ctx) {
+  let current;
+  const default_slot_template = (
+    /*#slots*/
+    ctx[16].default
+  );
+  const default_slot = create_slot(
+    default_slot_template,
+    ctx,
+    /*$$scope*/
+    ctx[15],
+    null
+  );
+  return {
+    c() {
+      if (default_slot) default_slot.c();
+    },
+    m(target, anchor) {
+      if (default_slot) {
+        default_slot.m(target, anchor);
+      }
+      current = true;
+    },
+    p(ctx2, dirty) {
+      if (default_slot) {
+        if (default_slot.p && (!current || dirty[0] & /*$$scope*/
+        32768)) {
+          update_slot_base(
+            default_slot,
+            default_slot_template,
+            ctx2,
+            /*$$scope*/
+            ctx2[15],
+            !current ? get_all_dirty_from_scope(
+              /*$$scope*/
+              ctx2[15]
+            ) : get_slot_changes(
+              default_slot_template,
+              /*$$scope*/
+              ctx2[15],
+              dirty,
+              null
+            ),
+            null
+          );
+        }
+      }
+    },
+    i(local) {
+      if (current) return;
+      transition_in(default_slot, local);
+      current = true;
+    },
+    o(local) {
+      transition_out(default_slot, local);
+      current = false;
+    },
+    d(detaching) {
+      if (default_slot) default_slot.d(detaching);
+    }
+  };
+}
+function create_else_block(ctx) {
+  let panel_1;
+  let current;
+  panel_1 = new Panel({
+    props: {
+      props: {
+        .../*panel*/
+        ctx[30],
+        align: (
+          /*panel*/
+          ctx[30].align || /*_layout*/
+          ctx[11].align
+        ),
+        transparentFloat: (
+          /*_layout*/
+          ctx[11].transparentFloat
+        ),
+        steps: (
+          /*steps*/
+          ctx[13]
+        ),
+        panelClass: (
+          /*panelClass*/
+          ctx[31]
+        )
+      }
+    }
+  });
+  return {
+    c() {
+      create_component(panel_1.$$.fragment);
+    },
+    m(target, anchor) {
+      mount_component(panel_1, target, anchor);
+      current = true;
+    },
+    p(ctx2, dirty) {
+      const panel_1_changes = {};
+      if (dirty[0] & /*panels, _layout*/
+      2050) panel_1_changes.props = {
+        .../*panel*/
+        ctx2[30],
+        align: (
+          /*panel*/
+          ctx2[30].align || /*_layout*/
+          ctx2[11].align
+        ),
+        transparentFloat: (
+          /*_layout*/
+          ctx2[11].transparentFloat
+        ),
+        steps: (
+          /*steps*/
+          ctx2[13]
+        ),
+        panelClass: (
+          /*panelClass*/
+          ctx2[31]
+        )
+      };
+      panel_1.$set(panel_1_changes);
+    },
+    i(local) {
+      if (current) return;
+      transition_in(panel_1.$$.fragment, local);
+      current = true;
+    },
+    o(local) {
+      transition_out(panel_1.$$.fragment, local);
+      current = false;
+    },
+    d(detaching) {
+      destroy_component(panel_1, detaching);
+    }
+  };
+}
+function create_if_block$1(ctx) {
+  let switch_instance;
+  let switch_instance_anchor;
+  let current;
+  const switch_instance_spread_levels = [
+    /*panel*/
+    ctx[30],
+    { steps: (
+      /*steps*/
+      ctx[13]
+    ) },
+    { panelClass: (
+      /*panelClass*/
+      ctx[31]
+    ) }
+  ];
+  var switch_value = (
+    /*customPanel*/
+    ctx[0]
+  );
+  function switch_props(ctx2, dirty) {
+    let switch_instance_props = {};
+    for (let i = 0; i < switch_instance_spread_levels.length; i += 1) {
+      switch_instance_props = assign(switch_instance_props, switch_instance_spread_levels[i]);
+    }
+    if (dirty !== void 0 && dirty[0] & /*panels, steps*/
+    8194) {
+      switch_instance_props = assign(switch_instance_props, get_spread_update(switch_instance_spread_levels, [
+        dirty[0] & /*panels*/
+        2 && get_spread_object(
+          /*panel*/
+          ctx2[30]
+        ),
+        dirty[0] & /*steps*/
+        8192 && { steps: (
+          /*steps*/
+          ctx2[13]
+        ) },
+        dirty[0] & /*panels*/
+        2 && { panelClass: (
+          /*panelClass*/
+          ctx2[31]
+        ) }
+      ]));
+    }
+    return { props: switch_instance_props };
+  }
+  if (switch_value) {
+    switch_instance = construct_svelte_component(switch_value, switch_props(ctx));
+  }
+  return {
+    c() {
+      if (switch_instance) create_component(switch_instance.$$.fragment);
+      switch_instance_anchor = empty();
+    },
+    m(target, anchor) {
+      if (switch_instance) mount_component(switch_instance, target, anchor);
+      insert(target, switch_instance_anchor, anchor);
+      current = true;
+    },
+    p(ctx2, dirty) {
+      if (dirty[0] & /*customPanel*/
+      1 && switch_value !== (switch_value = /*customPanel*/
+      ctx2[0])) {
+        if (switch_instance) {
+          group_outros();
+          const old_component = switch_instance;
+          transition_out(old_component.$$.fragment, 1, 0, () => {
+            destroy_component(old_component, 1);
+          });
+          check_outros();
+        }
+        if (switch_value) {
+          switch_instance = construct_svelte_component(switch_value, switch_props(ctx2, dirty));
+          create_component(switch_instance.$$.fragment);
+          transition_in(switch_instance.$$.fragment, 1);
+          mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
+        } else {
+          switch_instance = null;
+        }
+      } else if (switch_value) {
+        const switch_instance_changes = dirty[0] & /*panels, steps*/
+        8194 ? get_spread_update(switch_instance_spread_levels, [
+          dirty[0] & /*panels*/
+          2 && get_spread_object(
+            /*panel*/
+            ctx2[30]
+          ),
+          dirty[0] & /*steps*/
+          8192 && { steps: (
+            /*steps*/
+            ctx2[13]
+          ) },
+          dirty[0] & /*panels*/
+          2 && { panelClass: (
+            /*panelClass*/
+            ctx2[31]
+          ) }
+        ]) : {};
+        switch_instance.$set(switch_instance_changes);
+      }
+    },
+    i(local) {
+      if (current) return;
+      if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+      current = true;
+    },
+    o(local) {
+      if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+      current = false;
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(switch_instance_anchor);
+      }
+      if (switch_instance) destroy_component(switch_instance, detaching);
+    }
+  };
+}
+function create_each_block(ctx) {
+  let current_block_type_index;
+  let if_block;
+  let if_block_anchor;
+  let current;
+  const if_block_creators = [create_if_block$1, create_else_block];
+  const if_blocks = [];
+  function select_block_type(ctx2, dirty) {
+    if (
+      /*customPanel*/
+      ctx2[0]
+    ) return 0;
+    return 1;
+  }
+  current_block_type_index = select_block_type(ctx);
+  if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+  return {
+    c() {
+      if_block.c();
+      if_block_anchor = empty();
+    },
+    m(target, anchor) {
+      if_blocks[current_block_type_index].m(target, anchor);
+      insert(target, if_block_anchor, anchor);
+      current = true;
+    },
+    p(ctx2, dirty) {
+      let previous_block_index = current_block_type_index;
+      current_block_type_index = select_block_type(ctx2);
+      if (current_block_type_index === previous_block_index) {
+        if_blocks[current_block_type_index].p(ctx2, dirty);
+      } else {
+        group_outros();
+        transition_out(if_blocks[previous_block_index], 1, 1, () => {
+          if_blocks[previous_block_index] = null;
+        });
+        check_outros();
+        if_block = if_blocks[current_block_type_index];
+        if (!if_block) {
+          if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx2);
+          if_block.c();
+        } else {
+          if_block.p(ctx2, dirty);
+        }
+        transition_in(if_block, 1);
+        if_block.m(if_block_anchor.parentNode, if_block_anchor);
+      }
+    },
+    i(local) {
+      if (current) return;
+      transition_in(if_block);
+      current = true;
+    },
+    o(local) {
+      transition_out(if_block);
+      current = false;
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(if_block_anchor);
+      }
+      if_blocks[current_block_type_index].d(detaching);
+    }
+  };
+}
+function create_fragment$1(ctx) {
+  let t0;
+  let deprecationnotice;
+  let t1;
+  let panelobserver;
+  let updating_marker;
+  let t2;
+  let if_block1_anchor;
+  let t3;
+  let div2;
+  let div0;
+  let t4;
+  let div1;
+  let current;
+  let if_block0 = (
+    /*onProgress*/
+    ctx[2] && create_if_block_3(ctx)
+  );
+  deprecationnotice = new DeprecationNotice({
+    props: {
+      onProgress: (
+        /*onProgress*/
+        ctx[2]
+      ),
+      onMarker: (
+        /*onMarker*/
+        ctx[3]
+      )
+    }
+  });
+  function panelobserver_marker_binding(value) {
+    ctx[18](value);
+  }
+  let panelobserver_props = {
+    steps: (
+      /*steps*/
+      ctx[13]
+    ),
+    observerOptions: (
+      /*observerOptions*/
+      ctx[4]
+    )
+  };
+  if (
+    /*marker*/
+    ctx[6] !== void 0
+  ) {
+    panelobserver_props.marker = /*marker*/
+    ctx[6];
+  }
+  panelobserver = new PanelObserver({ props: panelobserver_props });
+  binding_callbacks.push(() => bind(panelobserver, "marker", panelobserver_marker_binding));
+  let if_block1 = (
+    /*isOdyssey*/
+    ctx[12] && create_if_block_2()
+  );
+  let if_block2 = (
+    /*isInViewport*/
+    (ctx[9] || /*discardSlot*/
+    ctx[5] === false) && create_if_block_1(ctx)
+  );
+  let each_value = ensure_array_like(
+    /*panels*/
+    ctx[1]
+  );
+  let each_blocks = [];
+  for (let i = 0; i < each_value.length; i += 1) {
+    each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+  }
+  const out = (i) => transition_out(each_blocks[i], 1, 1, () => {
+    each_blocks[i] = null;
+  });
+  return {
+    c() {
+      if (if_block0) if_block0.c();
+      t0 = space();
+      create_component(deprecationnotice.$$.fragment);
+      t1 = space();
+      create_component(panelobserver.$$.fragment);
+      t2 = space();
+      if (if_block1) if_block1.c();
+      if_block1_anchor = empty();
+      t3 = space();
+      div2 = element("div");
+      div0 = element("div");
+      if (if_block2) if_block2.c();
+      t4 = space();
+      div1 = element("div");
+      for (let i = 0; i < each_blocks.length; i += 1) {
+        each_blocks[i].c();
+      }
+      attr(div0, "class", "graphic svelte-1h184zu");
+      toggle_class(
+        div0,
+        "graphic--resized",
+        /*_layout*/
+        ctx[11].resizeInteractive
+      );
+      toggle_class(
+        div0,
+        "graphic--right",
+        /*_layout*/
+        ctx[11].resizeInteractive && /*_layout*/
+        ctx[11].align === "left"
+      );
+      toggle_class(
+        div0,
+        "graphic--left",
+        /*_layout*/
+        ctx[11].resizeInteractive && /*_layout*/
+        ctx[11].align === "right"
+      );
+      toggle_class(
+        div0,
+        "graphic--centre",
+        /*_layout*/
+        ctx[11].resizeInteractive && /*_layout*/
+        ctx[11].align === "centre"
+      );
+      attr(div1, "class", "content svelte-1h184zu");
+      toggle_class(div1, "content--resized", !/*_layout*/
+      ctx[11].resizeInteractive);
+      attr(div2, "class", "scrollyteller svelte-1h184zu");
+      toggle_class(
+        div2,
+        "scrollyteller--resized",
+        /*_layout*/
+        ctx[11].resizeInteractive
+      );
+      toggle_class(
+        div2,
+        "scrollyteller--debug",
+        /*isDebug*/
+        ctx[10]
+      );
+    },
+    m(target, anchor) {
+      if (if_block0) if_block0.m(target, anchor);
+      insert(target, t0, anchor);
+      mount_component(deprecationnotice, target, anchor);
+      insert(target, t1, anchor);
+      mount_component(panelobserver, target, anchor);
+      insert(target, t2, anchor);
+      if (if_block1) if_block1.m(document.head, null);
+      append(document.head, if_block1_anchor);
+      insert(target, t3, anchor);
+      insert(target, div2, anchor);
+      append(div2, div0);
+      if (if_block2) if_block2.m(div0, null);
+      ctx[19](div0);
+      append(div2, t4);
+      append(div2, div1);
+      for (let i = 0; i < each_blocks.length; i += 1) {
+        if (each_blocks[i]) {
+          each_blocks[i].m(div1, null);
+        }
+      }
+      ctx[20](div2);
+      current = true;
+    },
+    p(ctx2, dirty) {
+      if (
+        /*onProgress*/
+        ctx2[2]
+      ) {
+        if (if_block0) {
+          if_block0.p(ctx2, dirty);
+          if (dirty[0] & /*onProgress*/
+          4) {
+            transition_in(if_block0, 1);
+          }
+        } else {
+          if_block0 = create_if_block_3(ctx2);
+          if_block0.c();
+          transition_in(if_block0, 1);
+          if_block0.m(t0.parentNode, t0);
+        }
+      } else if (if_block0) {
+        group_outros();
+        transition_out(if_block0, 1, 1, () => {
+          if_block0 = null;
+        });
+        check_outros();
+      }
+      const deprecationnotice_changes = {};
+      if (dirty[0] & /*onProgress*/
+      4) deprecationnotice_changes.onProgress = /*onProgress*/
+      ctx2[2];
+      if (dirty[0] & /*onMarker*/
+      8) deprecationnotice_changes.onMarker = /*onMarker*/
+      ctx2[3];
+      deprecationnotice.$set(deprecationnotice_changes);
+      const panelobserver_changes = {};
+      if (dirty[0] & /*observerOptions*/
+      16) panelobserver_changes.observerOptions = /*observerOptions*/
+      ctx2[4];
+      if (!updating_marker && dirty[0] & /*marker*/
+      64) {
+        updating_marker = true;
+        panelobserver_changes.marker = /*marker*/
+        ctx2[6];
+        add_flush_callback(() => updating_marker = false);
+      }
+      panelobserver.$set(panelobserver_changes);
+      if (
+        /*isInViewport*/
+        ctx2[9] || /*discardSlot*/
+        ctx2[5] === false
+      ) {
+        if (if_block2) {
+          if_block2.p(ctx2, dirty);
+          if (dirty[0] & /*isInViewport, discardSlot*/
+          544) {
+            transition_in(if_block2, 1);
+          }
+        } else {
+          if_block2 = create_if_block_1(ctx2);
+          if_block2.c();
+          transition_in(if_block2, 1);
+          if_block2.m(div0, null);
+        }
+      } else if (if_block2) {
+        group_outros();
+        transition_out(if_block2, 1, 1, () => {
+          if_block2 = null;
+        });
+        check_outros();
+      }
+      if (!current || dirty[0] & /*_layout*/
+      2048) {
+        toggle_class(
+          div0,
+          "graphic--resized",
+          /*_layout*/
+          ctx2[11].resizeInteractive
+        );
+      }
+      if (!current || dirty[0] & /*_layout*/
+      2048) {
+        toggle_class(
+          div0,
+          "graphic--right",
+          /*_layout*/
+          ctx2[11].resizeInteractive && /*_layout*/
+          ctx2[11].align === "left"
+        );
+      }
+      if (!current || dirty[0] & /*_layout*/
+      2048) {
+        toggle_class(
+          div0,
+          "graphic--left",
+          /*_layout*/
+          ctx2[11].resizeInteractive && /*_layout*/
+          ctx2[11].align === "right"
+        );
+      }
+      if (!current || dirty[0] & /*_layout*/
+      2048) {
+        toggle_class(
+          div0,
+          "graphic--centre",
+          /*_layout*/
+          ctx2[11].resizeInteractive && /*_layout*/
+          ctx2[11].align === "centre"
+        );
+      }
+      if (dirty[0] & /*customPanel, panels, steps, _layout*/
+      10243) {
+        each_value = ensure_array_like(
+          /*panels*/
+          ctx2[1]
+        );
+        let i;
+        for (i = 0; i < each_value.length; i += 1) {
+          const child_ctx = get_each_context(ctx2, each_value, i);
+          if (each_blocks[i]) {
+            each_blocks[i].p(child_ctx, dirty);
+            transition_in(each_blocks[i], 1);
+          } else {
+            each_blocks[i] = create_each_block(child_ctx);
+            each_blocks[i].c();
+            transition_in(each_blocks[i], 1);
+            each_blocks[i].m(div1, null);
+          }
+        }
+        group_outros();
+        for (i = each_value.length; i < each_blocks.length; i += 1) {
+          out(i);
+        }
+        check_outros();
+      }
+      if (!current || dirty[0] & /*_layout*/
+      2048) {
+        toggle_class(div1, "content--resized", !/*_layout*/
+        ctx2[11].resizeInteractive);
+      }
+      if (!current || dirty[0] & /*_layout*/
+      2048) {
+        toggle_class(
+          div2,
+          "scrollyteller--resized",
+          /*_layout*/
+          ctx2[11].resizeInteractive
+        );
+      }
+      if (!current || dirty[0] & /*isDebug*/
+      1024) {
+        toggle_class(
+          div2,
+          "scrollyteller--debug",
+          /*isDebug*/
+          ctx2[10]
+        );
+      }
+    },
+    i(local) {
+      if (current) return;
+      transition_in(if_block0);
+      transition_in(deprecationnotice.$$.fragment, local);
+      transition_in(panelobserver.$$.fragment, local);
+      transition_in(if_block2);
+      for (let i = 0; i < each_value.length; i += 1) {
+        transition_in(each_blocks[i]);
+      }
+      current = true;
+    },
+    o(local) {
+      transition_out(if_block0);
+      transition_out(deprecationnotice.$$.fragment, local);
+      transition_out(panelobserver.$$.fragment, local);
+      transition_out(if_block2);
+      each_blocks = each_blocks.filter(Boolean);
+      for (let i = 0; i < each_blocks.length; i += 1) {
+        transition_out(each_blocks[i]);
+      }
+      current = false;
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(t0);
+        detach(t1);
+        detach(t2);
+        detach(t3);
+        detach(div2);
+      }
+      if (if_block0) if_block0.d(detaching);
+      destroy_component(deprecationnotice, detaching);
+      destroy_component(panelobserver, detaching);
+      if (if_block1) if_block1.d(detaching);
+      detach(if_block1_anchor);
+      if (if_block2) if_block2.d();
+      ctx[19](null);
+      destroy_each(each_blocks, detaching);
+      ctx[20](null);
+    }
+  };
+}
+function instance$1($$self, $$props, $$invalidate) {
+  let _layout;
+  let maxScrollSpeed;
+  let isDebug;
+  let { $$slots: slots = {}, $$scope } = $$props;
+  const dispatch = createEventDispatcher();
+  let { customPanel = null } = $$props;
+  let { panels } = $$props;
+  let { onProgress = false } = $$props;
+  let { onMarker = null } = $$props;
+  let { observerOptions = { threshold: 0.5 } } = $$props;
+  let { discardSlot = false } = $$props;
+  let { layout = {} } = $$props;
+  const isOdyssey = window.__IS_ODYSSEY_FORMAT__;
+  let scrollytellerRef;
+  let steps = [];
+  let marker;
+  let scrollingPos;
+  let isInViewport = false;
+  let scrollSpeed = 0;
+  let deferUntilScrollSettlesActions = [];
+  let graphicRootEl;
+  new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          $$invalidate(6, marker = entry.target.scrollyData);
+        }
+      });
+    },
+    observerOptions
+  );
+  const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
+    $$invalidate(9, isInViewport = scrollytellerEntry.isIntersecting);
+  }));
+  const deferUntilScrollSettles = (fn) => {
+    if (scrollSpeed < maxScrollSpeed) {
+      fn();
+    } else {
+      deferUntilScrollSettlesActions = [...deferUntilScrollSettlesActions, fn];
+    }
+  };
+  const runDeferredActions = () => {
+    if (scrollSpeed < maxScrollSpeed) {
+      if (deferUntilScrollSettlesActions.length) {
+        deferUntilScrollSettlesActions.forEach((fn) => fn());
+        deferUntilScrollSettlesActions = [];
+      }
+    }
+  };
+  onMount(() => {
+    scrollingPos = getScrollingPos(scrollytellerRef);
+    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(6, marker = panels[0].data);
+    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(6, marker = panels[panels.length - 1].data);
+    if (discardSlot) {
+      scrollytellerObserver.observe(scrollytellerRef);
+    }
+    getScrollSpeed((newSpeed) => {
+      scrollSpeed = newSpeed;
+      runDeferredActions();
+    });
+  });
+  function progress_handler(event) {
+    bubble.call(this, $$self, event);
+  }
+  function panelobserver_marker_binding(value) {
+    marker = value;
+    $$invalidate(6, marker);
+  }
+  function div0_binding($$value) {
+    binding_callbacks[$$value ? "unshift" : "push"](() => {
+      graphicRootEl = $$value;
+      $$invalidate(7, graphicRootEl);
+    });
+  }
+  function div2_binding($$value) {
+    binding_callbacks[$$value ? "unshift" : "push"](() => {
+      scrollytellerRef = $$value;
+      $$invalidate(8, scrollytellerRef);
+    });
+  }
+  $$self.$$set = ($$props2) => {
+    if ("customPanel" in $$props2) $$invalidate(0, customPanel = $$props2.customPanel);
+    if ("panels" in $$props2) $$invalidate(1, panels = $$props2.panels);
+    if ("onProgress" in $$props2) $$invalidate(2, onProgress = $$props2.onProgress);
+    if ("onMarker" in $$props2) $$invalidate(3, onMarker = $$props2.onMarker);
+    if ("observerOptions" in $$props2) $$invalidate(4, observerOptions = $$props2.observerOptions);
+    if ("discardSlot" in $$props2) $$invalidate(5, discardSlot = $$props2.discardSlot);
+    if ("layout" in $$props2) $$invalidate(14, layout = $$props2.layout);
+    if ("$$scope" in $$props2) $$invalidate(15, $$scope = $$props2.$$scope);
+  };
+  $$self.$$.update = () => {
+    if ($$self.$$.dirty[0] & /*layout*/
+    16384) {
+      $$invalidate(11, _layout = {
+        align: layout.align || "centre",
+        resizeInteractive: layout.resizeInteractive ?? true,
+        transparentFloat: layout.transparentFloat ?? ["left", "right"].includes(layout.align)
+      });
+    }
+    if ($$self.$$.dirty[0] & /*discardSlot*/
+    32) {
+      maxScrollSpeed = discardSlot ? 0.5 : Infinity;
+    }
+    if ($$self.$$.dirty[0] & /*graphicRootEl*/
+    128) {
+      if (graphicRootEl) {
+        dispatch("load", graphicRootEl);
+      }
+    }
+    if ($$self.$$.dirty[0] & /*marker*/
+    64) {
+      marker && deferUntilScrollSettles(() => dispatch("marker", marker));
+    }
+  };
+  $$invalidate(10, isDebug = typeof location !== "undefined" && location.hash === "#debug=true");
+  return [
+    customPanel,
+    panels,
+    onProgress,
+    onMarker,
+    observerOptions,
+    discardSlot,
+    marker,
+    graphicRootEl,
+    scrollytellerRef,
+    isInViewport,
+    isDebug,
+    _layout,
+    isOdyssey,
+    steps,
+    layout,
+    $$scope,
+    slots,
+    progress_handler,
+    panelobserver_marker_binding,
+    div0_binding,
+    div2_binding
+  ];
+}
+class Scrollyteller extends SvelteComponent {
+  constructor(options) {
+    super();
+    init(
+      this,
+      options,
+      instance$1,
+      create_fragment$1,
+      safe_not_equal,
+      {
+        customPanel: 0,
+        panels: 1,
+        onProgress: 2,
+        onMarker: 3,
+        observerOptions: 4,
+        discardSlot: 5,
+        layout: 14
+      },
+      add_css,
+      [-1, -1]
+    );
+  }
+  get customPanel() {
+    return this.$$.ctx[0];
+  }
+  set customPanel(customPanel) {
+    this.$$set({ customPanel });
+    flush();
+  }
+  get panels() {
+    return this.$$.ctx[1];
+  }
+  set panels(panels) {
+    this.$$set({ panels });
+    flush();
+  }
+  get onProgress() {
+    return this.$$.ctx[2];
+  }
+  set onProgress(onProgress) {
+    this.$$set({ onProgress });
+    flush();
+  }
+  get onMarker() {
+    return this.$$.ctx[3];
+  }
+  set onMarker(onMarker) {
+    this.$$set({ onMarker });
+    flush();
+  }
+  get observerOptions() {
+    return this.$$.ctx[4];
+  }
+  set observerOptions(observerOptions) {
+    this.$$set({ observerOptions });
+    flush();
+  }
+  get discardSlot() {
+    return this.$$.ctx[5];
+  }
+  set discardSlot(discardSlot) {
+    this.$$set({ discardSlot });
+    flush();
+  }
+  get layout() {
+    return this.$$.ctx[14];
+  }
+  set layout(layout) {
+    this.$$set({ layout });
+    flush();
+  }
+}
+create_custom_element(Scrollyteller, { "customPanel": {}, "panels": {}, "onProgress": { "type": "Boolean" }, "onMarker": {}, "observerOptions": {}, "discardSlot": { "type": "Boolean" }, "layout": {} }, ["default"], [], true);
+function create_if_block(ctx) {
+  let scrollyteller;
+  let current;
+  const scrollyteller_spread_levels = [
+    { panels: (
+      /*panels*/
+      ctx[0]
+    ) },
+    { layout: (
+      /*layout*/
+      ctx[1]
+    ) },
+    /*$$restProps*/
+    ctx[2]
+  ];
+  let scrollyteller_props = {};
+  for (let i = 0; i < scrollyteller_spread_levels.length; i += 1) {
+    scrollyteller_props = assign(scrollyteller_props, scrollyteller_spread_levels[i]);
+  }
+  scrollyteller = new Scrollyteller({ props: scrollyteller_props });
+  scrollyteller.$on(
+    "progress",
+    /*progress_handler*/
+    ctx[3]
+  );
+  scrollyteller.$on(
+    "marker",
+    /*marker_handler*/
+    ctx[4]
+  );
+  scrollyteller.$on(
+    "load",
+    /*load_handler*/
+    ctx[5]
+  );
+  return {
+    c() {
+      create_component(scrollyteller.$$.fragment);
+    },
+    m(target, anchor) {
+      mount_component(scrollyteller, target, anchor);
+      current = true;
+    },
+    p(ctx2, dirty) {
+      const scrollyteller_changes = dirty & /*panels, layout, $$restProps*/
+      7 ? get_spread_update(scrollyteller_spread_levels, [
+        dirty & /*panels*/
+        1 && { panels: (
+          /*panels*/
+          ctx2[0]
+        ) },
+        dirty & /*layout*/
+        2 && { layout: (
+          /*layout*/
+          ctx2[1]
+        ) },
+        dirty & /*$$restProps*/
+        4 && get_spread_object(
+          /*$$restProps*/
+          ctx2[2]
+        )
+      ]) : {};
+      scrollyteller.$set(scrollyteller_changes);
+    },
+    i(local) {
+      if (current) return;
+      transition_in(scrollyteller.$$.fragment, local);
+      current = true;
+    },
+    o(local) {
+      transition_out(scrollyteller.$$.fragment, local);
+      current = false;
+    },
+    d(detaching) {
+      destroy_component(scrollyteller, detaching);
+    }
+  };
+}
+function create_fragment(ctx) {
+  let if_block_anchor;
+  let current;
+  let if_block = (
+    /*panels*/
+    ctx[0].length && create_if_block(ctx)
+  );
+  return {
+    c() {
+      if (if_block) if_block.c();
+      if_block_anchor = empty();
+    },
+    m(target, anchor) {
+      if (if_block) if_block.m(target, anchor);
+      insert(target, if_block_anchor, anchor);
+      current = true;
+    },
+    p(ctx2, [dirty]) {
+      if (
+        /*panels*/
+        ctx2[0].length
+      ) {
+        if (if_block) {
+          if_block.p(ctx2, dirty);
+          if (dirty & /*panels*/
+          1) {
+            transition_in(if_block, 1);
+          }
+        } else {
+          if_block = create_if_block(ctx2);
+          if_block.c();
+          transition_in(if_block, 1);
+          if_block.m(if_block_anchor.parentNode, if_block_anchor);
+        }
+      } else if (if_block) {
+        group_outros();
+        transition_out(if_block, 1, 1, () => {
+          if_block = null;
+        });
+        check_outros();
+      }
+    },
+    i(local) {
+      if (current) return;
+      transition_in(if_block);
+      current = true;
+    },
+    o(local) {
+      transition_out(if_block);
+      current = false;
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(if_block_anchor);
+      }
+      if (if_block) if_block.d(detaching);
+    }
+  };
+}
+function instance($$self, $$props, $$invalidate) {
+  const omit_props_names = ["panels", "layout"];
+  let $$restProps = compute_rest_props($$props, omit_props_names);
+  let { panels = [] } = $$props;
+  let { layout = {} } = $$props;
+  function progress_handler(event) {
+    bubble.call(this, $$self, event);
+  }
+  function marker_handler(event) {
+    bubble.call(this, $$self, event);
+  }
+  function load_handler(event) {
+    bubble.call(this, $$self, event);
+  }
+  $$self.$$set = ($$new_props) => {
+    $$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    $$invalidate(2, $$restProps = compute_rest_props($$props, omit_props_names));
+    if ("panels" in $$new_props) $$invalidate(0, panels = $$new_props.panels);
+    if ("layout" in $$new_props) $$invalidate(1, layout = $$new_props.layout);
+  };
+  return [panels, layout, $$restProps, progress_handler, marker_handler, load_handler];
+}
+class Scrollyteller_wc extends SvelteComponent {
+  constructor(options) {
+    super();
+    init(this, options, instance, create_fragment, safe_not_equal, { panels: 0, layout: 1 });
+  }
+  get panels() {
+    return this.$$.ctx[0];
+  }
+  set panels(panels) {
+    this.$$set({ panels });
+    flush();
+  }
+  get layout() {
+    return this.$$.ctx[1];
+  }
+  set layout(layout) {
+    this.$$set({ layout });
+    flush();
+  }
+}
+customElements.define("abcnews-scrollyteller", create_custom_element(Scrollyteller_wc, { "panels": {}, "layout": {} }, [], [], false));
 var makeArray = (val) => typeof val === "string" ? [val] : val;
 function src_default(string, { propMap = {}, arrayProps = [], noTypeGuessing = [] } = {}) {
   const config = string.match(/[A-Z]+([0-9a-z]|$)+/g) || [];
@@ -1052,1247 +2404,6 @@ const loadPanels = (nodes, initialConfig, name) => {
   });
   return panels;
 };
-const getScrollSpeed = (callback) => {
-  const getScrollTop = () => document.documentElement.scrollTop;
-  let lastOffset = getScrollTop();
-  let lastDate = Date.now();
-  const onScroll = () => {
-    const delayInMs = Date.now() - lastDate;
-    const offset = getScrollTop() - lastOffset;
-    const speedInpxPerMs = offset / delayInMs;
-    const scrollSpeed = Math.abs(speedInpxPerMs);
-    lastDate = Date.now();
-    lastOffset = getScrollTop();
-    callback(scrollSpeed);
-  };
-  window.addEventListener("scroll", onScroll, { passive: true });
-  const onEndScroll = () => callback(0);
-  window.addEventListener("scrollend", onEndScroll, { passive: true });
-  return () => {
-    window.removeEventListener("scroll", onScroll);
-    window.removeEventListener("scrollend", onEndScroll);
-  };
-};
-var ScrollPositions = /* @__PURE__ */ ((ScrollPositions2) => {
-  ScrollPositions2["FULL"] = "FULL";
-  ScrollPositions2["ABOVE"] = "ABOVE";
-  ScrollPositions2["BELOW"] = "BELOW";
-  return ScrollPositions2;
-})(ScrollPositions || {});
-const getScrollingPos = (scrollytellerRef) => {
-  const boundingRect = scrollytellerRef.getBoundingClientRect();
-  if (boundingRect.bottom - window.innerHeight < 0) {
-    return "BELOW";
-  }
-  if (boundingRect.top > 0) {
-    return "ABOVE";
-  }
-  return "FULL";
-};
-const { window: window_1 } = globals;
-function create_fragment$2(ctx) {
-  let mounted;
-  let dispose;
-  return {
-    c: noop,
-    m(target, anchor) {
-      if (!mounted) {
-        dispose = listen(
-          window_1,
-          "scroll",
-          /*scrollHandler*/
-          ctx[0]
-        );
-        mounted = true;
-      }
-    },
-    p: noop,
-    i: noop,
-    o: noop,
-    d(detaching) {
-      mounted = false;
-      dispose();
-    }
-  };
-}
-function instance$3($$self, $$props, $$invalidate) {
-  const dispatch = createEventDispatcher();
-  let { scrollytellerRef } = $$props;
-  const scrollHandler = () => {
-    const rootRect = scrollytellerRef.getBoundingClientRect();
-    dispatch("progress", {
-      boundingRect: rootRect,
-      rootPct: 1 - rootRect.bottom / (rootRect.height + window.innerHeight),
-      scrollPct: 1 - (rootRect.bottom - window.innerHeight) / (rootRect.height - window.innerHeight)
-    });
-  };
-  $$self.$$set = ($$props2) => {
-    if ("scrollytellerRef" in $$props2) $$invalidate(1, scrollytellerRef = $$props2.scrollytellerRef);
-  };
-  return [scrollHandler, scrollytellerRef];
-}
-class OnProgressHandler extends SvelteComponent {
-  constructor(options) {
-    super();
-    init(this, options, instance$3, create_fragment$2, safe_not_equal, { scrollytellerRef: 1 });
-  }
-  get scrollytellerRef() {
-    return this.$$.ctx[1];
-  }
-  set scrollytellerRef(scrollytellerRef) {
-    this.$$set({ scrollytellerRef });
-    flush();
-  }
-}
-create_custom_element(OnProgressHandler, { "scrollytellerRef": {} }, [], [], true);
-function instance$2($$self, $$props, $$invalidate) {
-  let { onProgress } = $$props;
-  let { onMarker } = $$props;
-  $$self.$$set = ($$props2) => {
-    if ("onProgress" in $$props2) $$invalidate(0, onProgress = $$props2.onProgress);
-    if ("onMarker" in $$props2) $$invalidate(1, onMarker = $$props2.onMarker);
-  };
-  $$self.$$.update = () => {
-    if ($$self.$$.dirty & /*onProgress, onMarker*/
-    3) {
-      {
-        if (typeof onProgress === "function") {
-          throw new Error("the onProgress callback is deprecated. Please use on:progress");
-        }
-        if (typeof onMarker === "function") {
-          throw new Error("the onMarker callback is deprecated. Please use on:marker");
-        }
-      }
-    }
-  };
-  return [onProgress, onMarker];
-}
-class DeprecationNotice extends SvelteComponent {
-  constructor(options) {
-    super();
-    init(this, options, instance$2, null, safe_not_equal, { onProgress: 0, onMarker: 1 });
-  }
-  get onProgress() {
-    return this.$$.ctx[0];
-  }
-  set onProgress(onProgress) {
-    this.$$set({ onProgress });
-    flush();
-  }
-  get onMarker() {
-    return this.$$.ctx[1];
-  }
-  set onMarker(onMarker) {
-    this.$$set({ onMarker });
-    flush();
-  }
-}
-create_custom_element(DeprecationNotice, { "onProgress": {}, "onMarker": {} }, [], [], true);
-function add_css(target) {
-  append_styles(target, "svelte-1h184zu", '.scrollyteller.svelte-1h184zu.svelte-1h184zu{position:relative}.scrollyteller--resized.svelte-1h184zu.svelte-1h184zu{max-width:127.5rem;margin:0 auto}.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110}@media(min-width: 46.5rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"Tablet"}}@media(min-width: 62rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"LargeTablet"}}@media(min-width: 75rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"Desktop"}}@media(min-width: 90rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"LargeDesktop"}}.graphic.svelte-1h184zu.svelte-1h184zu{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-1h184zu.svelte-1h184zu{container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 46.5rem){.graphic--resized.svelte-1h184zu.svelte-1h184zu{--margin:4rem;top:8dvh;height:62dvh}}@media(min-width: 62rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu,.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{align-items:center;--marginOuter:2rem;--marginCentre:calc(var(--marginOuter) / 2);height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 75rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu,.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 90rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu,.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 62rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 62rem){.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 62rem){.graphic--resized.graphic--centre.svelte-1h184zu.svelte-1h184zu{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 75rem){.graphic--resized.graphic--centre.svelte-1h184zu.svelte-1h184zu{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 90rem){.graphic--resized.graphic--centre.svelte-1h184zu.svelte-1h184zu{--margin:6rem;top:12dvh;height:58dvh}}.scrollyteller--debug.svelte-1h184zu .graphic--resized.svelte-1h184zu{outline:5px solid limegreen}.content.svelte-1h184zu.svelte-1h184zu{margin:-100dvh auto 0;position:relative;z-index:2;pointer-events:none}.content--resized.svelte-1h184zu.svelte-1h184zu{max-width:127.5rem}');
-}
-function get_each_context(ctx, list, i) {
-  const child_ctx = ctx.slice();
-  child_ctx[29] = list[i];
-  child_ctx[32] = i;
-  const constants_0 = (
-    /*panel*/
-    (child_ctx[29].panelClass ?? "") + /*i*/
-    (child_ctx[32] === 0 ? " first" : "") + /*i*/
-    (child_ctx[32] === /*panels*/
-    child_ctx[1].length - 1 ? " last" : "")
-  );
-  child_ctx[30] = constants_0;
-  return child_ctx;
-}
-function create_if_block_3(ctx) {
-  let onprogresshandler;
-  let current;
-  onprogresshandler = new OnProgressHandler({
-    props: {
-      scrollytellerRef: (
-        /*scrollytellerRef*/
-        ctx[6]
-      )
-    }
-  });
-  onprogresshandler.$on(
-    "progress",
-    /*progress_handler*/
-    ctx[17]
-  );
-  return {
-    c() {
-      create_component(onprogresshandler.$$.fragment);
-    },
-    m(target, anchor) {
-      mount_component(onprogresshandler, target, anchor);
-      current = true;
-    },
-    p(ctx2, dirty) {
-      const onprogresshandler_changes = {};
-      if (dirty[0] & /*scrollytellerRef*/
-      64) onprogresshandler_changes.scrollytellerRef = /*scrollytellerRef*/
-      ctx2[6];
-      onprogresshandler.$set(onprogresshandler_changes);
-    },
-    i(local) {
-      if (current) return;
-      transition_in(onprogresshandler.$$.fragment, local);
-      current = true;
-    },
-    o(local) {
-      transition_out(onprogresshandler.$$.fragment, local);
-      current = false;
-    },
-    d(detaching) {
-      destroy_component(onprogresshandler, detaching);
-    }
-  };
-}
-function create_if_block_2(ctx) {
-  let style;
-  return {
-    c() {
-      style = element("style");
-      style.textContent = "/* styles required to make position sticky work */\n			/* existing styles on an Odyssey body are preventing position sticky from 'sticking' */\n			body {\n				overflow: visible;\n			}";
-    },
-    m(target, anchor) {
-      insert(target, style, anchor);
-    },
-    d(detaching) {
-      if (detaching) {
-        detach(style);
-      }
-    }
-  };
-}
-function create_if_block_1(ctx) {
-  let current;
-  const default_slot_template = (
-    /*#slots*/
-    ctx[16].default
-  );
-  const default_slot = create_slot(
-    default_slot_template,
-    ctx,
-    /*$$scope*/
-    ctx[15],
-    null
-  );
-  return {
-    c() {
-      if (default_slot) default_slot.c();
-    },
-    m(target, anchor) {
-      if (default_slot) {
-        default_slot.m(target, anchor);
-      }
-      current = true;
-    },
-    p(ctx2, dirty) {
-      if (default_slot) {
-        if (default_slot.p && (!current || dirty[0] & /*$$scope*/
-        32768)) {
-          update_slot_base(
-            default_slot,
-            default_slot_template,
-            ctx2,
-            /*$$scope*/
-            ctx2[15],
-            !current ? get_all_dirty_from_scope(
-              /*$$scope*/
-              ctx2[15]
-            ) : get_slot_changes(
-              default_slot_template,
-              /*$$scope*/
-              ctx2[15],
-              dirty,
-              null
-            ),
-            null
-          );
-        }
-      }
-    },
-    i(local) {
-      if (current) return;
-      transition_in(default_slot, local);
-      current = true;
-    },
-    o(local) {
-      transition_out(default_slot, local);
-      current = false;
-    },
-    d(detaching) {
-      if (default_slot) default_slot.d(detaching);
-    }
-  };
-}
-function create_else_block(ctx) {
-  let panel_1;
-  let current;
-  panel_1 = new Panel({
-    props: {
-      props: {
-        .../*panel*/
-        ctx[29],
-        align: (
-          /*panel*/
-          ctx[29].align || /*_layout*/
-          ctx[9].align
-        ),
-        transparentFloat: (
-          /*_layout*/
-          ctx[9].transparentFloat
-        ),
-        steps: (
-          /*steps*/
-          ctx[11]
-        ),
-        panelClass: (
-          /*panelClass*/
-          ctx[30]
-        )
-      }
-    }
-  });
-  return {
-    c() {
-      create_component(panel_1.$$.fragment);
-    },
-    m(target, anchor) {
-      mount_component(panel_1, target, anchor);
-      current = true;
-    },
-    p(ctx2, dirty) {
-      const panel_1_changes = {};
-      if (dirty[0] & /*panels, _layout*/
-      514) panel_1_changes.props = {
-        .../*panel*/
-        ctx2[29],
-        align: (
-          /*panel*/
-          ctx2[29].align || /*_layout*/
-          ctx2[9].align
-        ),
-        transparentFloat: (
-          /*_layout*/
-          ctx2[9].transparentFloat
-        ),
-        steps: (
-          /*steps*/
-          ctx2[11]
-        ),
-        panelClass: (
-          /*panelClass*/
-          ctx2[30]
-        )
-      };
-      panel_1.$set(panel_1_changes);
-    },
-    i(local) {
-      if (current) return;
-      transition_in(panel_1.$$.fragment, local);
-      current = true;
-    },
-    o(local) {
-      transition_out(panel_1.$$.fragment, local);
-      current = false;
-    },
-    d(detaching) {
-      destroy_component(panel_1, detaching);
-    }
-  };
-}
-function create_if_block$1(ctx) {
-  let switch_instance;
-  let switch_instance_anchor;
-  let current;
-  const switch_instance_spread_levels = [
-    /*panel*/
-    ctx[29],
-    { steps: (
-      /*steps*/
-      ctx[11]
-    ) },
-    { panelClass: (
-      /*panelClass*/
-      ctx[30]
-    ) }
-  ];
-  var switch_value = (
-    /*customPanel*/
-    ctx[0]
-  );
-  function switch_props(ctx2, dirty) {
-    let switch_instance_props = {};
-    for (let i = 0; i < switch_instance_spread_levels.length; i += 1) {
-      switch_instance_props = assign(switch_instance_props, switch_instance_spread_levels[i]);
-    }
-    if (dirty !== void 0 && dirty[0] & /*panels, steps*/
-    2050) {
-      switch_instance_props = assign(switch_instance_props, get_spread_update(switch_instance_spread_levels, [
-        dirty[0] & /*panels*/
-        2 && get_spread_object(
-          /*panel*/
-          ctx2[29]
-        ),
-        dirty[0] & /*steps*/
-        2048 && { steps: (
-          /*steps*/
-          ctx2[11]
-        ) },
-        dirty[0] & /*panels*/
-        2 && { panelClass: (
-          /*panelClass*/
-          ctx2[30]
-        ) }
-      ]));
-    }
-    return { props: switch_instance_props };
-  }
-  if (switch_value) {
-    switch_instance = construct_svelte_component(switch_value, switch_props(ctx));
-  }
-  return {
-    c() {
-      if (switch_instance) create_component(switch_instance.$$.fragment);
-      switch_instance_anchor = empty();
-    },
-    m(target, anchor) {
-      if (switch_instance) mount_component(switch_instance, target, anchor);
-      insert(target, switch_instance_anchor, anchor);
-      current = true;
-    },
-    p(ctx2, dirty) {
-      if (dirty[0] & /*customPanel*/
-      1 && switch_value !== (switch_value = /*customPanel*/
-      ctx2[0])) {
-        if (switch_instance) {
-          group_outros();
-          const old_component = switch_instance;
-          transition_out(old_component.$$.fragment, 1, 0, () => {
-            destroy_component(old_component, 1);
-          });
-          check_outros();
-        }
-        if (switch_value) {
-          switch_instance = construct_svelte_component(switch_value, switch_props(ctx2, dirty));
-          create_component(switch_instance.$$.fragment);
-          transition_in(switch_instance.$$.fragment, 1);
-          mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
-        } else {
-          switch_instance = null;
-        }
-      } else if (switch_value) {
-        const switch_instance_changes = dirty[0] & /*panels, steps*/
-        2050 ? get_spread_update(switch_instance_spread_levels, [
-          dirty[0] & /*panels*/
-          2 && get_spread_object(
-            /*panel*/
-            ctx2[29]
-          ),
-          dirty[0] & /*steps*/
-          2048 && { steps: (
-            /*steps*/
-            ctx2[11]
-          ) },
-          dirty[0] & /*panels*/
-          2 && { panelClass: (
-            /*panelClass*/
-            ctx2[30]
-          ) }
-        ]) : {};
-        switch_instance.$set(switch_instance_changes);
-      }
-    },
-    i(local) {
-      if (current) return;
-      if (switch_instance) transition_in(switch_instance.$$.fragment, local);
-      current = true;
-    },
-    o(local) {
-      if (switch_instance) transition_out(switch_instance.$$.fragment, local);
-      current = false;
-    },
-    d(detaching) {
-      if (detaching) {
-        detach(switch_instance_anchor);
-      }
-      if (switch_instance) destroy_component(switch_instance, detaching);
-    }
-  };
-}
-function create_each_block(ctx) {
-  let current_block_type_index;
-  let if_block;
-  let if_block_anchor;
-  let current;
-  const if_block_creators = [create_if_block$1, create_else_block];
-  const if_blocks = [];
-  function select_block_type(ctx2, dirty) {
-    if (
-      /*customPanel*/
-      ctx2[0]
-    ) return 0;
-    return 1;
-  }
-  current_block_type_index = select_block_type(ctx);
-  if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-  return {
-    c() {
-      if_block.c();
-      if_block_anchor = empty();
-    },
-    m(target, anchor) {
-      if_blocks[current_block_type_index].m(target, anchor);
-      insert(target, if_block_anchor, anchor);
-      current = true;
-    },
-    p(ctx2, dirty) {
-      let previous_block_index = current_block_type_index;
-      current_block_type_index = select_block_type(ctx2);
-      if (current_block_type_index === previous_block_index) {
-        if_blocks[current_block_type_index].p(ctx2, dirty);
-      } else {
-        group_outros();
-        transition_out(if_blocks[previous_block_index], 1, 1, () => {
-          if_blocks[previous_block_index] = null;
-        });
-        check_outros();
-        if_block = if_blocks[current_block_type_index];
-        if (!if_block) {
-          if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx2);
-          if_block.c();
-        } else {
-          if_block.p(ctx2, dirty);
-        }
-        transition_in(if_block, 1);
-        if_block.m(if_block_anchor.parentNode, if_block_anchor);
-      }
-    },
-    i(local) {
-      if (current) return;
-      transition_in(if_block);
-      current = true;
-    },
-    o(local) {
-      transition_out(if_block);
-      current = false;
-    },
-    d(detaching) {
-      if (detaching) {
-        detach(if_block_anchor);
-      }
-      if_blocks[current_block_type_index].d(detaching);
-    }
-  };
-}
-function create_fragment$1(ctx) {
-  let t0;
-  let deprecationnotice;
-  let t1;
-  let if_block1_anchor;
-  let t2;
-  let div2;
-  let div0;
-  let t3;
-  let div1;
-  let current;
-  let if_block0 = (
-    /*onProgress*/
-    ctx[2] && create_if_block_3(ctx)
-  );
-  deprecationnotice = new DeprecationNotice({
-    props: {
-      onProgress: (
-        /*onProgress*/
-        ctx[2]
-      ),
-      onMarker: (
-        /*onMarker*/
-        ctx[3]
-      )
-    }
-  });
-  let if_block1 = (
-    /*isOdyssey*/
-    ctx[10] && create_if_block_2()
-  );
-  let if_block2 = (
-    /*isInViewport*/
-    (ctx[7] || /*discardSlot*/
-    ctx[4] === false) && create_if_block_1(ctx)
-  );
-  let each_value = ensure_array_like(
-    /*panels*/
-    ctx[1]
-  );
-  let each_blocks = [];
-  for (let i = 0; i < each_value.length; i += 1) {
-    each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
-  }
-  const out = (i) => transition_out(each_blocks[i], 1, 1, () => {
-    each_blocks[i] = null;
-  });
-  return {
-    c() {
-      if (if_block0) if_block0.c();
-      t0 = space();
-      create_component(deprecationnotice.$$.fragment);
-      t1 = space();
-      if (if_block1) if_block1.c();
-      if_block1_anchor = empty();
-      t2 = space();
-      div2 = element("div");
-      div0 = element("div");
-      if (if_block2) if_block2.c();
-      t3 = space();
-      div1 = element("div");
-      for (let i = 0; i < each_blocks.length; i += 1) {
-        each_blocks[i].c();
-      }
-      attr(div0, "class", "graphic svelte-1h184zu");
-      toggle_class(
-        div0,
-        "graphic--resized",
-        /*_layout*/
-        ctx[9].resizeInteractive
-      );
-      toggle_class(
-        div0,
-        "graphic--right",
-        /*_layout*/
-        ctx[9].resizeInteractive && /*_layout*/
-        ctx[9].align === "left"
-      );
-      toggle_class(
-        div0,
-        "graphic--left",
-        /*_layout*/
-        ctx[9].resizeInteractive && /*_layout*/
-        ctx[9].align === "right"
-      );
-      toggle_class(
-        div0,
-        "graphic--centre",
-        /*_layout*/
-        ctx[9].resizeInteractive && /*_layout*/
-        ctx[9].align === "centre"
-      );
-      attr(div1, "class", "content svelte-1h184zu");
-      toggle_class(div1, "content--resized", !/*_layout*/
-      ctx[9].resizeInteractive);
-      attr(div2, "class", "scrollyteller svelte-1h184zu");
-      toggle_class(
-        div2,
-        "scrollyteller--resized",
-        /*_layout*/
-        ctx[9].resizeInteractive
-      );
-      toggle_class(
-        div2,
-        "scrollyteller--debug",
-        /*isDebug*/
-        ctx[8]
-      );
-    },
-    m(target, anchor) {
-      if (if_block0) if_block0.m(target, anchor);
-      insert(target, t0, anchor);
-      mount_component(deprecationnotice, target, anchor);
-      insert(target, t1, anchor);
-      if (if_block1) if_block1.m(document.head, null);
-      append(document.head, if_block1_anchor);
-      insert(target, t2, anchor);
-      insert(target, div2, anchor);
-      append(div2, div0);
-      if (if_block2) if_block2.m(div0, null);
-      ctx[18](div0);
-      append(div2, t3);
-      append(div2, div1);
-      for (let i = 0; i < each_blocks.length; i += 1) {
-        if (each_blocks[i]) {
-          each_blocks[i].m(div1, null);
-        }
-      }
-      ctx[19](div2);
-      current = true;
-    },
-    p(ctx2, dirty) {
-      if (
-        /*onProgress*/
-        ctx2[2]
-      ) {
-        if (if_block0) {
-          if_block0.p(ctx2, dirty);
-          if (dirty[0] & /*onProgress*/
-          4) {
-            transition_in(if_block0, 1);
-          }
-        } else {
-          if_block0 = create_if_block_3(ctx2);
-          if_block0.c();
-          transition_in(if_block0, 1);
-          if_block0.m(t0.parentNode, t0);
-        }
-      } else if (if_block0) {
-        group_outros();
-        transition_out(if_block0, 1, 1, () => {
-          if_block0 = null;
-        });
-        check_outros();
-      }
-      const deprecationnotice_changes = {};
-      if (dirty[0] & /*onProgress*/
-      4) deprecationnotice_changes.onProgress = /*onProgress*/
-      ctx2[2];
-      if (dirty[0] & /*onMarker*/
-      8) deprecationnotice_changes.onMarker = /*onMarker*/
-      ctx2[3];
-      deprecationnotice.$set(deprecationnotice_changes);
-      if (
-        /*isInViewport*/
-        ctx2[7] || /*discardSlot*/
-        ctx2[4] === false
-      ) {
-        if (if_block2) {
-          if_block2.p(ctx2, dirty);
-          if (dirty[0] & /*isInViewport, discardSlot*/
-          144) {
-            transition_in(if_block2, 1);
-          }
-        } else {
-          if_block2 = create_if_block_1(ctx2);
-          if_block2.c();
-          transition_in(if_block2, 1);
-          if_block2.m(div0, null);
-        }
-      } else if (if_block2) {
-        group_outros();
-        transition_out(if_block2, 1, 1, () => {
-          if_block2 = null;
-        });
-        check_outros();
-      }
-      if (!current || dirty[0] & /*_layout*/
-      512) {
-        toggle_class(
-          div0,
-          "graphic--resized",
-          /*_layout*/
-          ctx2[9].resizeInteractive
-        );
-      }
-      if (!current || dirty[0] & /*_layout*/
-      512) {
-        toggle_class(
-          div0,
-          "graphic--right",
-          /*_layout*/
-          ctx2[9].resizeInteractive && /*_layout*/
-          ctx2[9].align === "left"
-        );
-      }
-      if (!current || dirty[0] & /*_layout*/
-      512) {
-        toggle_class(
-          div0,
-          "graphic--left",
-          /*_layout*/
-          ctx2[9].resizeInteractive && /*_layout*/
-          ctx2[9].align === "right"
-        );
-      }
-      if (!current || dirty[0] & /*_layout*/
-      512) {
-        toggle_class(
-          div0,
-          "graphic--centre",
-          /*_layout*/
-          ctx2[9].resizeInteractive && /*_layout*/
-          ctx2[9].align === "centre"
-        );
-      }
-      if (dirty[0] & /*customPanel, panels, steps, _layout*/
-      2563) {
-        each_value = ensure_array_like(
-          /*panels*/
-          ctx2[1]
-        );
-        let i;
-        for (i = 0; i < each_value.length; i += 1) {
-          const child_ctx = get_each_context(ctx2, each_value, i);
-          if (each_blocks[i]) {
-            each_blocks[i].p(child_ctx, dirty);
-            transition_in(each_blocks[i], 1);
-          } else {
-            each_blocks[i] = create_each_block(child_ctx);
-            each_blocks[i].c();
-            transition_in(each_blocks[i], 1);
-            each_blocks[i].m(div1, null);
-          }
-        }
-        group_outros();
-        for (i = each_value.length; i < each_blocks.length; i += 1) {
-          out(i);
-        }
-        check_outros();
-      }
-      if (!current || dirty[0] & /*_layout*/
-      512) {
-        toggle_class(div1, "content--resized", !/*_layout*/
-        ctx2[9].resizeInteractive);
-      }
-      if (!current || dirty[0] & /*_layout*/
-      512) {
-        toggle_class(
-          div2,
-          "scrollyteller--resized",
-          /*_layout*/
-          ctx2[9].resizeInteractive
-        );
-      }
-      if (!current || dirty[0] & /*isDebug*/
-      256) {
-        toggle_class(
-          div2,
-          "scrollyteller--debug",
-          /*isDebug*/
-          ctx2[8]
-        );
-      }
-    },
-    i(local) {
-      if (current) return;
-      transition_in(if_block0);
-      transition_in(deprecationnotice.$$.fragment, local);
-      transition_in(if_block2);
-      for (let i = 0; i < each_value.length; i += 1) {
-        transition_in(each_blocks[i]);
-      }
-      current = true;
-    },
-    o(local) {
-      transition_out(if_block0);
-      transition_out(deprecationnotice.$$.fragment, local);
-      transition_out(if_block2);
-      each_blocks = each_blocks.filter(Boolean);
-      for (let i = 0; i < each_blocks.length; i += 1) {
-        transition_out(each_blocks[i]);
-      }
-      current = false;
-    },
-    d(detaching) {
-      if (detaching) {
-        detach(t0);
-        detach(t1);
-        detach(t2);
-        detach(div2);
-      }
-      if (if_block0) if_block0.d(detaching);
-      destroy_component(deprecationnotice, detaching);
-      if (if_block1) if_block1.d(detaching);
-      detach(if_block1_anchor);
-      if (if_block2) if_block2.d();
-      ctx[18](null);
-      destroy_each(each_blocks, detaching);
-      ctx[19](null);
-    }
-  };
-}
-function instance$1($$self, $$props, $$invalidate) {
-  let _layout;
-  let maxScrollSpeed;
-  let isDebug;
-  let { $$slots: slots = {}, $$scope } = $$props;
-  const dispatch = createEventDispatcher();
-  let { customPanel = null } = $$props;
-  let { panels } = $$props;
-  let { onProgress = false } = $$props;
-  let { onMarker = null } = $$props;
-  let { observerOptions = { threshold: 0.5 } } = $$props;
-  let { discardSlot = false } = $$props;
-  let { layout = {} } = $$props;
-  const isOdyssey = window.__IS_ODYSSEY_FORMAT__;
-  let scrollytellerRef;
-  let steps = [];
-  let marker;
-  let scrollingPos;
-  let isInViewport = false;
-  let scrollSpeed = 0;
-  let deferUntilScrollSettlesActions = [];
-  let graphicRootEl;
-  const panelObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          $$invalidate(14, marker = entry.target.scrollyData);
-        }
-      });
-    },
-    observerOptions
-  );
-  const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
-    $$invalidate(7, isInViewport = scrollytellerEntry.isIntersecting);
-  }));
-  const deferUntilScrollSettles = (fn) => {
-    if (scrollSpeed < maxScrollSpeed) {
-      fn();
-    } else {
-      deferUntilScrollSettlesActions = [...deferUntilScrollSettlesActions, fn];
-    }
-  };
-  const runDeferredActions = () => {
-    if (scrollSpeed < maxScrollSpeed) {
-      if (deferUntilScrollSettlesActions.length) {
-        deferUntilScrollSettlesActions.forEach((fn) => fn());
-        deferUntilScrollSettlesActions = [];
-      }
-    }
-  };
-  onMount(() => {
-    scrollingPos = getScrollingPos(scrollytellerRef);
-    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(14, marker = panels[0].data);
-    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(14, marker = panels[panels.length - 1].data);
-    steps.forEach((step, i) => {
-      panelObserver.observe(step);
-    });
-    if (discardSlot) {
-      scrollytellerObserver.observe(scrollytellerRef);
-    }
-    getScrollSpeed((newSpeed) => {
-      scrollSpeed = newSpeed;
-      runDeferredActions();
-    });
-  });
-  function progress_handler(event) {
-    bubble.call(this, $$self, event);
-  }
-  function div0_binding($$value) {
-    binding_callbacks[$$value ? "unshift" : "push"](() => {
-      graphicRootEl = $$value;
-      $$invalidate(5, graphicRootEl);
-    });
-  }
-  function div2_binding($$value) {
-    binding_callbacks[$$value ? "unshift" : "push"](() => {
-      scrollytellerRef = $$value;
-      $$invalidate(6, scrollytellerRef);
-    });
-  }
-  $$self.$$set = ($$props2) => {
-    if ("customPanel" in $$props2) $$invalidate(0, customPanel = $$props2.customPanel);
-    if ("panels" in $$props2) $$invalidate(1, panels = $$props2.panels);
-    if ("onProgress" in $$props2) $$invalidate(2, onProgress = $$props2.onProgress);
-    if ("onMarker" in $$props2) $$invalidate(3, onMarker = $$props2.onMarker);
-    if ("observerOptions" in $$props2) $$invalidate(12, observerOptions = $$props2.observerOptions);
-    if ("discardSlot" in $$props2) $$invalidate(4, discardSlot = $$props2.discardSlot);
-    if ("layout" in $$props2) $$invalidate(13, layout = $$props2.layout);
-    if ("$$scope" in $$props2) $$invalidate(15, $$scope = $$props2.$$scope);
-  };
-  $$self.$$.update = () => {
-    if ($$self.$$.dirty[0] & /*layout*/
-    8192) {
-      $$invalidate(9, _layout = {
-        align: layout.align || "centre",
-        resizeInteractive: layout.resizeInteractive ?? true,
-        transparentFloat: layout.transparentFloat ?? ["left", "right"].includes(layout.align)
-      });
-    }
-    if ($$self.$$.dirty[0] & /*discardSlot*/
-    16) {
-      maxScrollSpeed = discardSlot ? 0.5 : Infinity;
-    }
-    if ($$self.$$.dirty[0] & /*graphicRootEl*/
-    32) {
-      if (graphicRootEl) {
-        dispatch("load", graphicRootEl);
-      }
-    }
-    if ($$self.$$.dirty[0] & /*marker*/
-    16384) {
-      marker && deferUntilScrollSettles(() => dispatch("marker", marker));
-    }
-  };
-  $$invalidate(8, isDebug = typeof location !== "undefined" && location.hash === "#debug=true");
-  return [
-    customPanel,
-    panels,
-    onProgress,
-    onMarker,
-    discardSlot,
-    graphicRootEl,
-    scrollytellerRef,
-    isInViewport,
-    isDebug,
-    _layout,
-    isOdyssey,
-    steps,
-    observerOptions,
-    layout,
-    marker,
-    $$scope,
-    slots,
-    progress_handler,
-    div0_binding,
-    div2_binding
-  ];
-}
-class Scrollyteller extends SvelteComponent {
-  constructor(options) {
-    super();
-    init(
-      this,
-      options,
-      instance$1,
-      create_fragment$1,
-      safe_not_equal,
-      {
-        customPanel: 0,
-        panels: 1,
-        onProgress: 2,
-        onMarker: 3,
-        observerOptions: 12,
-        discardSlot: 4,
-        layout: 13
-      },
-      add_css,
-      [-1, -1]
-    );
-  }
-  get customPanel() {
-    return this.$$.ctx[0];
-  }
-  set customPanel(customPanel) {
-    this.$$set({ customPanel });
-    flush();
-  }
-  get panels() {
-    return this.$$.ctx[1];
-  }
-  set panels(panels) {
-    this.$$set({ panels });
-    flush();
-  }
-  get onProgress() {
-    return this.$$.ctx[2];
-  }
-  set onProgress(onProgress) {
-    this.$$set({ onProgress });
-    flush();
-  }
-  get onMarker() {
-    return this.$$.ctx[3];
-  }
-  set onMarker(onMarker) {
-    this.$$set({ onMarker });
-    flush();
-  }
-  get observerOptions() {
-    return this.$$.ctx[12];
-  }
-  set observerOptions(observerOptions) {
-    this.$$set({ observerOptions });
-    flush();
-  }
-  get discardSlot() {
-    return this.$$.ctx[4];
-  }
-  set discardSlot(discardSlot) {
-    this.$$set({ discardSlot });
-    flush();
-  }
-  get layout() {
-    return this.$$.ctx[13];
-  }
-  set layout(layout) {
-    this.$$set({ layout });
-    flush();
-  }
-}
-create_custom_element(Scrollyteller, { "customPanel": {}, "panels": {}, "onProgress": { "type": "Boolean" }, "onMarker": {}, "observerOptions": {}, "discardSlot": { "type": "Boolean" }, "layout": {} }, ["default"], [], true);
-function create_if_block(ctx) {
-  let scrollyteller;
-  let current;
-  const scrollyteller_spread_levels = [
-    { panels: (
-      /*panels*/
-      ctx[0]
-    ) },
-    { layout: (
-      /*layout*/
-      ctx[1]
-    ) },
-    /*$$restProps*/
-    ctx[2]
-  ];
-  let scrollyteller_props = {};
-  for (let i = 0; i < scrollyteller_spread_levels.length; i += 1) {
-    scrollyteller_props = assign(scrollyteller_props, scrollyteller_spread_levels[i]);
-  }
-  scrollyteller = new Scrollyteller({ props: scrollyteller_props });
-  scrollyteller.$on(
-    "progress",
-    /*progress_handler*/
-    ctx[3]
-  );
-  scrollyteller.$on(
-    "marker",
-    /*marker_handler*/
-    ctx[4]
-  );
-  scrollyteller.$on(
-    "load",
-    /*load_handler*/
-    ctx[5]
-  );
-  return {
-    c() {
-      create_component(scrollyteller.$$.fragment);
-    },
-    m(target, anchor) {
-      mount_component(scrollyteller, target, anchor);
-      current = true;
-    },
-    p(ctx2, dirty) {
-      const scrollyteller_changes = dirty & /*panels, layout, $$restProps*/
-      7 ? get_spread_update(scrollyteller_spread_levels, [
-        dirty & /*panels*/
-        1 && { panels: (
-          /*panels*/
-          ctx2[0]
-        ) },
-        dirty & /*layout*/
-        2 && { layout: (
-          /*layout*/
-          ctx2[1]
-        ) },
-        dirty & /*$$restProps*/
-        4 && get_spread_object(
-          /*$$restProps*/
-          ctx2[2]
-        )
-      ]) : {};
-      scrollyteller.$set(scrollyteller_changes);
-    },
-    i(local) {
-      if (current) return;
-      transition_in(scrollyteller.$$.fragment, local);
-      current = true;
-    },
-    o(local) {
-      transition_out(scrollyteller.$$.fragment, local);
-      current = false;
-    },
-    d(detaching) {
-      destroy_component(scrollyteller, detaching);
-    }
-  };
-}
-function create_fragment(ctx) {
-  let if_block_anchor;
-  let current;
-  let if_block = (
-    /*panels*/
-    ctx[0].length && create_if_block(ctx)
-  );
-  return {
-    c() {
-      if (if_block) if_block.c();
-      if_block_anchor = empty();
-    },
-    m(target, anchor) {
-      if (if_block) if_block.m(target, anchor);
-      insert(target, if_block_anchor, anchor);
-      current = true;
-    },
-    p(ctx2, [dirty]) {
-      if (
-        /*panels*/
-        ctx2[0].length
-      ) {
-        if (if_block) {
-          if_block.p(ctx2, dirty);
-          if (dirty & /*panels*/
-          1) {
-            transition_in(if_block, 1);
-          }
-        } else {
-          if_block = create_if_block(ctx2);
-          if_block.c();
-          transition_in(if_block, 1);
-          if_block.m(if_block_anchor.parentNode, if_block_anchor);
-        }
-      } else if (if_block) {
-        group_outros();
-        transition_out(if_block, 1, 1, () => {
-          if_block = null;
-        });
-        check_outros();
-      }
-    },
-    i(local) {
-      if (current) return;
-      transition_in(if_block);
-      current = true;
-    },
-    o(local) {
-      transition_out(if_block);
-      current = false;
-    },
-    d(detaching) {
-      if (detaching) {
-        detach(if_block_anchor);
-      }
-      if (if_block) if_block.d(detaching);
-    }
-  };
-}
-function instance($$self, $$props, $$invalidate) {
-  const omit_props_names = ["panels", "layout"];
-  let $$restProps = compute_rest_props($$props, omit_props_names);
-  let { panels = [] } = $$props;
-  let { layout = {} } = $$props;
-  function progress_handler(event) {
-    bubble.call(this, $$self, event);
-  }
-  function marker_handler(event) {
-    bubble.call(this, $$self, event);
-  }
-  function load_handler(event) {
-    bubble.call(this, $$self, event);
-  }
-  $$self.$$set = ($$new_props) => {
-    $$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
-    $$invalidate(2, $$restProps = compute_rest_props($$props, omit_props_names));
-    if ("panels" in $$new_props) $$invalidate(0, panels = $$new_props.panels);
-    if ("layout" in $$new_props) $$invalidate(1, layout = $$new_props.layout);
-  };
-  return [panels, layout, $$restProps, progress_handler, marker_handler, load_handler];
-}
-class Scrollyteller_wc extends SvelteComponent {
-  constructor(options) {
-    super();
-    init(this, options, instance, create_fragment, safe_not_equal, { panels: 0, layout: 1 });
-  }
-  get panels() {
-    return this.$$.ctx[0];
-  }
-  set panels(panels) {
-    this.$$set({ panels });
-    flush();
-  }
-  get layout() {
-    return this.$$.ctx[1];
-  }
-  set layout(layout) {
-    this.$$set({ layout });
-    flush();
-  }
-}
-customElements.define("abcnews-scrollyteller", create_custom_element(Scrollyteller_wc, { "panels": {}, "layout": {} }, [], [], false));
 export {
   Scrollyteller_wc as default,
   loadScrollyteller
