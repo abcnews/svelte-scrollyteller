@@ -5,35 +5,11 @@
 	import type { IntersectionEntries, PanelDefinition, PanelRef } from './types.js';
 	import { getScrollSpeed } from './utils';
 	import { createEventDispatcher } from 'svelte';
+	import { getScrollingPos, ScrollPositions, type Style } from './Scrollyteller/Scrollyteller.util';
+	import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
+	import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
 
 	const dispatch = createEventDispatcher();
-
-	enum ScrollPositions {
-		FULL = 'FULL',
-		ABOVE = 'ABOVE',
-		BELOW = 'BELOW'
-	}
-
-	type Style = {
-		/**
-		 * What styles to apply to panels.
-		 * - `centre` - centre panels, default
-		 * - `left` - float panels to the left and slot to the right
-		 * - `right` - float panels to the right and slot to the left
-		 * - `none` - don't apply styles other than font-size. You are responsible for all styling.
-		 */
-		align?: string;
-		/**
-		 * Disable block background when panels go left/right. Default true when
-		 * global is left/right.
-		 */
-		transparentFloat?: boolean;
-
-		/**
-		 * Resize the interactive to fit the left/right dimensions
-		 */
-		resizeInteractive?: boolean;
-	};
 
 	export let customPanel: ComponentType | null = null;
 	export let panels: PanelDefinition[];
@@ -88,28 +64,13 @@
 		dispatch('load', graphicRootEl);
 	}
 
-	const getScrollingPos = () => {
-		const boundingRect = scrollytellerRef.getBoundingClientRect();
-		if (boundingRect.bottom - window.innerHeight < 0) {
-			return ScrollPositions.BELOW;
-		}
-		if (boundingRect.top > 0) {
-			return ScrollPositions.ABOVE;
-		}
-		return ScrollPositions.FULL;
-	};
-
-	const panelIntersectionObserverCallback = (entries: IntersectionEntries[]) => {
+	const panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
 		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
 				marker = entry.target.scrollyData;
 			}
 		});
-	};
-	const panelObserver = new IntersectionObserver(
-		panelIntersectionObserverCallback,
-		observerOptions
-	);
+	}, observerOptions);
 
 	const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) =>
 		deferUntilScrollSettles(() => {
@@ -135,7 +96,7 @@
 	};
 
 	onMount(() => {
-		scrollingPos = getScrollingPos();
+		scrollingPos = getScrollingPos(scrollytellerRef);
 		if (scrollingPos === ScrollPositions.ABOVE) marker = panels[0].data;
 		if (scrollingPos === ScrollPositions.BELOW) marker = panels[panels.length - 1].data;
 
@@ -153,34 +114,17 @@
 		});
 	});
 
-	const scrollHandler = () => {
-		const rootRect = scrollytellerRef.getBoundingClientRect();
-
-		dispatch('progress', {
-			boundingRect: rootRect,
-			rootPct: 1 - rootRect.bottom / (rootRect.height + window.innerHeight),
-			scrollPct: 1 - (rootRect.bottom - window.innerHeight) / (rootRect.height - window.innerHeight)
-		});
-	};
-
-	$: {
-		// 2024-08 : This block checks for deprecated usage & throws helpful errors.
-		// Please remove it after a suitable time has passed.
-		if (typeof onProgress === 'function') {
-			throw new Error('the onProgress callback is deprecated. Please use on:progress');
-		}
-		if (typeof onMarker === 'function') {
-			throw new Error('the onMarker callback is deprecated. Please use on:marker');
-		}
-	}
-
 	$: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
 
 	// Debug mode should highlight blocks, graphic & show which breakpoint we're at
 	$: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 </script>
 
-<svelte:window on:scroll={onProgress ? scrollHandler : null} />
+{#if onProgress}
+	<OnProgressHandler {scrollytellerRef} on:progress />
+{/if}
+
+<DeprecationNotice {onProgress} {onMarker} />
 
 <svelte:head>
 	{#if isOdyssey}
