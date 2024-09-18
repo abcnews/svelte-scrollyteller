@@ -34,7 +34,7 @@ $: {
         };
     }
     else {
-        _observerOptions = { thresholds: [0.5] };
+        _observerOptions = { threshold: 0.5 };
     }
 }
 // Set up observer for graphic size ========================================

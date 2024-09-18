@@ -3,7 +3,7 @@
 	 * @file
 	 * Handles intersection observers for panels/markers.
 	 *
-	 * The default observer options for centred panels is { thresholds: [0.5] }
+	 * The default observer options for centred panels is { threshold: 0.5 }
 	 *
 	 * The default observer options for left/right aligned panels works
 	 * such that blocks only trigger when they've scrolled past at least 20% of
@@ -51,7 +51,7 @@
 	 * When observerOptions isn't set, default to either 0.5 for centred blocks
 	 * or a 20% margin on the interactive.
 	 */
-	let _observerOptions = observerOptions;
+	let _observerOptions: IntersectionObserverInit = observerOptions;
 	$: {
 		if (observerOptions) {
 			_observerOptions = observerOptions;
@@ -60,7 +60,7 @@
 				rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
 			};
 		} else {
-			_observerOptions = { thresholds: [0.5] };
+			_observerOptions = { threshold: 0.5 };
 		}
 	}
 

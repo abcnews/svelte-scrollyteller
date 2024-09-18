@@ -1186,7 +1186,7 @@ function instance$2($$self, $$props, $$invalidate) {
             rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
           });
         } else {
-          $$invalidate(11, _observerOptions = { thresholds: [0.5] });
+          $$invalidate(11, _observerOptions = { threshold: 0.5 });
         }
       }
     }
