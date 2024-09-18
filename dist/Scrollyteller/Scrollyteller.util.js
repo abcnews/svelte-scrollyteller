@@ -45,3 +45,5 @@ export const getScrollSpeed = (callback) => {
         window.removeEventListener('scrollend', onEndScroll);
     };
 };
+/** Keep trying until the condition is met */
+export const retryUntil = (condition) => new Promise((resolve) => condition() ? resolve(0) : setInterval(() => condition() && resolve(0), 10));

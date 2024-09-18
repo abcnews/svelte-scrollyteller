@@ -34,3 +34,5 @@ export declare const getScrollingPos: (scrollytellerRef: any) => ScrollPositions
  * @param options.interval - interval to debounce scroll check.
  */
 export declare const getScrollSpeed: (callback: (speed: number) => void) => () => void;
+/** Keep trying until the condition is met */
+export declare const retryUntil: (condition: any) => Promise<unknown>;

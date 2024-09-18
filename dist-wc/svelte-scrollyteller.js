@@ -161,6 +161,13 @@ function attr(node, attribute, value) {
 function children$1(element2) {
   return Array.from(element2.childNodes);
 }
+function set_style(node, key, value, important) {
+  if (value == null) {
+    node.style.removeProperty(key);
+  } else {
+    node.style.setProperty(key, value, "");
+  }
+}
 function toggle_class(element2, name, toggle) {
   element2.classList.toggle(name, !!toggle);
 }
@@ -758,10 +765,10 @@ const children = (el, children2) => {
     }
   };
 };
-function add_css$1(target) {
+function add_css$2(target) {
   append_styles(target, "svelte-ov3zac", '.st-panel-root.svelte-ov3zac{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding:1rem;--panel-margin:1rem;box-sizing:border-box;margin:80vh auto;width:calc(100% - var(--panel-margin) * 2);position:relative;z-index:1;pointer-events:none;font-size:1.125rem}@media(min-width: 46.5rem){.st-panel-root.svelte-ov3zac{--panel-padding:2rem;--panel-margin:2rem}}[data-scheme="dark"] .st-panel-root.svelte-ov3zac,.is-dark-mode .st-panel-root.svelte-ov3zac{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb);--panel-border:var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15))}.scrollyteller--debug .st-panel-root.svelte-ov3zac{outline:5px solid limegreen}.st-panel-root.first.svelte-ov3zac{margin-top:100dvh}.st-panel-root.last.svelte-ov3zac{margin-bottom:100vh}@media(min-width: 62rem){.st-panel-root--centre.svelte-ov3zac{max-width:48.75rem;font-size:1.875}}@media(min-width: 90rem){.st-panel-root--centre.svelte-ov3zac{max-width:56.25rem}}@media(min-width: 62rem){.st-panel-root--left.svelte-ov3zac,.st-panel-root--right.svelte-ov3zac{--maxWidth:45%;--panel-margin:2rem;--panel-margin-inner:calc(var(--panel-margin) / 2);max-width:calc(var(--maxWidth) - (var(--panel-margin) + var(--panel-margin-inner)));margin:30vh 0 30vh var(--panel-margin);font-size:1.125rem}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-ov3zac,.st-panel-root--right.st-panel-root--transparent-blocks.svelte-ov3zac{--panel-filter:none;--panel-background:none;--panel-border:none;--panel-padding:0}.st-panel-root--left.first.svelte-ov3zac,.st-panel-root--right.first.svelte-ov3zac{margin-top:50dvh}}@media(min-width: 75rem){.st-panel-root--left.svelte-ov3zac,.st-panel-root--right.svelte-ov3zac{--panel-margin:3rem;--maxWidth:40%;font-size:1.125rem}}@media(min-width: 90rem){.st-panel-root--left.svelte-ov3zac,.st-panel-root--right.svelte-ov3zac{--panel-margin:4rem;--maxWidth:40%;font-size:1.25rem}}@media(min-width: 62rem){.st-panel-root--right.svelte-ov3zac{margin:15vh calc(var(--marginLeft) - 1rem) 15vh auto}}.st-panel.svelte-ov3zac{-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding)}.st-panel.svelte-ov3zac::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-ov3zac::after{content:"";display:table;clear:both}.st-panel.svelte-ov3zac > *{font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-ov3zac > *:last-child{margin-bottom:0}.st-panel.svelte-ov3zac>img{max-width:66%;display:block;margin:auto;height:auto}');
 }
-function create_fragment$3(ctx) {
+function create_fragment$4(ctx) {
   let div1;
   let div0;
   let mounted;
@@ -853,7 +860,7 @@ function instance$5($$self, $$props, $$invalidate) {
 class Panel extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$5, create_fragment$3, safe_not_equal, { props: 5 }, add_css$1);
+    init(this, options, instance$5, create_fragment$4, safe_not_equal, { props: 5 }, add_css$2);
   }
   get props() {
     return this.$$.ctx[5];
@@ -901,8 +908,11 @@ const getScrollSpeed = (callback) => {
     window.removeEventListener("scrollend", onEndScroll);
   };
 };
+const retryUntil = (condition) => new Promise(
+  (resolve) => condition() ? resolve(0) : setInterval(() => condition() && resolve(0), 10)
+);
 const { window: window_1 } = globals;
-function create_fragment$2(ctx) {
+function create_fragment$3(ctx) {
   let mounted;
   let dispose;
   return {
@@ -946,7 +956,7 @@ function instance$4($$self, $$props, $$invalidate) {
 class OnProgressHandler extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$4, create_fragment$2, safe_not_equal, { scrollytellerRef: 1 });
+    init(this, options, instance$4, create_fragment$3, safe_not_equal, { scrollytellerRef: 1 });
   }
   get scrollytellerRef() {
     return this.$$.ctx[1];
@@ -1000,75 +1010,315 @@ class DeprecationNotice extends SvelteComponent {
   }
 }
 create_custom_element(DeprecationNotice, { "onProgress": {}, "onMarker": {} }, [], [], true);
-function instance$2($$self, $$props, $$invalidate) {
-  let { marker } = $$props;
-  let { steps } = $$props;
-  let { observerOptions } = $$props;
-  const panelObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          $$invalidate(0, marker = entry.target.scrollyData);
-        }
-      });
+function add_css$1(target) {
+  append_styles(target, "svelte-1iywulw", ".panelobserver-debug.svelte-1iywulw{position:sticky;left:0;width:100%;background:rgba(0, 0, 0, 0.1);border:1px solid rgba(0, 255, 47, 0.4);border-style:solid none solid;z-index:0}");
+}
+function create_if_block$2(ctx) {
+  let div;
+  return {
+    c() {
+      div = element("div");
+      attr(div, "class", "panelobserver-debug svelte-1iywulw");
+      set_style(
+        div,
+        "top",
+        /*rootMargin*/
+        ctx[3] + "px"
+      );
+      set_style(
+        div,
+        "height",
+        /*innerHeight*/
+        ctx[2] - /*rootMargin*/
+        ctx[3] * 2 + "px"
+      );
     },
-    observerOptions
-  );
-  onMount(() => {
-    steps.forEach((step, i) => {
-      panelObserver.observe(step);
-    });
-  });
-  $$self.$$set = ($$props2) => {
-    if ("marker" in $$props2) $$invalidate(0, marker = $$props2.marker);
-    if ("steps" in $$props2) $$invalidate(1, steps = $$props2.steps);
-    if ("observerOptions" in $$props2) $$invalidate(2, observerOptions = $$props2.observerOptions);
+    m(target, anchor) {
+      insert(target, div, anchor);
+    },
+    p(ctx2, dirty) {
+      if (dirty & /*rootMargin*/
+      8) {
+        set_style(
+          div,
+          "top",
+          /*rootMargin*/
+          ctx2[3] + "px"
+        );
+      }
+      if (dirty & /*innerHeight, rootMargin*/
+      12) {
+        set_style(
+          div,
+          "height",
+          /*innerHeight*/
+          ctx2[2] - /*rootMargin*/
+          ctx2[3] * 2 + "px"
+        );
+      }
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(div);
+      }
+    }
   };
-  return [marker, steps, observerOptions];
+}
+function create_fragment$2(ctx) {
+  let if_block_anchor;
+  let mounted;
+  let dispose;
+  add_render_callback(
+    /*onwindowresize*/
+    ctx[14]
+  );
+  let if_block = (
+    /*isDebug*/
+    ctx[0] && /*rootMargin*/
+    ctx[3] && create_if_block$2(ctx)
+  );
+  return {
+    c() {
+      if (if_block) if_block.c();
+      if_block_anchor = empty();
+    },
+    m(target, anchor) {
+      if (if_block) if_block.m(target, anchor);
+      insert(target, if_block_anchor, anchor);
+      if (!mounted) {
+        dispose = listen(
+          window,
+          "resize",
+          /*onwindowresize*/
+          ctx[14]
+        );
+        mounted = true;
+      }
+    },
+    p(ctx2, [dirty]) {
+      if (
+        /*isDebug*/
+        ctx2[0] && /*rootMargin*/
+        ctx2[3]
+      ) {
+        if (if_block) {
+          if_block.p(ctx2, dirty);
+        } else {
+          if_block = create_if_block$2(ctx2);
+          if_block.c();
+          if_block.m(if_block_anchor.parentNode, if_block_anchor);
+        }
+      } else if (if_block) {
+        if_block.d(1);
+        if_block = null;
+      }
+    },
+    i: noop,
+    o: noop,
+    d(detaching) {
+      if (detaching) {
+        detach(if_block_anchor);
+      }
+      if (if_block) if_block.d(detaching);
+      mounted = false;
+      dispose();
+    }
+  };
+}
+function instance$2($$self, $$props, $$invalidate) {
+  let isSplitScreen;
+  let rootMargin;
+  let { align = "" } = $$props;
+  let { graphicRootEl } = $$props;
+  let { marker } = $$props;
+  let { observerOptions } = $$props;
+  let { steps } = $$props;
+  let { isDebug } = $$props;
+  let status = "loading";
+  let graphicDims = [0, 0];
+  let graphicEl;
+  let innerWidth = 0;
+  let innerHeight = 0;
+  let _observerOptions = observerOptions;
+  onMount(() => {
+    let observer;
+    retryUntil(() => graphicRootEl == null ? void 0 : graphicRootEl.children).then(() => {
+      graphicEl = graphicRootEl.children[0];
+      observer = new ResizeObserver(([entry]) => $$invalidate(10, graphicDims = [entry.contentRect.width, entry.contentRect.height]));
+      observer.observe(graphicEl);
+      $$invalidate(9, status = "ready");
+    });
+    return () => {
+      observer == null ? void 0 : observer.disconnect();
+    };
+  });
+  let panelObserver;
+  let intersectingPanels = [];
+  onMount(() => panelObserver == null ? void 0 : panelObserver.disconnect());
+  function onwindowresize() {
+    $$invalidate(1, innerWidth = window.innerWidth);
+    $$invalidate(2, innerHeight = window.innerHeight);
+  }
+  $$self.$$set = ($$props2) => {
+    if ("align" in $$props2) $$invalidate(5, align = $$props2.align);
+    if ("graphicRootEl" in $$props2) $$invalidate(6, graphicRootEl = $$props2.graphicRootEl);
+    if ("marker" in $$props2) $$invalidate(4, marker = $$props2.marker);
+    if ("observerOptions" in $$props2) $$invalidate(7, observerOptions = $$props2.observerOptions);
+    if ("steps" in $$props2) $$invalidate(8, steps = $$props2.steps);
+    if ("isDebug" in $$props2) $$invalidate(0, isDebug = $$props2.isDebug);
+  };
+  $$self.$$.update = () => {
+    if ($$self.$$.dirty & /*align, innerWidth*/
+    34) {
+      $$invalidate(13, isSplitScreen = ["left", "right"].includes(align) && innerWidth >= 992);
+    }
+    if ($$self.$$.dirty & /*observerOptions, isSplitScreen, innerHeight, graphicDims*/
+    9348) {
+      $$invalidate(3, rootMargin = observerOptions || !isSplitScreen ? null : Math.round((innerHeight - graphicDims[1] * 0.6) / 2));
+    }
+    if ($$self.$$.dirty & /*observerOptions, isSplitScreen, rootMargin*/
+    8328) {
+      {
+        if (observerOptions) {
+          $$invalidate(11, _observerOptions = observerOptions);
+        } else if (isSplitScreen) {
+          $$invalidate(11, _observerOptions = {
+            rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
+          });
+        } else {
+          $$invalidate(11, _observerOptions = { thresholds: [0.5] });
+        }
+      }
+    }
+    if ($$self.$$.dirty & /*status, panelObserver, _observerOptions, steps*/
+    6912) {
+      {
+        if (status === "ready") {
+          panelObserver == null ? void 0 : panelObserver.disconnect();
+          $$invalidate(12, panelObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  intersectingPanels.push(entry);
+                } else {
+                  const itemToRemove = intersectingPanels.findIndex((panel) => panel.target === entry.target);
+                  if (itemToRemove === -1) return;
+                  intersectingPanels.splice(itemToRemove, 1);
+                }
+                const newPanel = intersectingPanels[intersectingPanels.length - 1];
+                if (newPanel) {
+                  $$invalidate(4, marker = newPanel.target.scrollyData);
+                }
+              });
+            },
+            _observerOptions
+          ));
+          steps.forEach((step, i) => {
+            panelObserver.observe(step);
+          });
+        } else {
+          panelObserver == null ? void 0 : panelObserver.disconnect();
+        }
+      }
+    }
+  };
+  return [
+    isDebug,
+    innerWidth,
+    innerHeight,
+    rootMargin,
+    marker,
+    align,
+    graphicRootEl,
+    observerOptions,
+    steps,
+    status,
+    graphicDims,
+    _observerOptions,
+    panelObserver,
+    isSplitScreen,
+    onwindowresize
+  ];
 }
 class PanelObserver extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$2, null, safe_not_equal, { marker: 0, steps: 1, observerOptions: 2 });
+    init(
+      this,
+      options,
+      instance$2,
+      create_fragment$2,
+      safe_not_equal,
+      {
+        align: 5,
+        graphicRootEl: 6,
+        marker: 4,
+        observerOptions: 7,
+        steps: 8,
+        isDebug: 0
+      },
+      add_css$1
+    );
+  }
+  get align() {
+    return this.$$.ctx[5];
+  }
+  set align(align) {
+    this.$$set({ align });
+    flush();
+  }
+  get graphicRootEl() {
+    return this.$$.ctx[6];
+  }
+  set graphicRootEl(graphicRootEl) {
+    this.$$set({ graphicRootEl });
+    flush();
   }
   get marker() {
-    return this.$$.ctx[0];
+    return this.$$.ctx[4];
   }
   set marker(marker) {
     this.$$set({ marker });
     flush();
   }
-  get steps() {
-    return this.$$.ctx[1];
-  }
-  set steps(steps) {
-    this.$$set({ steps });
-    flush();
-  }
   get observerOptions() {
-    return this.$$.ctx[2];
+    return this.$$.ctx[7];
   }
   set observerOptions(observerOptions) {
     this.$$set({ observerOptions });
     flush();
   }
+  get steps() {
+    return this.$$.ctx[8];
+  }
+  set steps(steps) {
+    this.$$set({ steps });
+    flush();
+  }
+  get isDebug() {
+    return this.$$.ctx[0];
+  }
+  set isDebug(isDebug) {
+    this.$$set({ isDebug });
+    flush();
+  }
 }
-create_custom_element(PanelObserver, { "marker": {}, "steps": {}, "observerOptions": {} }, [], [], true);
+create_custom_element(PanelObserver, { "align": {}, "graphicRootEl": {}, "marker": {}, "observerOptions": {}, "steps": {}, "isDebug": {} }, [], [], true);
 function add_css(target) {
   append_styles(target, "svelte-1h184zu", '.scrollyteller.svelte-1h184zu.svelte-1h184zu{position:relative}.scrollyteller--resized.svelte-1h184zu.svelte-1h184zu{max-width:127.5rem;margin:0 auto}.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110}@media(min-width: 46.5rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"Tablet"}}@media(min-width: 62rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"LargeTablet"}}@media(min-width: 75rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"Desktop"}}@media(min-width: 90rem){.scrollyteller--debug.svelte-1h184zu.svelte-1h184zu:after{content:"LargeDesktop"}}.graphic.svelte-1h184zu.svelte-1h184zu{transform:translate3d(0, 0, 0);height:100dvh;width:100%;position:sticky;top:0;left:0;z-index:1}.graphic--resized.svelte-1h184zu.svelte-1h184zu{container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;width:auto;--margin:1.5rem;margin:0 auto;width:calc(100% - var(--margin) * 2)}@media(min-width: 46.5rem){.graphic--resized.svelte-1h184zu.svelte-1h184zu{--margin:4rem;top:8dvh;height:62dvh}}@media(min-width: 62rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu,.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{align-items:center;--marginOuter:2rem;--marginCentre:calc(var(--marginOuter) / 2);height:84dvh;top:8dvh;--maxWidth:55%;max-width:calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)))}}@media(min-width: 75rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu,.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{--marginOuter:3rem;--maxWidth:60%;height:76dvh;top:12dvh}}@media(min-width: 90rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu,.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{--marginOuter:4rem;--maxWidth:60%;top:10dvh;height:80dvh}}@media(min-width: 62rem){.graphic--resized.graphic--left.svelte-1h184zu.svelte-1h184zu{margin:0 auto 0 var(--marginOuter)}}@media(min-width: 62rem){.graphic--resized.graphic--right.svelte-1h184zu.svelte-1h184zu{margin:0 var(--marginOuter) 0 auto}}@media(min-width: 62rem){.graphic--resized.graphic--centre.svelte-1h184zu.svelte-1h184zu{--margin:3rem;top:8dvh;height:62dvh}}@media(min-width: 75rem){.graphic--resized.graphic--centre.svelte-1h184zu.svelte-1h184zu{--margin:4rem;top:12dvh;height:58dvh}}@media(min-width: 90rem){.graphic--resized.graphic--centre.svelte-1h184zu.svelte-1h184zu{--margin:6rem;top:12dvh;height:58dvh}}.scrollyteller--debug.svelte-1h184zu .graphic--resized.svelte-1h184zu{outline:5px solid limegreen}.content.svelte-1h184zu.svelte-1h184zu{margin:-100dvh auto 0;position:relative;z-index:2;pointer-events:none}.content--resized.svelte-1h184zu.svelte-1h184zu{max-width:127.5rem}');
 }
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[30] = list[i];
-  child_ctx[33] = i;
+  child_ctx[29] = list[i];
+  child_ctx[32] = i;
   const constants_0 = (
     /*panel*/
-    (child_ctx[30].panelClass ?? "") + /*i*/
-    (child_ctx[33] === 0 ? " first" : "") + /*i*/
-    (child_ctx[33] === /*panels*/
+    (child_ctx[29].panelClass ?? "") + /*i*/
+    (child_ctx[32] === 0 ? " first" : "") + /*i*/
+    (child_ctx[32] === /*panels*/
     child_ctx[1].length - 1 ? " last" : "")
   );
-  child_ctx[31] = constants_0;
+  child_ctx[30] = constants_0;
   return child_ctx;
 }
 function create_if_block_3(ctx) {
@@ -1202,10 +1452,10 @@ function create_else_block(ctx) {
     props: {
       props: {
         .../*panel*/
-        ctx[30],
+        ctx[29],
         align: (
           /*panel*/
-          ctx[30].align || /*_layout*/
+          ctx[29].align || /*_layout*/
           ctx[11].align
         ),
         transparentFloat: (
@@ -1218,7 +1468,7 @@ function create_else_block(ctx) {
         ),
         panelClass: (
           /*panelClass*/
-          ctx[31]
+          ctx[30]
         )
       }
     }
@@ -1236,10 +1486,10 @@ function create_else_block(ctx) {
       if (dirty[0] & /*panels, _layout*/
       2050) panel_1_changes.props = {
         .../*panel*/
-        ctx2[30],
+        ctx2[29],
         align: (
           /*panel*/
-          ctx2[30].align || /*_layout*/
+          ctx2[29].align || /*_layout*/
           ctx2[11].align
         ),
         transparentFloat: (
@@ -1252,7 +1502,7 @@ function create_else_block(ctx) {
         ),
         panelClass: (
           /*panelClass*/
-          ctx2[31]
+          ctx2[30]
         )
       };
       panel_1.$set(panel_1_changes);
@@ -1277,14 +1527,14 @@ function create_if_block$1(ctx) {
   let current;
   const switch_instance_spread_levels = [
     /*panel*/
-    ctx[30],
+    ctx[29],
     { steps: (
       /*steps*/
       ctx[13]
     ) },
     { panelClass: (
       /*panelClass*/
-      ctx[31]
+      ctx[30]
     ) }
   ];
   var switch_value = (
@@ -1302,7 +1552,7 @@ function create_if_block$1(ctx) {
         dirty[0] & /*panels*/
         2 && get_spread_object(
           /*panel*/
-          ctx2[30]
+          ctx2[29]
         ),
         dirty[0] & /*steps*/
         8192 && { steps: (
@@ -1312,7 +1562,7 @@ function create_if_block$1(ctx) {
         dirty[0] & /*panels*/
         2 && { panelClass: (
           /*panelClass*/
-          ctx2[31]
+          ctx2[30]
         ) }
       ]));
     }
@@ -1357,7 +1607,7 @@ function create_if_block$1(ctx) {
           dirty[0] & /*panels*/
           2 && get_spread_object(
             /*panel*/
-            ctx2[30]
+            ctx2[29]
           ),
           dirty[0] & /*steps*/
           8192 && { steps: (
@@ -1367,7 +1617,7 @@ function create_if_block$1(ctx) {
           dirty[0] & /*panels*/
           2 && { panelClass: (
             /*panelClass*/
-            ctx2[31]
+            ctx2[30]
           ) }
         ]) : {};
         switch_instance.$set(switch_instance_changes);
@@ -1496,6 +1746,18 @@ function create_fragment$1(ctx) {
     observerOptions: (
       /*observerOptions*/
       ctx[4]
+    ),
+    graphicRootEl: (
+      /*graphicRootEl*/
+      ctx[7]
+    ),
+    isDebug: (
+      /*isDebug*/
+      ctx[10]
+    ),
+    align: (
+      /*_layout*/
+      ctx[11].align
     )
   };
   if (
@@ -1651,6 +1913,15 @@ function create_fragment$1(ctx) {
       if (dirty[0] & /*observerOptions*/
       16) panelobserver_changes.observerOptions = /*observerOptions*/
       ctx2[4];
+      if (dirty[0] & /*graphicRootEl*/
+      128) panelobserver_changes.graphicRootEl = /*graphicRootEl*/
+      ctx2[7];
+      if (dirty[0] & /*isDebug*/
+      1024) panelobserver_changes.isDebug = /*isDebug*/
+      ctx2[10];
+      if (dirty[0] & /*_layout*/
+      2048) panelobserver_changes.align = /*_layout*/
+      ctx2[11].align;
       if (!updating_marker && dirty[0] & /*marker*/
       64) {
         updating_marker = true;
@@ -1823,7 +2094,7 @@ function instance$1($$self, $$props, $$invalidate) {
   let { panels } = $$props;
   let { onProgress = false } = $$props;
   let { onMarker = null } = $$props;
-  let { observerOptions = { threshold: 0.5 } } = $$props;
+  let { observerOptions } = $$props;
   let { discardSlot = false } = $$props;
   let { layout = {} } = $$props;
   const isOdyssey = window.__IS_ODYSSEY_FORMAT__;
@@ -1835,16 +2106,6 @@ function instance$1($$self, $$props, $$invalidate) {
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions = [];
   let graphicRootEl;
-  new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          $$invalidate(6, marker = entry.target.scrollyData);
-        }
-      });
-    },
-    observerOptions
-  );
   const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
     $$invalidate(9, isInViewport = scrollytellerEntry.isIntersecting);
   }));

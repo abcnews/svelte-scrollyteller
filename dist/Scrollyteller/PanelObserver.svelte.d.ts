@@ -1,9 +1,12 @@
 import { SvelteComponent } from "svelte";
 declare const __propDef: {
     props: {
+        align?: string;
+        graphicRootEl: any;
         marker: any;
-        steps: any;
         observerOptions: any;
+        steps: any;
+        isDebug: any;
     };
     events: {
         [evt: string]: CustomEvent<any>;

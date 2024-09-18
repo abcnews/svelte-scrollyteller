@@ -22,9 +22,7 @@
 	export let onProgress: boolean = false;
 	/** @deprecated please use on:marker instead */
 	export let onMarker: () => void = null;
-	export let observerOptions: IntersectionObserverInit = {
-		threshold: 0.5
-	};
+	export let observerOptions: IntersectionObserverInit;
 	/**
 	 * When `true` we remove the slot from the DOM when not in the viewport, and
 	 * debounce loading markers while the browser is scrolling quickly.
@@ -68,14 +66,6 @@
 	$: if (graphicRootEl) {
 		dispatch('load', graphicRootEl);
 	}
-
-	const panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				marker = entry.target.scrollyData;
-			}
-		});
-	}, observerOptions);
 
 	const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) =>
 		deferUntilScrollSettles(() => {
@@ -127,7 +117,14 @@
 
 <DeprecationNotice {onProgress} {onMarker} />
 
-<PanelObserver bind:marker {steps} {observerOptions} />
+<PanelObserver
+	bind:marker
+	{steps}
+	{observerOptions}
+	{graphicRootEl}
+	{isDebug}
+	align={_layout.align}
+/>
 
 <svelte:head>
 	{#if isOdyssey}
