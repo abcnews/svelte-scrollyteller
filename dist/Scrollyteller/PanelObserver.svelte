@@ -15,10 +15,11 @@ let innerHeight = 0;
 $: isSplitScreen = ['left', 'right'].includes(align) && innerWidth >= 992;
 /**
  * For split screens, trigger the intersection observer when the block is
- * over 20% of the interactive.
+ * over 20% of the interactive. Otherwise 10% of the screen height.
  */
-$: rootMargin =
-    observerOptions || !isSplitScreen ? null : Math.round((innerHeight - graphicDims[1] * 0.6) / 2);
+$: rootMargin = isSplitScreen
+    ? Math.round((innerHeight - (graphicDims[1] || innerHeight) * 0.6) / 2)
+    : Math.round(innerHeight / 8);
 /**
  * When observerOptions isn't set, default to either 0.5 for centred blocks
  * or a 20% margin on the interactive.
@@ -28,13 +29,10 @@ $: {
     if (observerOptions) {
         _observerOptions = observerOptions;
     }
-    else if (isSplitScreen) {
+    else {
         _observerOptions = {
             rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
         };
-    }
-    else {
-        _observerOptions = { threshold: 0.5 };
     }
 }
 // Set up observer for graphic size ========================================
@@ -62,6 +60,7 @@ $: {
         panelObserver?.disconnect();
         panelObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
+                console.log({ entry });
                 if (entry.isIntersecting) {
                     intersectingPanels.push(entry);
                 }
@@ -93,7 +92,7 @@ onMount(() => panelObserver?.disconnect());
 
 <svelte:window bind:innerWidth bind:innerHeight />
 
-{#if isDebug && rootMargin}
+{#if isDebug && rootMargin && !observerOptions}
 	<div
 		class="panelobserver-debug"
 		style:top={rootMargin + 'px'}

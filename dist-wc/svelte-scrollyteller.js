@@ -1023,14 +1023,14 @@ function create_if_block$2(ctx) {
         div,
         "top",
         /*rootMargin*/
-        ctx[3] + "px"
+        ctx[4] + "px"
       );
       set_style(
         div,
         "height",
         /*innerHeight*/
-        ctx[2] - /*rootMargin*/
-        ctx[3] * 2 + "px"
+        ctx[3] - /*rootMargin*/
+        ctx[4] * 2 + "px"
       );
     },
     m(target, anchor) {
@@ -1038,22 +1038,22 @@ function create_if_block$2(ctx) {
     },
     p(ctx2, dirty) {
       if (dirty & /*rootMargin*/
-      8) {
+      16) {
         set_style(
           div,
           "top",
           /*rootMargin*/
-          ctx2[3] + "px"
+          ctx2[4] + "px"
         );
       }
       if (dirty & /*innerHeight, rootMargin*/
-      12) {
+      24) {
         set_style(
           div,
           "height",
           /*innerHeight*/
-          ctx2[2] - /*rootMargin*/
-          ctx2[3] * 2 + "px"
+          ctx2[3] - /*rootMargin*/
+          ctx2[4] * 2 + "px"
         );
       }
     },
@@ -1074,8 +1074,9 @@ function create_fragment$2(ctx) {
   );
   let if_block = (
     /*isDebug*/
-    ctx[0] && /*rootMargin*/
-    ctx[3] && create_if_block$2(ctx)
+    ctx[1] && /*rootMargin*/
+    ctx[4] && !/*observerOptions*/
+    ctx[0] && create_if_block$2(ctx)
   );
   return {
     c() {
@@ -1098,8 +1099,9 @@ function create_fragment$2(ctx) {
     p(ctx2, [dirty]) {
       if (
         /*isDebug*/
-        ctx2[0] && /*rootMargin*/
-        ctx2[3]
+        ctx2[1] && /*rootMargin*/
+        ctx2[4] && !/*observerOptions*/
+        ctx2[0]
       ) {
         if (if_block) {
           if_block.p(ctx2, dirty);
@@ -1156,37 +1158,35 @@ function instance$2($$self, $$props, $$invalidate) {
   let intersectingPanels = [];
   onMount(() => panelObserver == null ? void 0 : panelObserver.disconnect());
   function onwindowresize() {
-    $$invalidate(1, innerWidth = window.innerWidth);
-    $$invalidate(2, innerHeight = window.innerHeight);
+    $$invalidate(2, innerWidth = window.innerWidth);
+    $$invalidate(3, innerHeight = window.innerHeight);
   }
   $$self.$$set = ($$props2) => {
-    if ("align" in $$props2) $$invalidate(5, align = $$props2.align);
-    if ("graphicRootEl" in $$props2) $$invalidate(6, graphicRootEl = $$props2.graphicRootEl);
-    if ("marker" in $$props2) $$invalidate(4, marker = $$props2.marker);
-    if ("observerOptions" in $$props2) $$invalidate(7, observerOptions = $$props2.observerOptions);
+    if ("align" in $$props2) $$invalidate(6, align = $$props2.align);
+    if ("graphicRootEl" in $$props2) $$invalidate(7, graphicRootEl = $$props2.graphicRootEl);
+    if ("marker" in $$props2) $$invalidate(5, marker = $$props2.marker);
+    if ("observerOptions" in $$props2) $$invalidate(0, observerOptions = $$props2.observerOptions);
     if ("steps" in $$props2) $$invalidate(8, steps = $$props2.steps);
-    if ("isDebug" in $$props2) $$invalidate(0, isDebug = $$props2.isDebug);
+    if ("isDebug" in $$props2) $$invalidate(1, isDebug = $$props2.isDebug);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty & /*align, innerWidth*/
-    34) {
+    68) {
       $$invalidate(13, isSplitScreen = ["left", "right"].includes(align) && innerWidth >= 992);
     }
-    if ($$self.$$.dirty & /*observerOptions, isSplitScreen, innerHeight, graphicDims*/
-    9348) {
-      $$invalidate(3, rootMargin = observerOptions || !isSplitScreen ? null : Math.round((innerHeight - graphicDims[1] * 0.6) / 2));
+    if ($$self.$$.dirty & /*isSplitScreen, innerHeight, graphicDims*/
+    9224) {
+      $$invalidate(4, rootMargin = isSplitScreen ? Math.round((innerHeight - (graphicDims[1] || innerHeight) * 0.6) / 2) : Math.round(innerHeight / 8));
     }
-    if ($$self.$$.dirty & /*observerOptions, isSplitScreen, rootMargin*/
-    8328) {
+    if ($$self.$$.dirty & /*observerOptions, rootMargin*/
+    17) {
       {
         if (observerOptions) {
           $$invalidate(11, _observerOptions = observerOptions);
-        } else if (isSplitScreen) {
+        } else {
           $$invalidate(11, _observerOptions = {
             rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
           });
-        } else {
-          $$invalidate(11, _observerOptions = { threshold: 0.5 });
         }
       }
     }
@@ -1198,6 +1198,7 @@ function instance$2($$self, $$props, $$invalidate) {
           $$invalidate(12, panelObserver = new IntersectionObserver(
             (entries) => {
               entries.forEach((entry) => {
+                console.log({ entry });
                 if (entry.isIntersecting) {
                   intersectingPanels.push(entry);
                 } else {
@@ -1207,7 +1208,7 @@ function instance$2($$self, $$props, $$invalidate) {
                 }
                 const newPanel = intersectingPanels[intersectingPanels.length - 1];
                 if (newPanel) {
-                  $$invalidate(4, marker = newPanel.target.scrollyData);
+                  $$invalidate(5, marker = newPanel.target.scrollyData);
                 }
               });
             },
@@ -1223,6 +1224,7 @@ function instance$2($$self, $$props, $$invalidate) {
     }
   };
   return [
+    observerOptions,
     isDebug,
     innerWidth,
     innerHeight,
@@ -1230,7 +1232,6 @@ function instance$2($$self, $$props, $$invalidate) {
     marker,
     align,
     graphicRootEl,
-    observerOptions,
     steps,
     status,
     graphicDims,
@@ -1250,39 +1251,39 @@ class PanelObserver extends SvelteComponent {
       create_fragment$2,
       safe_not_equal,
       {
-        align: 5,
-        graphicRootEl: 6,
-        marker: 4,
-        observerOptions: 7,
+        align: 6,
+        graphicRootEl: 7,
+        marker: 5,
+        observerOptions: 0,
         steps: 8,
-        isDebug: 0
+        isDebug: 1
       },
       add_css$1
     );
   }
   get align() {
-    return this.$$.ctx[5];
+    return this.$$.ctx[6];
   }
   set align(align) {
     this.$$set({ align });
     flush();
   }
   get graphicRootEl() {
-    return this.$$.ctx[6];
+    return this.$$.ctx[7];
   }
   set graphicRootEl(graphicRootEl) {
     this.$$set({ graphicRootEl });
     flush();
   }
   get marker() {
-    return this.$$.ctx[4];
+    return this.$$.ctx[5];
   }
   set marker(marker) {
     this.$$set({ marker });
     flush();
   }
   get observerOptions() {
-    return this.$$.ctx[7];
+    return this.$$.ctx[0];
   }
   set observerOptions(observerOptions) {
     this.$$set({ observerOptions });
@@ -1296,7 +1297,7 @@ class PanelObserver extends SvelteComponent {
     flush();
   }
   get isDebug() {
-    return this.$$.ctx[0];
+    return this.$$.ctx[1];
   }
   set isDebug(isDebug) {
     this.$$set({ isDebug });
