@@ -1,4 +1,26 @@
 <script lang="ts">
+	/**
+	 * @file
+	 * Handles intersection observers for panels/markers.
+	 *
+	 * The default observer options for centred panels is { thresholds: [0.5] }
+	 *
+	 * The default observer options for left/right aligned panels works
+	 * such that blocks only trigger when they've scrolled past at least 20% of
+	 * the viz.
+	 *
+	 * As a result, we need to:
+	 * 1. wait for the viz to be inserted (graphicRootEl.children[0]). Sometimes
+	 *    this is async, namely when using the web component version. We don't
+	 *    watch for updates if the viz DOM node is replaced after the fact.
+	 * 2. observe/measure the box (graphicDims)
+	 * 3. calculate the rootMargin for the panel observer based on the box size.
+	 * 4. finally, observe the panels.
+	 *
+	 * Because left/right aligned panels are closer together than centred panels
+	 * we must track intersecting panels in `intersectingPanels`, otherwise
+	 * scrolling back up the page doesn't work as expected.
+	 */
 	import type { IntersectionEntries } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { retryUntil } from './Scrollyteller.util';
