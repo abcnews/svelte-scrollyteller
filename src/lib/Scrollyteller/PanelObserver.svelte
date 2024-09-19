@@ -10,12 +10,9 @@
 	 * the viz.
 	 *
 	 * As a result, we need to:
-	 * 1. wait for the viz to be inserted (graphicRootEl.children[0]). Sometimes
-	 *    this is async, namely when using the web component version. We don't
-	 *    watch for updates if the viz DOM node is replaced after the fact.
-	 * 2. observe/measure the box (graphicDims)
-	 * 3. calculate the rootMargin for the panel observer based on the box size.
-	 * 4. finally, observe the panels.
+	 * 1. Wait for graphicDims to become availble
+	 * 2. calculate the rootMargin for the panel observer based on the box size.
+	 * 3. finally, observe the panels.
 	 *
 	 * Because left/right aligned panels are closer together than centred panels
 	 * we must track intersecting panels in `intersectingPanels`, otherwise
@@ -23,18 +20,14 @@
 	 */
 	import type { IntersectionEntries } from '$lib/types';
 	import { onMount } from 'svelte';
-	import { retryUntil } from './Scrollyteller.util';
+	import { graphicDims } from '../stores';
 
 	export let align = '';
-	export let graphicRootEl;
 	export let marker;
 	export let observerOptions;
 	export let steps;
 	export let isDebug;
 
-	let status = 'loading';
-	let graphicDims = [0, 0];
-	let graphicEl;
 	let innerWidth = 0;
 	let innerHeight = 0;
 
@@ -45,7 +38,7 @@
 	 * over 20% of the interactive. Otherwise 10% of the screen height.
 	 */
 	$: rootMargin = isSplitScreen
-		? Math.round((innerHeight - (graphicDims[1] || innerHeight) * 0.6) / 2)
+		? Math.round((innerHeight - ($graphicDims.dims[1] || innerHeight) * 0.6) / 2)
 		: Math.round(innerHeight / 8);
 
 	/**
@@ -63,23 +56,6 @@
 		}
 	}
 
-	// Set up observer for graphic size ========================================
-	onMount(() => {
-		let observer;
-		retryUntil(() => graphicRootEl?.children).then(() => {
-			graphicEl = graphicRootEl.children[0];
-			observer = new ResizeObserver(
-				([entry]) => (graphicDims = [entry.contentRect.width, entry.contentRect.height])
-			);
-			observer.observe(graphicEl);
-			status = 'ready';
-		});
-
-		return () => {
-			observer?.disconnect();
-		};
-	});
-
 	// Set up observer for panel position ======================================
 	let panelObserver;
 	/**
@@ -88,7 +64,7 @@
 	 */
 	let intersectingPanels = [];
 	$: {
-		if (status === 'ready') {
+		if ($graphicDims.status === 'ready') {
 			panelObserver?.disconnect();
 			panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
 				entries.forEach((entry) => {

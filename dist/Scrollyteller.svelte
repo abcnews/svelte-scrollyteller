@@ -5,6 +5,7 @@ import { getScrollingPos, getScrollSpeed, ScrollPositions } from './Scrollytelle
 import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
 import PanelObserver from './Scrollyteller/PanelObserver.svelte';
+import GraphicObserver from './Scrollyteller/GraphicObserver.svelte';
 const dispatch = createEventDispatcher();
 export let customPanel = null;
 export let panels;
@@ -94,15 +95,8 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 {/if}
 
 <DeprecationNotice {onProgress} {onMarker} />
-
-<PanelObserver
-	bind:marker
-	{steps}
-	{observerOptions}
-	{graphicRootEl}
-	{isDebug}
-	align={_layout.align}
-/>
+<GraphicObserver {graphicRootEl} />
+<PanelObserver bind:marker {steps} {observerOptions} {isDebug} align={_layout.align} />
 
 <svelte:head>
 	{#if isOdyssey}

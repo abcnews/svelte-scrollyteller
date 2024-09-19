@@ -1,14 +1,10 @@
 <script>import { onMount } from 'svelte';
-import { retryUntil } from './Scrollyteller.util';
+import { graphicDims } from '../stores';
 export let align = '';
-export let graphicRootEl;
 export let marker;
 export let observerOptions;
 export let steps;
 export let isDebug;
-let status = 'loading';
-let graphicDims = [0, 0];
-let graphicEl;
 let innerWidth = 0;
 let innerHeight = 0;
 /** Split screen mode happens when left/right aligned + not mobile */
@@ -18,7 +14,7 @@ $: isSplitScreen = ['left', 'right'].includes(align) && innerWidth >= 992;
  * over 20% of the interactive. Otherwise 10% of the screen height.
  */
 $: rootMargin = isSplitScreen
-    ? Math.round((innerHeight - (graphicDims[1] || innerHeight) * 0.6) / 2)
+    ? Math.round((innerHeight - ($graphicDims.dims[1] || innerHeight) * 0.6) / 2)
     : Math.round(innerHeight / 8);
 /**
  * When observerOptions isn't set, default to either 0.5 for centred blocks
@@ -35,19 +31,6 @@ $: {
         };
     }
 }
-// Set up observer for graphic size ========================================
-onMount(() => {
-    let observer;
-    retryUntil(() => graphicRootEl?.children).then(() => {
-        graphicEl = graphicRootEl.children[0];
-        observer = new ResizeObserver(([entry]) => (graphicDims = [entry.contentRect.width, entry.contentRect.height]));
-        observer.observe(graphicEl);
-        status = 'ready';
-    });
-    return () => {
-        observer?.disconnect();
-    };
-});
 // Set up observer for panel position ======================================
 let panelObserver;
 /**
@@ -56,7 +39,7 @@ let panelObserver;
  */
 let intersectingPanels = [];
 $: {
-    if (status === 'ready') {
+    if ($graphicDims.status === 'ready') {
         panelObserver?.disconnect();
         panelObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {

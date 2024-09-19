@@ -187,7 +187,7 @@ The Svelte components are [packaged using SvelteKit svelte-package](https://kit.
 
 The Web Component is built separately using Vite with the `vite-webcomponents.config.js` config.
 
-Add `#debug=true` to your story to enable debug mode and clearly outline each section.
+Add `#debug=true` to your story to enable debug mode and clearly outline each section, block, breakpoint, and observer trigger point.
 
 ### Get started
 
