@@ -14,6 +14,8 @@
 	import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
 	import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 	import GraphicObserver from './Scrollyteller/GraphicObserver.svelte';
+	import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
+	import { MAX_SCROLLYTELLER_WIDTH, maxGraphicWidth } from './stores';
 
 	const dispatch = createEventDispatcher();
 
@@ -23,7 +25,7 @@
 	export let onProgress: boolean = false;
 	/** @deprecated please use on:marker instead */
 	export let onMarker: () => void = null;
-	export let observerOptions: IntersectionObserverInit;
+	export let observerOptions: IntersectionObserverInit = undefined;
 	/**
 	 * When `true` we remove the slot from the DOM when not in the viewport, and
 	 * debounce loading markers while the browser is scrolling quickly.
@@ -117,8 +119,9 @@
 {/if}
 
 <DeprecationNotice {onProgress} {onMarker} />
+<ScreenDimsStoreUpdater align={_layout.align} />
 <GraphicObserver {graphicRootEl} />
-<PanelObserver bind:marker {steps} {observerOptions} {isDebug} align={_layout.align} />
+<PanelObserver bind:marker {steps} {observerOptions} {isDebug} />
 
 <svelte:head>
 	{#if isOdyssey}
@@ -136,6 +139,7 @@
 	class="scrollyteller"
 	class:scrollyteller--resized={_layout.resizeInteractive}
 	class:scrollyteller--debug={isDebug}
+	style:--maxScrollytellerWidth={MAX_SCROLLYTELLER_WIDTH + 'px'}
 	bind:this={scrollytellerRef}
 >
 	<div
@@ -144,6 +148,7 @@
 		class:graphic--right={_layout.resizeInteractive && _layout.align === 'left'}
 		class:graphic--left={_layout.resizeInteractive && _layout.align === 'right'}
 		class:graphic--centre={_layout.resizeInteractive && _layout.align === 'centre'}
+		style:width={$maxGraphicWidth ? $maxGraphicWidth + 'px' : 'auto'}
 		bind:this={graphicRootEl}
 	>
 		{#if isInViewport || discardSlot === false}
@@ -178,7 +183,7 @@
 	.scrollyteller {
 		position: relative;
 		&--resized {
-			max-width: 127.5rem;
+			max-width: var(--maxScrollytellerWidth);
 			margin: 0 auto;
 		}
 		&--debug:after {

@@ -8,7 +8,7 @@ declare const __propDef: {
         panels: PanelDefinition[];
         /** Whether to enable the on:progress event. This is a somewhat heavy operation, so we don't enable it by default. */ onProgress?: boolean;
         /** @deprecated please use on:marker instead */ onMarker?: () => void;
-        observerOptions: IntersectionObserverInit;
+        observerOptions?: IntersectionObserverInit;
         /**
              * When `true` we remove the slot from the DOM when not in the viewport, and
              * debounce loading markers while the browser is scrolling quickly.

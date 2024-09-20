@@ -8,6 +8,7 @@
 	let align = 'centre';
 	let transparentFloat = undefined;
 	let resizeInteractive = undefined;
+	let ratio = null;
 
 	$: layout = { align, transparentFloat, resizeInteractive };
 	onMount(() => {
@@ -53,6 +54,15 @@
 			<option value={false}>false</option>
 		</select>
 	</label>
+
+	<label>
+		Viz ratio:
+		<select bind:value={ratio}>
+			<option value={null}>full size</option>
+			<option value={9 / 16}>portrait 16x9</option>
+			<option value={1}>1x1</option>
+		</select>
+	</label>
 </div>
 
 <div
@@ -65,7 +75,7 @@
 
 	<!-- Once the test data is loaded, load the scrollyteller -->
 	{#key JSON.stringify(layout)}
-		{#if status === 'ready'}<ScrollyAppTest name="test1" {layout} />{/if}
+		{#if status === 'ready'}<ScrollyAppTest name="test1" {layout} {ratio} />{/if}
 	{/key}
 
 	<div class="description">

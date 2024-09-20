@@ -1,7 +1,6 @@
 import { SvelteComponent } from "svelte";
 declare const __propDef: {
     props: {
-        align?: string;
         marker: any;
         observerOptions: any;
         steps: any;

@@ -3,6 +3,7 @@
 	import PercentageIndicators from './PercentageIndicators.svelte';
 	import Worm from './Worm/Worm.svelte';
 	export let name = 'test';
+	export let ratio = null;
 
 	const scrollyData = loadScrollyteller(
 		name, // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
@@ -29,7 +30,11 @@
 	on:progress={onProgress}
 	{...$$restProps}
 >
-	<div class="example-graphic">
+	<div
+		class="example-graphic"
+		class:example-graphic__ratio={!!ratio}
+		style:--ratio={ratio || 'unset'}
+	>
 		<Worm />
 		<span class="number">{number}</span>
 		<PercentageIndicators percentage={Math.round(stProgress?.scrollPct * 100)} />
@@ -97,5 +102,12 @@
 		transform: translate(-50%, -50%);
 		font-weight: 900;
 		font-size: xx-large;
+	}
+
+	.example-graphic__ratio {
+		aspect-ratio: var(--ratio);
+		width: auto !important;
+		// CSS can't do vars in media queries, and Svelte can't to vars in
+		// inline CSS so this only works for portrait ratios for now.
 	}
 </style>

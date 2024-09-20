@@ -6,6 +6,8 @@ import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
 import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 import GraphicObserver from './Scrollyteller/GraphicObserver.svelte';
+import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
+import { MAX_SCROLLYTELLER_WIDTH, maxGraphicWidth } from './stores';
 const dispatch = createEventDispatcher();
 export let customPanel = null;
 export let panels;
@@ -13,7 +15,7 @@ export let panels;
 export let onProgress = false;
 /** @deprecated please use on:marker instead */
 export let onMarker = null;
-export let observerOptions;
+export let observerOptions = undefined;
 /**
  * When `true` we remove the slot from the DOM when not in the viewport, and
  * debounce loading markers while the browser is scrolling quickly.
@@ -95,8 +97,9 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 {/if}
 
 <DeprecationNotice {onProgress} {onMarker} />
+<ScreenDimsStoreUpdater align={_layout.align} />
 <GraphicObserver {graphicRootEl} />
-<PanelObserver bind:marker {steps} {observerOptions} {isDebug} align={_layout.align} />
+<PanelObserver bind:marker {steps} {observerOptions} {isDebug} />
 
 <svelte:head>
 	{#if isOdyssey}
@@ -114,6 +117,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 	class="scrollyteller"
 	class:scrollyteller--resized={_layout.resizeInteractive}
 	class:scrollyteller--debug={isDebug}
+	style:--maxScrollytellerWidth={MAX_SCROLLYTELLER_WIDTH + 'px'}
 	bind:this={scrollytellerRef}
 >
 	<div
@@ -122,6 +126,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 		class:graphic--right={_layout.resizeInteractive && _layout.align === 'left'}
 		class:graphic--left={_layout.resizeInteractive && _layout.align === 'right'}
 		class:graphic--centre={_layout.resizeInteractive && _layout.align === 'centre'}
+		style:width={$maxGraphicWidth ? $maxGraphicWidth + 'px' : 'auto'}
 		bind:this={graphicRootEl}
 	>
 		{#if isInViewport || discardSlot === false}
@@ -155,7 +160,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
   position: relative;
 }
 .scrollyteller--resized {
-  max-width: 127.5rem;
+  max-width: var(--maxScrollytellerWidth);
   margin: 0 auto;
 }
 .scrollyteller--debug:after {

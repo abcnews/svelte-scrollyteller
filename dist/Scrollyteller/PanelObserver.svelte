@@ -1,21 +1,16 @@
 <script>import { onMount } from 'svelte';
-import { graphicDims } from '../stores';
-export let align = '';
+import { graphicDims, isSplitScreen, screenDims } from '../stores';
 export let marker;
 export let observerOptions;
 export let steps;
 export let isDebug;
-let innerWidth = 0;
-let innerHeight = 0;
-/** Split screen mode happens when left/right aligned + not mobile */
-$: isSplitScreen = ['left', 'right'].includes(align) && innerWidth >= 992;
 /**
  * For split screens, trigger the intersection observer when the block is
  * over 20% of the interactive. Otherwise 10% of the screen height.
  */
-$: rootMargin = isSplitScreen
-    ? Math.round((innerHeight - ($graphicDims.dims[1] || innerHeight) * 0.6) / 2)
-    : Math.round(innerHeight / 8);
+$: rootMargin = $isSplitScreen
+    ? Math.round(($screenDims[1] - ($graphicDims.dims[1] || $screenDims[1]) * 0.6) / 2)
+    : Math.round($screenDims[1] / 8);
 /**
  * When observerOptions isn't set, default to either 0.5 for centred blocks
  * or a 20% margin on the interactive.
@@ -43,7 +38,6 @@ $: {
         panelObserver?.disconnect();
         panelObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
-                console.log({ entry });
                 if (entry.isIntersecting) {
                     intersectingPanels.push(entry);
                 }
@@ -72,8 +66,6 @@ $: {
 }
 onMount(() => panelObserver?.disconnect());
 </script>
-
-<svelte:window bind:innerWidth bind:innerHeight />
 
 {#if isDebug && rootMargin && !observerOptions}
 	<div
