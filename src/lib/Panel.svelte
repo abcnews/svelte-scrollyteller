@@ -2,16 +2,17 @@
 	import { onMount } from 'svelte';
 	import { children } from './actions.js';
 	import type { PanelDefinition, PanelRef } from './types.js';
+	import { steps } from './stores.js';
 
 	export let props: PanelDefinition;
 
-	const { align, transparentFloat, panelClass, data, nodes = [], steps = [] } = props;
+	const { align, transparentFloat, panelClass, data, nodes = [] } = props;
 
 	let panelRef: PanelRef;
 
 	onMount(() => {
 		panelRef.scrollyData = data;
-		steps.push(panelRef);
+		$steps = [...$steps, panelRef];
 	});
 </script>
 
@@ -38,20 +39,16 @@
 		--panel-filter: var(--color-panel-filter, blur(2.5px));
 		--panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));
 		--panel-padding: 1rem;
-		--panel-margin: 1rem;
 
 		box-sizing: border-box;
 		margin: 80vh auto;
-		width: calc(100% - calc(var(--panel-margin) * 2));
 		position: relative;
 		z-index: 1;
 		pointer-events: none;
 		font-size: 1.125rem;
-		// max-width: 41.25rem; // Removed pending discussion with Ben
 
 		@media (min-width: $breakpointTablet) {
 			--panel-padding: 2rem;
-			--panel-margin: 2rem;
 			// max-width: 45rem; // Removed pending discussion with Ben
 		}
 
@@ -90,14 +87,6 @@
 		&--left,
 		&--right {
 			@media (min-width: $breakpointLargeTablet) {
-				--maxWidth: 45%;
-				// outer margin
-				--panel-margin: 2rem;
-				// inner margin divided by 2 because the vis also adds half a margin
-				--panel-margin-inner: calc(var(--panel-margin) / 2);
-
-				max-width: calc(var(--maxWidth) - calc(var(--panel-margin) + var(--panel-margin-inner)));
-				margin: 30vh 0 30vh var(--panel-margin);
 				font-size: 1.125rem;
 
 				&.st-panel-root--transparent-blocks {
@@ -111,20 +100,10 @@
 				}
 			}
 			@media (min-width: $breakpointDesktop) {
-				--panel-margin: 3rem;
-				--maxWidth: 40%;
 				font-size: 1.125rem;
 			}
 			@media (min-width: $breakpointLargeDesktop) {
-				--panel-margin: 4rem;
-				--maxWidth: 40%;
 				font-size: 1.25rem;
-			}
-		}
-
-		&--right {
-			@media (min-width: $breakpointLargeTablet) {
-				margin: 15vh calc(var(--marginLeft) - 1rem) 15vh auto;
 			}
 		}
 	}

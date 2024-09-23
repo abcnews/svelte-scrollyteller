@@ -3,7 +3,6 @@ declare const __propDef: {
     props: {
         marker: any;
         observerOptions: any;
-        steps: any;
         isDebug: any;
     };
     events: {

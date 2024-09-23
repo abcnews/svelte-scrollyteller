@@ -1,15 +1,14 @@
 <script>import { onMount } from 'svelte';
-import { graphicDims, isSplitScreen, screenDims } from '../stores';
+import { vizDims, isSplitScreen, screenDims, steps } from '../stores';
 export let marker;
 export let observerOptions;
-export let steps;
 export let isDebug;
 /**
  * For split screens, trigger the intersection observer when the block is
  * over 20% of the interactive. Otherwise 10% of the screen height.
  */
 $: rootMargin = $isSplitScreen
-    ? Math.round(($screenDims[1] - ($graphicDims.dims[1] || $screenDims[1]) * 0.6) / 2)
+    ? Math.round(($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * 0.6) / 2)
     : Math.round($screenDims[1] / 8);
 /**
  * When observerOptions isn't set, default to either 0.5 for centred blocks
@@ -34,7 +33,7 @@ let panelObserver;
  */
 let intersectingPanels = [];
 $: {
-    if ($graphicDims.status === 'ready') {
+    if ($vizDims.status === 'ready') {
         panelObserver?.disconnect();
         panelObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -56,7 +55,7 @@ $: {
                 }
             });
         }, _observerOptions);
-        steps.forEach((step, i) => {
+        $steps.forEach((step) => {
             panelObserver.observe(step);
         });
     }

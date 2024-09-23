@@ -1,11 +1,12 @@
 <script>import { onMount } from 'svelte';
 import { children } from './actions.js';
+import { steps } from './stores.js';
 export let props;
-const { align, transparentFloat, panelClass, data, nodes = [], steps = [] } = props;
+const { align, transparentFloat, panelClass, data, nodes = [] } = props;
 let panelRef;
 onMount(() => {
     panelRef.scrollyData = data;
-    steps.push(panelRef);
+    $steps = [...$steps, panelRef];
 });
 </script>
 
@@ -29,10 +30,8 @@ onMount(() => {
   --panel-filter: var(--color-panel-filter, blur(2.5px));
   --panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));
   --panel-padding: 1rem;
-  --panel-margin: 1rem;
   box-sizing: border-box;
   margin: 80vh auto;
-  width: calc(100% - var(--panel-margin) * 2);
   position: relative;
   z-index: 1;
   pointer-events: none;
@@ -41,7 +40,6 @@ onMount(() => {
 @media (min-width: 46.5rem) {
   .st-panel-root {
     --panel-padding: 2rem;
-    --panel-margin: 2rem;
   }
 }
 :global([data-scheme="dark"]) .st-panel-root, :global(.is-dark-mode) .st-panel-root {
@@ -71,11 +69,6 @@ onMount(() => {
 }
 @media (min-width: 62rem) {
   .st-panel-root--left, .st-panel-root--right {
-    --maxWidth: 45%;
-    --panel-margin: 2rem;
-    --panel-margin-inner: calc(var(--panel-margin) / 2);
-    max-width: calc(var(--maxWidth) - (var(--panel-margin) + var(--panel-margin-inner)));
-    margin: 30vh 0 30vh var(--panel-margin);
     font-size: 1.125rem;
   }
   .st-panel-root--left.st-panel-root--transparent-blocks, .st-panel-root--right.st-panel-root--transparent-blocks {
@@ -90,21 +83,12 @@ onMount(() => {
 }
 @media (min-width: 75rem) {
   .st-panel-root--left, .st-panel-root--right {
-    --panel-margin: 3rem;
-    --maxWidth: 40%;
     font-size: 1.125rem;
   }
 }
 @media (min-width: 90rem) {
   .st-panel-root--left, .st-panel-root--right {
-    --panel-margin: 4rem;
-    --maxWidth: 40%;
     font-size: 1.25rem;
-  }
-}
-@media (min-width: 62rem) {
-  .st-panel-root--right {
-    margin: 15vh calc(var(--marginLeft) - 1rem) 15vh auto;
   }
 }
 

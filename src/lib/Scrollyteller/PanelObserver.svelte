@@ -10,7 +10,7 @@
 	 * the viz.
 	 *
 	 * As a result, we need to:
-	 * 1. Wait for graphicDims to become availble
+	 * 1. Wait for vizDims to become availble
 	 * 2. calculate the rootMargin for the panel observer based on the box size.
 	 * 3. finally, observe the panels.
 	 *
@@ -20,11 +20,10 @@
 	 */
 	import type { IntersectionEntries } from '$lib/types';
 	import { onMount } from 'svelte';
-	import { graphicDims, isSplitScreen, screenDims } from '../stores';
+	import { vizDims, isSplitScreen, screenDims, steps } from '../stores';
 
 	export let marker;
 	export let observerOptions;
-	export let steps;
 	export let isDebug;
 
 	/**
@@ -32,7 +31,7 @@
 	 * over 20% of the interactive. Otherwise 10% of the screen height.
 	 */
 	$: rootMargin = $isSplitScreen
-		? Math.round(($screenDims[1] - ($graphicDims.dims[1] || $screenDims[1]) * 0.6) / 2)
+		? Math.round(($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * 0.6) / 2)
 		: Math.round($screenDims[1] / 8);
 
 	/**
@@ -58,7 +57,7 @@
 	 */
 	let intersectingPanels = [];
 	$: {
-		if ($graphicDims.status === 'ready') {
+		if ($vizDims.status === 'ready') {
 			panelObserver?.disconnect();
 			panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
 				entries.forEach((entry) => {
@@ -81,7 +80,7 @@
 					}
 				});
 			}, _observerOptions);
-			steps.forEach((step, i) => {
+			$steps.forEach((step) => {
 				panelObserver.observe(step);
 			});
 		} else {

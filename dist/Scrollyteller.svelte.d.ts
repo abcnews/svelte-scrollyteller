@@ -1,7 +1,6 @@
 import { SvelteComponent } from "svelte";
 import type { ComponentType } from 'svelte';
-import type { PanelDefinition } from './types.js';
-import { type Style } from './Scrollyteller/Scrollyteller.util';
+import type { PanelDefinition, Style } from './types.js';
 declare const __propDef: {
     props: {
         customPanel?: ComponentType | null;
@@ -25,7 +24,6 @@ declare const __propDef: {
     };
     events: {
         progress: CustomEvent<any>;
-        load: CustomEvent<any>;
         marker: CustomEvent<any>;
     } & {
         [evt: string]: CustomEvent<any>;

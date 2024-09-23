@@ -3,10 +3,10 @@
 	 * @file
 	 * Observer on the graphic (viz) inserted into the main slot.
 	 *
-	 * This component is responsible for keeping the graphicDims store updated.
+	 * This component is responsible for keeping the vizDims store updated.
 	 */
 	import { onMount } from 'svelte';
-	import { _graphicDims, graphicRootDims, maxGraphicWidth } from '../stores';
+	import { _vizDims, graphicRootDims, maxGraphicWidth } from '../stores';
 	import { retryUntil } from './Scrollyteller.util';
 	export let graphicRootEl;
 
@@ -21,7 +21,7 @@
 						dims: [entry.contentRect.width, entry.contentRect.height]
 					};
 				} else {
-					$_graphicDims = {
+					$_vizDims = {
 						status: 'ready',
 						dims: [entry.contentRect.width, entry.contentRect.height]
 					};
@@ -43,6 +43,4 @@
 			observer?.disconnect();
 		};
 	});
-
-	$: console.log({ $maxGraphicWidth });
 </script>

@@ -1,19 +1,27 @@
-/** Calculated dimensions of the graphic */
-export declare const _graphicDims: import("svelte/store").Writable<{
+import { type PanelRef } from './types';
+/** Each panel inserts itself into this list when it instantiates */
+export declare let steps: import("svelte/store").Writable<PanelRef[]>;
+/** Margin either side + in between scrollyteller columns */
+export declare let margin: import("svelte/store").Writable<number>;
+/** Raw dimensions of the graphic. Use calculated `vizDims` instead */
+export declare const _vizDims: import("svelte/store").Writable<{
     status: string;
     dims: number[];
 }>;
+/** Dims of the root container inside which the viz sits */
 export declare const graphicRootDims: import("svelte/store").Writable<{
     status: string;
     dims: number[];
 }>;
-export declare const graphicDims: import("svelte/store").Readable<{
+/** Calculated dimensions of the viz */
+export declare const vizDims: import("svelte/store").Readable<{
     ratio: number;
     status: string;
     dims: number[];
 }>;
 /** Reactive window.innerWidth/innerHeight */
 export declare const screenDims: import("svelte/store").Writable<number[]>;
+/** Global align prop that resizeInteractive uses, etc. */
 export declare const globalAlign: import("svelte/store").Writable<string>;
 /** Split screen mode happens when left/right aligned + not mobile */
 export declare const isSplitScreen: import("svelte/store").Readable<boolean>;

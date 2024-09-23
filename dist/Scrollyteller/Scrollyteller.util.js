@@ -1,9 +1,4 @@
-export var ScrollPositions;
-(function (ScrollPositions) {
-    ScrollPositions["FULL"] = "FULL";
-    ScrollPositions["ABOVE"] = "ABOVE";
-    ScrollPositions["BELOW"] = "BELOW";
-})(ScrollPositions || (ScrollPositions = {}));
+import { ScrollPositions } from '../types';
 export const getScrollingPos = (scrollytellerRef) => {
     const boundingRect = scrollytellerRef.getBoundingClientRect();
     if (boundingRect.bottom - window.innerHeight < 0) {

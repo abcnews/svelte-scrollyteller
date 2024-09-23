@@ -1,13 +1,16 @@
 <script>import { onMount } from 'svelte';
-import Panel from './Panel.svelte';
+import { ScrollPositions } from './types.js';
 import { createEventDispatcher } from 'svelte';
-import { getScrollingPos, getScrollSpeed, ScrollPositions } from './Scrollyteller/Scrollyteller.util';
+import { getScrollingPos, getScrollSpeed } from './Scrollyteller/Scrollyteller.util';
 import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
 import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 import GraphicObserver from './Scrollyteller/GraphicObserver.svelte';
 import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
 import { MAX_SCROLLYTELLER_WIDTH, maxGraphicWidth } from './stores';
+import Panels from './Panels.svelte';
+import Viz from './Viz.svelte';
+import ResizeObserver from './Scrollyteller/ResizeObserver.svelte';
 const dispatch = createEventDispatcher();
 export let customPanel = null;
 export let panels;
@@ -42,18 +45,11 @@ $: _layout = {
 $: maxScrollSpeed = discardSlot ? 0.5 : Infinity;
 const isOdyssey = window.__IS_ODYSSEY_FORMAT__;
 let scrollytellerRef;
-let steps = [];
 let marker;
 let scrollingPos;
 let isInViewport = false;
 let scrollSpeed = 0;
 let deferUntilScrollSettlesActions = [];
-// emit an event with the graphic root, because the web component doesn't
-// support slots & must insert content  manually.
-let graphicRootEl;
-$: if (graphicRootEl) {
-    dispatch('load', graphicRootEl);
-}
 const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
     isInViewport = scrollytellerEntry.isIntersecting;
 }));
@@ -98,8 +94,8 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 
 <DeprecationNotice {onProgress} {onMarker} />
 <ScreenDimsStoreUpdater align={_layout.align} />
-<GraphicObserver {graphicRootEl} />
-<PanelObserver bind:marker {steps} {observerOptions} {isDebug} />
+<PanelObserver bind:marker {observerOptions} {isDebug} />
+<ResizeObserver {scrollytellerRef} />
 
 <svelte:head>
 	{#if isOdyssey}
@@ -117,51 +113,43 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 	class="scrollyteller"
 	class:scrollyteller--resized={_layout.resizeInteractive}
 	class:scrollyteller--debug={isDebug}
-	style:--maxScrollytellerWidth={MAX_SCROLLYTELLER_WIDTH + 'px'}
+	style:--maxScrollytellerWidthPx={MAX_SCROLLYTELLER_WIDTH + 'px'}
+	style:--rightColumnWidth={$maxGraphicWidth ? $maxGraphicWidth + 'px' : 'auto'}
 	bind:this={scrollytellerRef}
 >
-	<div
-		class="graphic"
-		class:graphic--resized={_layout.resizeInteractive}
-		class:graphic--right={_layout.resizeInteractive && _layout.align === 'left'}
-		class:graphic--left={_layout.resizeInteractive && _layout.align === 'right'}
-		class:graphic--centre={_layout.resizeInteractive && _layout.align === 'centre'}
-		style:width={$maxGraphicWidth ? $maxGraphicWidth + 'px' : 'auto'}
-		bind:this={graphicRootEl}
-	>
-		{#if isInViewport || discardSlot === false}
-			<slot />
-		{/if}
-	</div>
-	<div class="content" class:content--resized={!_layout.resizeInteractive}>
-		{#each panels as panel, i}
-			{@const panelClass =
-				(panel.panelClass ?? '') +
-				(i === 0 ? ' first' : '') +
-				(i === panels.length - 1 ? ' last' : '')}
-			{#if customPanel}
-				<svelte:component this={customPanel} {...panel} {steps} {panelClass} />
-			{:else}
-				<Panel
-					props={{
-						...panel,
-						align: panel.align || _layout.align,
-						transparentFloat: _layout.transparentFloat,
-						steps,
-						panelClass
-					}}
-				/>
-			{/if}
-		{/each}
-	</div>
+	<Viz layout={_layout} {isInViewport} {discardSlot}><slot /></Viz>
+	<Panels layout={_layout} {panels} {customPanel} />
 </div>
 
 <style>.scrollyteller {
   position: relative;
 }
 .scrollyteller--resized {
-  max-width: var(--maxScrollytellerWidth);
+  --maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);
+  max-width: calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);
   margin: 0 auto;
+  width: fit-content;
+  --marginOuter: 1.5rem;
+}
+@media (min-width: 46.5rem) {
+  .scrollyteller--resized {
+    --marginOuter: 2rem;
+  }
+}
+@media (min-width: 62rem) {
+  .scrollyteller--resized {
+    --marginOuter: 2rem;
+  }
+}
+@media (min-width: 75rem) {
+  .scrollyteller--resized {
+    --marginOuter: 3rem;
+  }
+}
+@media (min-width: 90rem) {
+  .scrollyteller--resized {
+    --marginOuter: 4rem;
+  }
 }
 .scrollyteller--debug:after {
   content: "Mobile";
@@ -194,106 +182,4 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
   .scrollyteller--debug:after {
     content: "LargeDesktop";
   }
-}
-
-.graphic {
-  transform: translate3d(0, 0, 0);
-  height: 100dvh;
-  width: 100%;
-  position: sticky;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.graphic--resized {
-  container-type: size;
-  height: 60dvh;
-  top: 10dvh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin: 0 auto;
-  width: auto;
-  --margin: 1.5rem;
-  margin: 0 auto;
-  width: calc(100% - var(--margin) * 2);
-}
-@media (min-width: 46.5rem) {
-  .graphic--resized {
-    --margin: 4rem;
-    top: 8dvh;
-    height: 62dvh;
-  }
-}
-@media (min-width: 62rem) {
-  .graphic--resized.graphic--left, .graphic--resized.graphic--right {
-    align-items: center;
-    --marginOuter: 2rem;
-    --marginCentre: calc(var(--marginOuter) / 2);
-    height: 84dvh;
-    top: 8dvh;
-    --maxWidth: 55%;
-    max-width: calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)));
-  }
-}
-@media (min-width: 75rem) {
-  .graphic--resized.graphic--left, .graphic--resized.graphic--right {
-    --marginOuter: 3rem;
-    --maxWidth: 60%;
-    height: 76dvh;
-    top: 12dvh;
-  }
-}
-@media (min-width: 90rem) {
-  .graphic--resized.graphic--left, .graphic--resized.graphic--right {
-    --marginOuter: 4rem;
-    --maxWidth: 60%;
-    top: 10dvh;
-    height: 80dvh;
-  }
-}
-@media (min-width: 62rem) {
-  .graphic--resized.graphic--left {
-    margin: 0 auto 0 var(--marginOuter);
-  }
-}
-@media (min-width: 62rem) {
-  .graphic--resized.graphic--right {
-    margin: 0 var(--marginOuter) 0 auto;
-  }
-}
-@media (min-width: 62rem) {
-  .graphic--resized.graphic--centre {
-    --margin: 3rem;
-    top: 8dvh;
-    height: 62dvh;
-  }
-}
-@media (min-width: 75rem) {
-  .graphic--resized.graphic--centre {
-    --margin: 4rem;
-    top: 12dvh;
-    height: 58dvh;
-  }
-}
-@media (min-width: 90rem) {
-  .graphic--resized.graphic--centre {
-    --margin: 6rem;
-    top: 12dvh;
-    height: 58dvh;
-  }
-}
-.scrollyteller--debug .graphic--resized {
-  outline: 5px solid limegreen;
-}
-
-.content {
-  margin: -100dvh auto 0;
-  position: relative;
-  z-index: 2;
-  pointer-events: none;
-}
-.content--resized {
-  max-width: 127.5rem;
 }</style>
