@@ -69,6 +69,8 @@ onMount(() => {
 }
 @media (min-width: 62rem) {
   .st-panel-root--left, .st-panel-root--right {
+    margin-top: 30vh;
+    margin-bottom: 30vh;
     font-size: 1.125rem;
   }
   .st-panel-root--left.st-panel-root--transparent-blocks, .st-panel-root--right.st-panel-root--transparent-blocks {

@@ -87,6 +87,8 @@
 		&--left,
 		&--right {
 			@media (min-width: $breakpointLargeTablet) {
+				margin-top: 30vh;
+				margin-bottom: 30vh;
 				font-size: 1.125rem;
 
 				&.st-panel-root--transparent-blocks {
