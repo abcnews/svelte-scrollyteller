@@ -109,47 +109,58 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 	{/if}
 </svelte:head>
 
-<div
-	class="scrollyteller"
-	class:scrollyteller--resized={_layout.resizeInteractive}
-	class:scrollyteller--debug={isDebug}
-	style:--maxScrollytellerWidthPx={MAX_SCROLLYTELLER_WIDTH + 'px'}
-	style:--rightColumnWidth={$maxGraphicWidth ? $maxGraphicWidth + 'px' : 'auto'}
-	bind:this={scrollytellerRef}
->
-	<Viz layout={_layout} {isInViewport} {discardSlot}><slot /></Viz>
-	<Panels layout={_layout} {panels} {customPanel} />
+<div class="scrollyteller-wrapper">
+	{#if !layout.resizeInteractive}
+		<Viz layout={_layout} {isInViewport} {discardSlot}><slot /></Viz>
+	{/if}
+	<div
+		class="scrollyteller"
+		class:scrollyteller--resized={_layout.resizeInteractive}
+		class:scrollyteller--debug={isDebug}
+		style:--maxScrollytellerWidthPx={MAX_SCROLLYTELLER_WIDTH + 'px'}
+		style:--rightColumnWidth={$maxGraphicWidth ? $maxGraphicWidth + 'px' : undefined}
+		bind:this={scrollytellerRef}
+	>
+		{#if layout.resizeInteractive}
+			<Viz layout={_layout} {isInViewport} {discardSlot}><slot /></Viz>
+		{/if}
+		<Panels layout={_layout} {panels} {customPanel} />
+	</div>
 </div>
 
-<style>.scrollyteller {
+<style>.scrollyteller-wrapper {
   position: relative;
 }
-.scrollyteller--resized {
+
+.scrollyteller {
+  position: relative;
   --maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);
-  max-width: calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);
-  margin: 0 auto;
-  width: fit-content;
   --marginOuter: 1.5rem;
+  margin: 0 auto;
+  max-width: calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);
 }
 @media (min-width: 46.5rem) {
-  .scrollyteller--resized {
+  .scrollyteller {
     --marginOuter: 2rem;
   }
 }
 @media (min-width: 62rem) {
-  .scrollyteller--resized {
+  .scrollyteller {
     --marginOuter: 2rem;
   }
 }
 @media (min-width: 75rem) {
-  .scrollyteller--resized {
+  .scrollyteller {
     --marginOuter: 3rem;
   }
 }
 @media (min-width: 90rem) {
-  .scrollyteller--resized {
+  .scrollyteller {
     --marginOuter: 4rem;
   }
+}
+.scrollyteller--resized {
+  width: fit-content;
 }
 .scrollyteller--debug:after {
   content: "Mobile";

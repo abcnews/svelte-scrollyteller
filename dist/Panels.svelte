@@ -56,16 +56,17 @@ $: console.log({ panelGroups, panels, layout });
   position: relative;
   z-index: 2;
 }
-.content--resized {
-  max-width: 127.5rem;
-}
 
+.content--left, .content--right {
+  max-width: 127.5rem;
+  margin-left: 0;
+}
 @media (min-width: 62rem) {
   .content--left, .content--right {
     --maxWidth: 0.45;
-    --actualMaxWidth: calc(min(calc(100vw, var(--maxScrollytellerWidth)) * var(--maxWidth)));
+    --actualMaxWidth: calc(min(100vw, var(--maxScrollytellerWidth)) * var(--maxWidth));
     max-width: calc(var(--actualMaxWidth) - var(--marginOuter) * 1);
-    margin-right: calc(var(--rightColumnWidth) + var(--marginOuter) * 1);
+    margin-right: calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);
   }
 }
 @media (min-width: 75rem) {

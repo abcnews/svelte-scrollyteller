@@ -65,19 +65,18 @@
 		z-index: 2;
 		// This style doesn't apply to child blocks, just the container
 		// pointer-events: none;
-		&--resized {
-			max-width: 127.5rem;
-		}
 	}
 	.content {
 		&--left,
 		&--right {
+			max-width: 127.5rem;
+			margin-left: 0;
 			@media (min-width: $breakpointLargeTablet) {
 				--maxWidth: 0.45;
-				--actualMaxWidth: calc(min(calc(100vw, var(--maxScrollytellerWidth)) * var(--maxWidth)));
+				--actualMaxWidth: calc(min(100vw, var(--maxScrollytellerWidth)) * var(--maxWidth));
 
 				max-width: calc(var(--actualMaxWidth) - calc(var(--marginOuter) * 1));
-				margin-right: calc(var(--rightColumnWidth) + calc(var(--marginOuter) * 1));
+				margin-right: calc(var(--rightColumnWidth, 100px) + calc(var(--marginOuter) * 1));
 			}
 			@media (min-width: $breakpointDesktop) {
 				--maxWidth: 0.4;

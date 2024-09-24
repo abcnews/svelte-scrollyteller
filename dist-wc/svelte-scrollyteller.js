@@ -1014,10 +1014,6 @@ const _vizDims = writable({
   status: "loading",
   dims: [0, 0]
 });
-const graphicRootDims = writable({
-  status: "loading",
-  dims: [0, 0]
-});
 const vizDims = derived(_vizDims, ($vizDims) => ({
   ...$vizDims,
   ratio: $vizDims.dims[1] / $vizDims.dims[0]
@@ -1264,37 +1260,21 @@ class PanelObserver extends SvelteComponent {
 create_custom_element(PanelObserver, { "marker": {}, "observerOptions": {}, "isDebug": {} }, [], [], true);
 function instance$7($$self, $$props, $$invalidate) {
   let $_vizDims;
-  let $graphicRootDims;
   component_subscribe($$self, _vizDims, ($$value) => $$invalidate(1, $_vizDims = $$value));
-  component_subscribe($$self, graphicRootDims, ($$value) => $$invalidate(2, $graphicRootDims = $$value));
   let { graphicRootEl } = $$props;
   onMount(() => {
     let observer;
     observer = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.target === graphicRootEl) {
-          set_store_value(
-            graphicRootDims,
-            $graphicRootDims = {
-              status: "ready",
-              dims: [entry.contentRect.width, entry.contentRect.height]
-            },
-            $graphicRootDims
-          );
-        } else {
-          set_store_value(
-            _vizDims,
-            $_vizDims = {
-              status: "ready",
-              dims: [entry.contentRect.width, entry.contentRect.height]
-            },
-            $_vizDims
-          );
-        }
+        set_store_value(
+          _vizDims,
+          $_vizDims = {
+            status: "ready",
+            dims: [entry.contentRect.width, entry.contentRect.height]
+          },
+          $_vizDims
+        );
       });
-    });
-    retryUntil(() => graphicRootEl).then(() => {
-      observer.observe(graphicRootEl);
     });
     retryUntil(() => graphicRootEl == null ? void 0 : graphicRootEl.children).then(() => {
       observer.observe(graphicRootEl.children[0]);
@@ -1509,7 +1489,7 @@ class Panel extends SvelteComponent {
 }
 create_custom_element(Panel, { "props": {} }, [], [], true);
 function add_css$2(target) {
-  append_styles(target, "svelte-tj3t14", ".content.svelte-tj3t14{margin:-100dvh auto 0;position:relative;z-index:2}@media(min-width: 62rem){.content--left.svelte-tj3t14,.content--right.svelte-tj3t14{--maxWidth:0.45;--actualMaxWidth:calc(min(calc(100vw, var(--maxScrollytellerWidth)) * var(--maxWidth)));max-width:calc(var(--actualMaxWidth) - var(--marginOuter) * 1);margin-right:calc(var(--rightColumnWidth) + var(--marginOuter) * 1)}}@media(min-width: 75rem){.content--left.svelte-tj3t14,.content--right.svelte-tj3t14{--maxWidth:0.4}}@media(min-width: 90rem){.content--left.svelte-tj3t14,.content--right.svelte-tj3t14{--maxWidth:0.4}}");
+  append_styles(target, "svelte-8cn2jg", ".content.svelte-8cn2jg{margin:-100dvh auto 0;position:relative;z-index:2}.content--left.svelte-8cn2jg,.content--right.svelte-8cn2jg{max-width:127.5rem;margin-left:0}@media(min-width: 62rem){.content--left.svelte-8cn2jg,.content--right.svelte-8cn2jg{--maxWidth:0.45;--actualMaxWidth:calc(min(100vw, var(--maxScrollytellerWidth)) * var(--maxWidth));max-width:calc(var(--actualMaxWidth) - var(--marginOuter) * 1);margin-right:calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1)}}@media(min-width: 75rem){.content--left.svelte-8cn2jg,.content--right.svelte-8cn2jg{--maxWidth:0.4}}@media(min-width: 90rem){.content--left.svelte-8cn2jg,.content--right.svelte-8cn2jg{--maxWidth:0.4}}");
 }
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
@@ -1812,7 +1792,7 @@ function create_each_block(ctx) {
         each_blocks[i].c();
       }
       t = space();
-      attr(div, "class", "content svelte-tj3t14");
+      attr(div, "class", "content svelte-8cn2jg");
       toggle_class(
         div,
         "content--right",
@@ -2417,16 +2397,16 @@ let ResizeObserver$1 = class ResizeObserver2 extends SvelteComponent {
 };
 create_custom_element(ResizeObserver$1, { "scrollytellerRef": {} }, [], [], true);
 function add_css(target) {
-  append_styles(target, "svelte-m89ms9", '.scrollyteller.svelte-m89ms9{position:relative}.scrollyteller--resized.svelte-m89ms9{--maxScrollytellerWidth:min(var(--maxScrollytellerWidthPx), 100vw);max-width:calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);margin:0 auto;width:fit-content;--marginOuter:1.5rem}@media(min-width: 46.5rem){.scrollyteller--resized.svelte-m89ms9{--marginOuter:2rem}}@media(min-width: 62rem){.scrollyteller--resized.svelte-m89ms9{--marginOuter:2rem}}@media(min-width: 75rem){.scrollyteller--resized.svelte-m89ms9{--marginOuter:3rem}}@media(min-width: 90rem){.scrollyteller--resized.svelte-m89ms9{--marginOuter:4rem}}.scrollyteller--debug.svelte-m89ms9:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110}@media(min-width: 46.5rem){.scrollyteller--debug.svelte-m89ms9:after{content:"Tablet"}}@media(min-width: 62rem){.scrollyteller--debug.svelte-m89ms9:after{content:"LargeTablet"}}@media(min-width: 75rem){.scrollyteller--debug.svelte-m89ms9:after{content:"Desktop"}}@media(min-width: 90rem){.scrollyteller--debug.svelte-m89ms9:after{content:"LargeDesktop"}}');
+  append_styles(target, "svelte-16nqhu1", '.scrollyteller-wrapper.svelte-16nqhu1{position:relative}.scrollyteller.svelte-16nqhu1{position:relative;--maxScrollytellerWidth:min(var(--maxScrollytellerWidthPx), 100vw);--marginOuter:1.5rem;margin:0 auto;max-width:calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2)}@media(min-width: 46.5rem){.scrollyteller.svelte-16nqhu1{--marginOuter:2rem}}@media(min-width: 62rem){.scrollyteller.svelte-16nqhu1{--marginOuter:2rem}}@media(min-width: 75rem){.scrollyteller.svelte-16nqhu1{--marginOuter:3rem}}@media(min-width: 90rem){.scrollyteller.svelte-16nqhu1{--marginOuter:4rem}}.scrollyteller--resized.svelte-16nqhu1{width:fit-content}.scrollyteller--debug.svelte-16nqhu1:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110}@media(min-width: 46.5rem){.scrollyteller--debug.svelte-16nqhu1:after{content:"Tablet"}}@media(min-width: 62rem){.scrollyteller--debug.svelte-16nqhu1:after{content:"LargeTablet"}}@media(min-width: 75rem){.scrollyteller--debug.svelte-16nqhu1:after{content:"Desktop"}}@media(min-width: 90rem){.scrollyteller--debug.svelte-16nqhu1:after{content:"LargeDesktop"}}');
 }
-function create_if_block_1(ctx) {
+function create_if_block_3(ctx) {
   let onprogresshandler;
   let current;
   onprogresshandler = new OnProgressHandler({
     props: {
       scrollytellerRef: (
         /*scrollytellerRef*/
-        ctx[7]
+        ctx[8]
       )
     }
   });
@@ -2446,8 +2426,8 @@ function create_if_block_1(ctx) {
     p(ctx2, dirty) {
       const onprogresshandler_changes = {};
       if (dirty & /*scrollytellerRef*/
-      128) onprogresshandler_changes.scrollytellerRef = /*scrollytellerRef*/
-      ctx2[7];
+      256) onprogresshandler_changes.scrollytellerRef = /*scrollytellerRef*/
+      ctx2[8];
       onprogresshandler.$set(onprogresshandler_changes);
     },
     i(local) {
@@ -2464,7 +2444,7 @@ function create_if_block_1(ctx) {
     }
   };
 }
-function create_if_block$1(ctx) {
+function create_if_block_2(ctx) {
   let style;
   return {
     c() {
@@ -2478,6 +2458,188 @@ function create_if_block$1(ctx) {
       if (detaching) {
         detach(style);
       }
+    }
+  };
+}
+function create_if_block_1(ctx) {
+  let viz;
+  let current;
+  viz = new Viz({
+    props: {
+      layout: (
+        /*_layout*/
+        ctx[11]
+      ),
+      isInViewport: (
+        /*isInViewport*/
+        ctx[9]
+      ),
+      discardSlot: (
+        /*discardSlot*/
+        ctx[5]
+      ),
+      $$slots: { default: [create_default_slot_1] },
+      $$scope: { ctx }
+    }
+  });
+  return {
+    c() {
+      create_component(viz.$$.fragment);
+    },
+    m(target, anchor) {
+      mount_component(viz, target, anchor);
+      current = true;
+    },
+    p(ctx2, dirty) {
+      const viz_changes = {};
+      if (dirty & /*_layout*/
+      2048) viz_changes.layout = /*_layout*/
+      ctx2[11];
+      if (dirty & /*isInViewport*/
+      512) viz_changes.isInViewport = /*isInViewport*/
+      ctx2[9];
+      if (dirty & /*discardSlot*/
+      32) viz_changes.discardSlot = /*discardSlot*/
+      ctx2[5];
+      if (dirty & /*$$scope*/
+      262144) {
+        viz_changes.$$scope = { dirty, ctx: ctx2 };
+      }
+      viz.$set(viz_changes);
+    },
+    i(local) {
+      if (current) return;
+      transition_in(viz.$$.fragment, local);
+      current = true;
+    },
+    o(local) {
+      transition_out(viz.$$.fragment, local);
+      current = false;
+    },
+    d(detaching) {
+      destroy_component(viz, detaching);
+    }
+  };
+}
+function create_default_slot_1(ctx) {
+  let current;
+  const default_slot_template = (
+    /*#slots*/
+    ctx[14].default
+  );
+  const default_slot = create_slot(
+    default_slot_template,
+    ctx,
+    /*$$scope*/
+    ctx[18],
+    null
+  );
+  return {
+    c() {
+      if (default_slot) default_slot.c();
+    },
+    m(target, anchor) {
+      if (default_slot) {
+        default_slot.m(target, anchor);
+      }
+      current = true;
+    },
+    p(ctx2, dirty) {
+      if (default_slot) {
+        if (default_slot.p && (!current || dirty & /*$$scope*/
+        262144)) {
+          update_slot_base(
+            default_slot,
+            default_slot_template,
+            ctx2,
+            /*$$scope*/
+            ctx2[18],
+            !current ? get_all_dirty_from_scope(
+              /*$$scope*/
+              ctx2[18]
+            ) : get_slot_changes(
+              default_slot_template,
+              /*$$scope*/
+              ctx2[18],
+              dirty,
+              null
+            ),
+            null
+          );
+        }
+      }
+    },
+    i(local) {
+      if (current) return;
+      transition_in(default_slot, local);
+      current = true;
+    },
+    o(local) {
+      transition_out(default_slot, local);
+      current = false;
+    },
+    d(detaching) {
+      if (default_slot) default_slot.d(detaching);
+    }
+  };
+}
+function create_if_block$1(ctx) {
+  let viz;
+  let current;
+  viz = new Viz({
+    props: {
+      layout: (
+        /*_layout*/
+        ctx[11]
+      ),
+      isInViewport: (
+        /*isInViewport*/
+        ctx[9]
+      ),
+      discardSlot: (
+        /*discardSlot*/
+        ctx[5]
+      ),
+      $$slots: { default: [create_default_slot] },
+      $$scope: { ctx }
+    }
+  });
+  return {
+    c() {
+      create_component(viz.$$.fragment);
+    },
+    m(target, anchor) {
+      mount_component(viz, target, anchor);
+      current = true;
+    },
+    p(ctx2, dirty) {
+      const viz_changes = {};
+      if (dirty & /*_layout*/
+      2048) viz_changes.layout = /*_layout*/
+      ctx2[11];
+      if (dirty & /*isInViewport*/
+      512) viz_changes.isInViewport = /*isInViewport*/
+      ctx2[9];
+      if (dirty & /*discardSlot*/
+      32) viz_changes.discardSlot = /*discardSlot*/
+      ctx2[5];
+      if (dirty & /*$$scope*/
+      262144) {
+        viz_changes.$$scope = { dirty, ctx: ctx2 };
+      }
+      viz.$set(viz_changes);
+    },
+    i(local) {
+      if (current) return;
+      transition_in(viz.$$.fragment, local);
+      current = true;
+    },
+    o(local) {
+      transition_out(viz.$$.fragment, local);
+      current = false;
+    },
+    d(detaching) {
+      destroy_component(viz, detaching);
     }
   };
 }
@@ -2556,14 +2718,15 @@ function create_fragment$1(ctx) {
   let t4;
   let if_block1_anchor;
   let t5;
-  let div;
-  let viz;
+  let div1;
   let t6;
+  let div0;
+  let t7;
   let panels_1;
   let current;
   let if_block0 = (
     /*onProgress*/
-    ctx[2] && create_if_block_1(ctx)
+    ctx[2] && create_if_block_3(ctx)
   );
   deprecationnotice = new DeprecationNotice({
     props: {
@@ -2580,7 +2743,7 @@ function create_fragment$1(ctx) {
   screendimsstoreupdater = new ScreenDimsStoreUpdater({
     props: { align: (
       /*_layout*/
-      ctx[10].align
+      ctx[11].align
     ) }
   });
   function panelobserver_marker_binding(value) {
@@ -2593,15 +2756,15 @@ function create_fragment$1(ctx) {
     ),
     isDebug: (
       /*isDebug*/
-      ctx[9]
+      ctx[10]
     )
   };
   if (
     /*marker*/
-    ctx[6] !== void 0
+    ctx[7] !== void 0
   ) {
     panelobserver_props.marker = /*marker*/
-    ctx[6];
+    ctx[7];
   }
   panelobserver = new PanelObserver({ props: panelobserver_props });
   binding_callbacks.push(() => bind(panelobserver, "marker", panelobserver_marker_binding));
@@ -2609,37 +2772,25 @@ function create_fragment$1(ctx) {
     props: {
       scrollytellerRef: (
         /*scrollytellerRef*/
-        ctx[7]
+        ctx[8]
       )
     }
   });
   let if_block1 = (
     /*isOdyssey*/
-    ctx[12] && create_if_block$1()
+    ctx[13] && create_if_block_2()
   );
-  viz = new Viz({
-    props: {
-      layout: (
-        /*_layout*/
-        ctx[10]
-      ),
-      isInViewport: (
-        /*isInViewport*/
-        ctx[8]
-      ),
-      discardSlot: (
-        /*discardSlot*/
-        ctx[5]
-      ),
-      $$slots: { default: [create_default_slot] },
-      $$scope: { ctx }
-    }
-  });
+  let if_block2 = !/*layout*/
+  ctx[6].resizeInteractive && create_if_block_1(ctx);
+  let if_block3 = (
+    /*layout*/
+    ctx[6].resizeInteractive && create_if_block$1(ctx)
+  );
   panels_1 = new Panels({
     props: {
       layout: (
         /*_layout*/
-        ctx[10]
+        ctx[11]
       ),
       panels: (
         /*panels*/
@@ -2666,33 +2817,37 @@ function create_fragment$1(ctx) {
       if (if_block1) if_block1.c();
       if_block1_anchor = empty();
       t5 = space();
-      div = element("div");
-      create_component(viz.$$.fragment);
+      div1 = element("div");
+      if (if_block2) if_block2.c();
       t6 = space();
+      div0 = element("div");
+      if (if_block3) if_block3.c();
+      t7 = space();
       create_component(panels_1.$$.fragment);
-      attr(div, "class", "scrollyteller svelte-m89ms9");
+      attr(div0, "class", "scrollyteller svelte-16nqhu1");
       toggle_class(
-        div,
+        div0,
         "scrollyteller--resized",
         /*_layout*/
-        ctx[10].resizeInteractive
+        ctx[11].resizeInteractive
       );
       toggle_class(
-        div,
+        div0,
         "scrollyteller--debug",
         /*isDebug*/
-        ctx[9]
+        ctx[10]
       );
-      set_style(div, "--maxScrollytellerWidthPx", MAX_SCROLLYTELLER_WIDTH + "px");
+      set_style(div0, "--maxScrollytellerWidthPx", MAX_SCROLLYTELLER_WIDTH + "px");
       set_style(
-        div,
+        div0,
         "--rightColumnWidth",
         /*$maxGraphicWidth*/
-        ctx[11] ? (
+        ctx[12] ? (
           /*$maxGraphicWidth*/
-          ctx[11] + "px"
-        ) : "auto"
+          ctx[12] + "px"
+        ) : void 0
       );
+      attr(div1, "class", "scrollyteller-wrapper svelte-16nqhu1");
     },
     m(target, anchor) {
       if (if_block0) if_block0.m(target, anchor);
@@ -2708,11 +2863,14 @@ function create_fragment$1(ctx) {
       if (if_block1) if_block1.m(document.head, null);
       append(document.head, if_block1_anchor);
       insert(target, t5, anchor);
-      insert(target, div, anchor);
-      mount_component(viz, div, null);
-      append(div, t6);
-      mount_component(panels_1, div, null);
-      ctx[17](div);
+      insert(target, div1, anchor);
+      if (if_block2) if_block2.m(div1, null);
+      append(div1, t6);
+      append(div1, div0);
+      if (if_block3) if_block3.m(div0, null);
+      append(div0, t7);
+      mount_component(panels_1, div0, null);
+      ctx[17](div0);
       current = true;
     },
     p(ctx2, [dirty]) {
@@ -2727,7 +2885,7 @@ function create_fragment$1(ctx) {
             transition_in(if_block0, 1);
           }
         } else {
-          if_block0 = create_if_block_1(ctx2);
+          if_block0 = create_if_block_3(ctx2);
           if_block0.c();
           transition_in(if_block0, 1);
           if_block0.m(t0.parentNode, t0);
@@ -2749,48 +2907,77 @@ function create_fragment$1(ctx) {
       deprecationnotice.$set(deprecationnotice_changes);
       const screendimsstoreupdater_changes = {};
       if (dirty & /*_layout*/
-      1024) screendimsstoreupdater_changes.align = /*_layout*/
-      ctx2[10].align;
+      2048) screendimsstoreupdater_changes.align = /*_layout*/
+      ctx2[11].align;
       screendimsstoreupdater.$set(screendimsstoreupdater_changes);
       const panelobserver_changes = {};
       if (dirty & /*observerOptions*/
       16) panelobserver_changes.observerOptions = /*observerOptions*/
       ctx2[4];
       if (dirty & /*isDebug*/
-      512) panelobserver_changes.isDebug = /*isDebug*/
-      ctx2[9];
+      1024) panelobserver_changes.isDebug = /*isDebug*/
+      ctx2[10];
       if (!updating_marker && dirty & /*marker*/
-      64) {
+      128) {
         updating_marker = true;
         panelobserver_changes.marker = /*marker*/
-        ctx2[6];
+        ctx2[7];
         add_flush_callback(() => updating_marker = false);
       }
       panelobserver.$set(panelobserver_changes);
       const resizeobserver_changes = {};
       if (dirty & /*scrollytellerRef*/
-      128) resizeobserver_changes.scrollytellerRef = /*scrollytellerRef*/
-      ctx2[7];
-      resizeobserver.$set(resizeobserver_changes);
-      const viz_changes = {};
-      if (dirty & /*_layout*/
-      1024) viz_changes.layout = /*_layout*/
-      ctx2[10];
-      if (dirty & /*isInViewport*/
-      256) viz_changes.isInViewport = /*isInViewport*/
+      256) resizeobserver_changes.scrollytellerRef = /*scrollytellerRef*/
       ctx2[8];
-      if (dirty & /*discardSlot*/
-      32) viz_changes.discardSlot = /*discardSlot*/
-      ctx2[5];
-      if (dirty & /*$$scope*/
-      262144) {
-        viz_changes.$$scope = { dirty, ctx: ctx2 };
+      resizeobserver.$set(resizeobserver_changes);
+      if (!/*layout*/
+      ctx2[6].resizeInteractive) {
+        if (if_block2) {
+          if_block2.p(ctx2, dirty);
+          if (dirty & /*layout*/
+          64) {
+            transition_in(if_block2, 1);
+          }
+        } else {
+          if_block2 = create_if_block_1(ctx2);
+          if_block2.c();
+          transition_in(if_block2, 1);
+          if_block2.m(div1, t6);
+        }
+      } else if (if_block2) {
+        group_outros();
+        transition_out(if_block2, 1, 1, () => {
+          if_block2 = null;
+        });
+        check_outros();
       }
-      viz.$set(viz_changes);
+      if (
+        /*layout*/
+        ctx2[6].resizeInteractive
+      ) {
+        if (if_block3) {
+          if_block3.p(ctx2, dirty);
+          if (dirty & /*layout*/
+          64) {
+            transition_in(if_block3, 1);
+          }
+        } else {
+          if_block3 = create_if_block$1(ctx2);
+          if_block3.c();
+          transition_in(if_block3, 1);
+          if_block3.m(div0, t7);
+        }
+      } else if (if_block3) {
+        group_outros();
+        transition_out(if_block3, 1, 1, () => {
+          if_block3 = null;
+        });
+        check_outros();
+      }
       const panels_1_changes = {};
       if (dirty & /*_layout*/
-      1024) panels_1_changes.layout = /*_layout*/
-      ctx2[10];
+      2048) panels_1_changes.layout = /*_layout*/
+      ctx2[11];
       if (dirty & /*panels*/
       2) panels_1_changes.panels = /*panels*/
       ctx2[1];
@@ -2799,33 +2986,33 @@ function create_fragment$1(ctx) {
       ctx2[0];
       panels_1.$set(panels_1_changes);
       if (!current || dirty & /*_layout*/
-      1024) {
+      2048) {
         toggle_class(
-          div,
+          div0,
           "scrollyteller--resized",
           /*_layout*/
-          ctx2[10].resizeInteractive
+          ctx2[11].resizeInteractive
         );
       }
       if (!current || dirty & /*isDebug*/
-      512) {
+      1024) {
         toggle_class(
-          div,
+          div0,
           "scrollyteller--debug",
           /*isDebug*/
-          ctx2[9]
+          ctx2[10]
         );
       }
       if (dirty & /*$maxGraphicWidth*/
-      2048) {
+      4096) {
         set_style(
-          div,
+          div0,
           "--rightColumnWidth",
           /*$maxGraphicWidth*/
-          ctx2[11] ? (
+          ctx2[12] ? (
             /*$maxGraphicWidth*/
-            ctx2[11] + "px"
-          ) : "auto"
+            ctx2[12] + "px"
+          ) : void 0
         );
       }
     },
@@ -2836,7 +3023,8 @@ function create_fragment$1(ctx) {
       transition_in(screendimsstoreupdater.$$.fragment, local);
       transition_in(panelobserver.$$.fragment, local);
       transition_in(resizeobserver.$$.fragment, local);
-      transition_in(viz.$$.fragment, local);
+      transition_in(if_block2);
+      transition_in(if_block3);
       transition_in(panels_1.$$.fragment, local);
       current = true;
     },
@@ -2846,7 +3034,8 @@ function create_fragment$1(ctx) {
       transition_out(screendimsstoreupdater.$$.fragment, local);
       transition_out(panelobserver.$$.fragment, local);
       transition_out(resizeobserver.$$.fragment, local);
-      transition_out(viz.$$.fragment, local);
+      transition_out(if_block2);
+      transition_out(if_block3);
       transition_out(panels_1.$$.fragment, local);
       current = false;
     },
@@ -2858,7 +3047,7 @@ function create_fragment$1(ctx) {
         detach(t3);
         detach(t4);
         detach(t5);
-        detach(div);
+        detach(div1);
       }
       if (if_block0) if_block0.d(detaching);
       destroy_component(deprecationnotice, detaching);
@@ -2867,7 +3056,8 @@ function create_fragment$1(ctx) {
       destroy_component(resizeobserver, detaching);
       if (if_block1) if_block1.d(detaching);
       detach(if_block1_anchor);
-      destroy_component(viz);
+      if (if_block2) if_block2.d();
+      if (if_block3) if_block3.d();
       destroy_component(panels_1);
       ctx[17](null);
     }
@@ -2878,7 +3068,7 @@ function instance$1($$self, $$props, $$invalidate) {
   let maxScrollSpeed;
   let isDebug;
   let $maxGraphicWidth;
-  component_subscribe($$self, maxGraphicWidth, ($$value) => $$invalidate(11, $maxGraphicWidth = $$value));
+  component_subscribe($$self, maxGraphicWidth, ($$value) => $$invalidate(12, $maxGraphicWidth = $$value));
   let { $$slots: slots = {}, $$scope } = $$props;
   const dispatch = createEventDispatcher();
   let { customPanel = null } = $$props;
@@ -2896,7 +3086,7 @@ function instance$1($$self, $$props, $$invalidate) {
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions = [];
   const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
-    $$invalidate(8, isInViewport = scrollytellerEntry.isIntersecting);
+    $$invalidate(9, isInViewport = scrollytellerEntry.isIntersecting);
   }));
   const deferUntilScrollSettles = (fn) => {
     if (scrollSpeed < maxScrollSpeed) {
@@ -2915,8 +3105,8 @@ function instance$1($$self, $$props, $$invalidate) {
   };
   onMount(() => {
     scrollingPos = getScrollingPos(scrollytellerRef);
-    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(6, marker = panels[0].data);
-    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(6, marker = panels[panels.length - 1].data);
+    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(7, marker = panels[0].data);
+    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(7, marker = panels[panels.length - 1].data);
     if (discardSlot) {
       scrollytellerObserver.observe(scrollytellerRef);
     }
@@ -2930,12 +3120,12 @@ function instance$1($$self, $$props, $$invalidate) {
   }
   function panelobserver_marker_binding(value) {
     marker = value;
-    $$invalidate(6, marker);
+    $$invalidate(7, marker);
   }
-  function div_binding($$value) {
+  function div0_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       scrollytellerRef = $$value;
-      $$invalidate(7, scrollytellerRef);
+      $$invalidate(8, scrollytellerRef);
     });
   }
   $$self.$$set = ($$props2) => {
@@ -2945,13 +3135,13 @@ function instance$1($$self, $$props, $$invalidate) {
     if ("onMarker" in $$props2) $$invalidate(3, onMarker = $$props2.onMarker);
     if ("observerOptions" in $$props2) $$invalidate(4, observerOptions = $$props2.observerOptions);
     if ("discardSlot" in $$props2) $$invalidate(5, discardSlot = $$props2.discardSlot);
-    if ("layout" in $$props2) $$invalidate(13, layout = $$props2.layout);
+    if ("layout" in $$props2) $$invalidate(6, layout = $$props2.layout);
     if ("$$scope" in $$props2) $$invalidate(18, $$scope = $$props2.$$scope);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty & /*layout*/
-    8192) {
-      $$invalidate(10, _layout = {
+    64) {
+      $$invalidate(11, _layout = {
         align: layout.align || "centre",
         resizeInteractive: layout.resizeInteractive ?? true,
         transparentFloat: layout.transparentFloat ?? ["left", "right"].includes(layout.align)
@@ -2962,11 +3152,11 @@ function instance$1($$self, $$props, $$invalidate) {
       maxScrollSpeed = discardSlot ? 0.5 : Infinity;
     }
     if ($$self.$$.dirty & /*marker*/
-    64) {
+    128) {
       marker && deferUntilScrollSettles(() => dispatch("marker", marker));
     }
   };
-  $$invalidate(9, isDebug = typeof location !== "undefined" && location.hash === "#debug=true");
+  $$invalidate(10, isDebug = typeof location !== "undefined" && location.hash === "#debug=true");
   return [
     customPanel,
     panels,
@@ -2974,6 +3164,7 @@ function instance$1($$self, $$props, $$invalidate) {
     onMarker,
     observerOptions,
     discardSlot,
+    layout,
     marker,
     scrollytellerRef,
     isInViewport,
@@ -2981,11 +3172,10 @@ function instance$1($$self, $$props, $$invalidate) {
     _layout,
     $maxGraphicWidth,
     isOdyssey,
-    layout,
     slots,
     progress_handler,
     panelobserver_marker_binding,
-    div_binding,
+    div0_binding,
     $$scope
   ];
 }
@@ -3005,7 +3195,7 @@ class Scrollyteller extends SvelteComponent {
         onMarker: 3,
         observerOptions: 4,
         discardSlot: 5,
-        layout: 13
+        layout: 6
       },
       add_css
     );
@@ -3053,7 +3243,7 @@ class Scrollyteller extends SvelteComponent {
     flush();
   }
   get layout() {
-    return this.$$.ctx[13];
+    return this.$$.ctx[6];
   }
   set layout(layout) {
     this.$$set({ layout });

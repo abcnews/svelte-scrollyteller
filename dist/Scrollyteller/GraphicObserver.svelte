@@ -15,21 +15,11 @@
 
 		observer = new ResizeObserver((entries) => {
 			entries.forEach((entry) => {
-				if (entry.target === graphicRootEl) {
-					$graphicRootDims = {
-						status: 'ready',
-						dims: [entry.contentRect.width, entry.contentRect.height]
-					};
-				} else {
-					$_vizDims = {
-						status: 'ready',
-						dims: [entry.contentRect.width, entry.contentRect.height]
-					};
-				}
+				$_vizDims = {
+					status: 'ready',
+					dims: [entry.contentRect.width, entry.contentRect.height]
+				};
 			});
-		});
-		retryUntil(() => graphicRootEl).then(() => {
-			observer.observe(graphicRootEl);
 		});
 
 		// 1. wait for the viz to be inserted (graphicRootEl.children[0]). Sometimes
