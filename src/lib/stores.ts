@@ -7,8 +7,8 @@ export let steps = writable<PanelRef[]>([]);
 /** Margin either side + in between scrollyteller columns */
 export let margin = writable(0);
 
-/** Raw dimensions of the graphic. Use calculated `vizDims` instead */
-export const _vizDims = writable({
+/** Raw dimensions of the viz. Used to trigger panels when they hit 20% of the viz */
+export const vizDims = writable({
 	status: 'loading',
 	dims: [0, 0]
 });
@@ -19,11 +19,8 @@ export const graphicRootDims = writable({
 	dims: [0, 0]
 });
 
-/** Calculated dimensions of the viz */
-export const vizDims = derived(_vizDims, ($vizDims) => ({
-	...$vizDims,
-	ratio: $vizDims.dims[1] / $vizDims.dims[0]
-}));
+/** Dimensions of the viz */
+export const ratio = writable(1);
 
 /** Reactive window.innerWidth/innerHeight */
 export const screenDims = writable([0, 0]);
@@ -47,22 +44,16 @@ export const MAX_SCROLLYTELLER_WIDTH = 2040;
  * not, return how wide the column should be so there's no whitespace;
  */
 export const maxGraphicWidth = derived(
-	[isSplitScreen, vizDims, screenDims, margin],
-	([$isSplitScreen, $vizDims, $screenDims, $margin]) => {
+	[isSplitScreen, graphicRootDims, screenDims, ratio],
+	([$isSplitScreen, $graphicRootDims, $screenDims, $ratio]) => {
 		if (!$isSplitScreen) {
 			return null;
 		}
 		const [screenWidth] = $screenDims;
-		const [, graphicHeight] = $vizDims.dims;
+		const [, columnHeight] = $graphicRootDims.dims;
 		const columnWidth = Math.min(screenWidth, MAX_SCROLLYTELLER_WIDTH) * 0.6;
 
-		const speculativeHeight = columnWidth * $vizDims.ratio;
-		const speculativeWidth = graphicHeight / $vizDims.ratio;
-
-		if (speculativeHeight > graphicHeight) {
-			return speculativeWidth;
-		} else {
-			return null;
-		}
+		const widthBasedOnHeight = columnHeight * $ratio;
+		return Math.min(widthBasedOnHeight, columnWidth);
 	}
 );

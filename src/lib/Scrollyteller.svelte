@@ -10,7 +10,7 @@
 	import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 	import GraphicObserver from './Scrollyteller/GraphicObserver.svelte';
 	import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
-	import { MAX_SCROLLYTELLER_WIDTH, maxGraphicWidth } from './stores';
+	import { MAX_SCROLLYTELLER_WIDTH, maxGraphicWidth, ratio as ratioStore } from './stores';
 	import Panels from './Panels.svelte';
 	import Viz from './Viz.svelte';
 	import ResizeObserver from './Scrollyteller/ResizeObserver.svelte';
@@ -43,6 +43,12 @@
 		resizeInteractive: layout.resizeInteractive ?? true,
 		transparentFloat: layout.transparentFloat ?? ['left', 'right'].includes(layout.align)
 	};
+
+	export let ratio: number = 1;
+
+	$: {
+		$ratioStore = ratio;
+	}
 
 	/**
 	 * When the user is scrolling at a speed greater than this, don't mount
@@ -125,7 +131,7 @@
 </svelte:head>
 
 <div class="scrollyteller-wrapper">
-	{#if !layout.resizeInteractive}
+	{#if !_layout.resizeInteractive}
 		<Viz layout={_layout} {isInViewport} {discardSlot}><slot /></Viz>
 	{/if}
 	<div
@@ -136,7 +142,7 @@
 		style:--rightColumnWidth={$maxGraphicWidth ? $maxGraphicWidth + 'px' : undefined}
 		bind:this={scrollytellerRef}
 	>
-		{#if layout.resizeInteractive}
+		{#if _layout.resizeInteractive}
 			<Viz layout={_layout} {isInViewport} {discardSlot}><slot /></Viz>
 		{/if}
 		<Panels layout={_layout} {panels} {customPanel} />

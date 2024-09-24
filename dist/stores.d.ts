@@ -3,8 +3,8 @@ import { type PanelRef } from './types';
 export declare let steps: import("svelte/store").Writable<PanelRef[]>;
 /** Margin either side + in between scrollyteller columns */
 export declare let margin: import("svelte/store").Writable<number>;
-/** Raw dimensions of the graphic. Use calculated `vizDims` instead */
-export declare const _vizDims: import("svelte/store").Writable<{
+/** Raw dimensions of the viz. Used to trigger panels when they hit 20% of the viz */
+export declare const vizDims: import("svelte/store").Writable<{
     status: string;
     dims: number[];
 }>;
@@ -13,12 +13,8 @@ export declare const graphicRootDims: import("svelte/store").Writable<{
     status: string;
     dims: number[];
 }>;
-/** Calculated dimensions of the viz */
-export declare const vizDims: import("svelte/store").Readable<{
-    ratio: number;
-    status: string;
-    dims: number[];
-}>;
+/** Dimensions of the viz */
+export declare const ratio: import("svelte/store").Writable<number>;
 /** Reactive window.innerWidth/innerHeight */
 export declare const screenDims: import("svelte/store").Writable<number[]>;
 /** Global align prop that resizeInteractive uses, etc. */

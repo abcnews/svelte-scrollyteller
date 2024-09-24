@@ -8,7 +8,7 @@
 	let align = 'centre';
 	let transparentFloat = undefined;
 	let resizeInteractive = undefined;
-	let ratio = null;
+	let ratio = 1;
 
 	$: layout = { align, transparentFloat, resizeInteractive };
 	onMount(() => {
@@ -58,8 +58,8 @@
 	<label>
 		Viz ratio:
 		<select bind:value={ratio}>
-			<option value={null}>full size</option>
 			<option value={9 / 16}>portrait 16x9</option>
+			<option value={16 / 9}>landscape 16x9</option>
 			<option value={1}>1x1</option>
 		</select>
 	</label>

@@ -21,6 +21,7 @@ declare const __propDef: {
              * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload mdn preload docs}
              */ discardSlot?: boolean;
         layout?: Style;
+        ratio?: number;
     };
     events: {
         progress: CustomEvent<any>;

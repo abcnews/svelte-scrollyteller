@@ -11,6 +11,7 @@ function onResize() {
     const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
     // Conmvert the margin to pixels we can use in JS.
     const pixelMargin = parsedMarginRems * rootFontSize;
+    // FIXME: possibly unused
     $margin = pixelMargin;
 }
 $: {

@@ -61,13 +61,12 @@ $: if (graphicRootEl) {
 }
 @media (min-width: 62rem) {
   .viz--resized.viz--left, .viz--resized.viz--right {
-    align-items: center;
     --marginOuter: 2rem;
     --marginCentre: calc(var(--marginOuter) / 2);
+    --maxWidth: 55%;
+    align-items: center;
     height: 84dvh;
     top: 8dvh;
-    --maxWidth: 55%;
-    max-width: calc(var(--maxWidth) - (var(--marginCentre) + var(--marginOuter)));
   }
 }
 @media (min-width: 75rem) {
@@ -117,6 +116,6 @@ $: if (graphicRootEl) {
     height: 58dvh;
   }
 }
-.scrollyteller--debug .viz--resized {
+:global(.scrollyteller--debug) .viz--resized {
   outline: 5px solid limegreen;
 }</style>
