@@ -25,6 +25,7 @@ declare const __propDef: {
     };
     events: {
         progress: CustomEvent<any>;
+        load: CustomEvent<any>;
         marker: CustomEvent<any>;
     } & {
         [evt: string]: CustomEvent<any>;

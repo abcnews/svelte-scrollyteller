@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { margin } from '../stores';
-	import { onMount } from 'svelte';
 	export let scrollytellerRef: HTMLElement;
 
 	function onResize() {

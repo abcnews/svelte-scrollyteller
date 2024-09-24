@@ -1265,33 +1265,39 @@ function instance$7($$self, $$props, $$invalidate) {
   onMount(() => {
     let observer;
     observer = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.target === graphicRootEl) {
-          set_store_value(
-            graphicRootDims,
-            $graphicRootDims = {
-              status: "ready",
-              dims: [entry.contentRect.width, entry.contentRect.height]
-            },
-            $graphicRootDims
-          );
-        } else {
-          set_store_value(
-            vizDims,
-            $vizDims = {
-              status: "ready",
-              dims: [entry.contentRect.width, entry.contentRect.height]
-            },
-            $vizDims
-          );
-        }
+      requestAnimationFrame(() => {
+        entries.forEach((entry) => {
+          if (entry.target === graphicRootEl) {
+            set_store_value(
+              graphicRootDims,
+              $graphicRootDims = {
+                status: "ready",
+                dims: [entry.contentRect.width, entry.contentRect.height]
+              },
+              $graphicRootDims
+            );
+          } else {
+            set_store_value(
+              vizDims,
+              $vizDims = {
+                status: "ready",
+                dims: [entry.contentRect.width, entry.contentRect.height]
+              },
+              $vizDims
+            );
+          }
+        });
       });
     });
     retryUntil(() => graphicRootEl).then(() => {
       observer.observe(graphicRootEl);
     });
-    retryUntil(() => graphicRootEl == null ? void 0 : graphicRootEl.children).then(() => {
-      observer.observe(graphicRootEl.children[0]);
+    retryUntil(() => {
+      var _a;
+      return (_a = graphicRootEl == null ? void 0 : graphicRootEl.children) == null ? void 0 : _a.length;
+    }).then(() => {
+      const child = graphicRootEl.children[0];
+      observer.observe(child);
     });
     return () => {
       observer == null ? void 0 : observer.disconnect();
@@ -2473,6 +2479,11 @@ function create_if_block_1(ctx) {
       $$scope: { ctx }
     }
   });
+  viz.$on(
+    "load",
+    /*load_handler*/
+    ctx[18]
+  );
   return {
     c() {
       create_component(viz.$$.fragment);
@@ -2493,7 +2504,7 @@ function create_if_block_1(ctx) {
       32) viz_changes.discardSlot = /*discardSlot*/
       ctx2[5];
       if (dirty & /*$$scope*/
-      524288) {
+      2097152) {
         viz_changes.$$scope = { dirty, ctx: ctx2 };
       }
       viz.$set(viz_changes);
@@ -2522,7 +2533,7 @@ function create_default_slot_1(ctx) {
     default_slot_template,
     ctx,
     /*$$scope*/
-    ctx[19],
+    ctx[21],
     null
   );
   return {
@@ -2538,20 +2549,20 @@ function create_default_slot_1(ctx) {
     p(ctx2, dirty) {
       if (default_slot) {
         if (default_slot.p && (!current || dirty & /*$$scope*/
-        524288)) {
+        2097152)) {
           update_slot_base(
             default_slot,
             default_slot_template,
             ctx2,
             /*$$scope*/
-            ctx2[19],
+            ctx2[21],
             !current ? get_all_dirty_from_scope(
               /*$$scope*/
-              ctx2[19]
+              ctx2[21]
             ) : get_slot_changes(
               default_slot_template,
               /*$$scope*/
-              ctx2[19],
+              ctx2[21],
               dirty,
               null
             ),
@@ -2595,6 +2606,11 @@ function create_if_block$1(ctx) {
       $$scope: { ctx }
     }
   });
+  viz.$on(
+    "load",
+    /*load_handler_1*/
+    ctx[19]
+  );
   return {
     c() {
       create_component(viz.$$.fragment);
@@ -2615,7 +2631,7 @@ function create_if_block$1(ctx) {
       32) viz_changes.discardSlot = /*discardSlot*/
       ctx2[5];
       if (dirty & /*$$scope*/
-      524288) {
+      2097152) {
         viz_changes.$$scope = { dirty, ctx: ctx2 };
       }
       viz.$set(viz_changes);
@@ -2644,7 +2660,7 @@ function create_default_slot(ctx) {
     default_slot_template,
     ctx,
     /*$$scope*/
-    ctx[19],
+    ctx[21],
     null
   );
   return {
@@ -2660,20 +2676,20 @@ function create_default_slot(ctx) {
     p(ctx2, dirty) {
       if (default_slot) {
         if (default_slot.p && (!current || dirty & /*$$scope*/
-        524288)) {
+        2097152)) {
           update_slot_base(
             default_slot,
             default_slot_template,
             ctx2,
             /*$$scope*/
-            ctx2[19],
+            ctx2[21],
             !current ? get_all_dirty_from_scope(
               /*$$scope*/
-              ctx2[19]
+              ctx2[21]
             ) : get_slot_changes(
               default_slot_template,
               /*$$scope*/
-              ctx2[19],
+              ctx2[21],
               dirty,
               null
             ),
@@ -2861,7 +2877,7 @@ function create_fragment$1(ctx) {
       if (if_block3) if_block3.m(div0, null);
       append(div0, t7);
       mount_component(panels_1, div0, null);
-      ctx[18](div0);
+      ctx[20](div0);
       current = true;
     },
     p(ctx2, [dirty]) {
@@ -3050,7 +3066,7 @@ function create_fragment$1(ctx) {
       if (if_block2) if_block2.d();
       if (if_block3) if_block3.d();
       destroy_component(panels_1);
-      ctx[18](null);
+      ctx[20](null);
     }
   };
 }
@@ -3060,7 +3076,7 @@ function instance$1($$self, $$props, $$invalidate) {
   let isDebug;
   let $ratioStore;
   let $maxGraphicWidth;
-  component_subscribe($$self, ratio, ($$value) => $$invalidate(24, $ratioStore = $$value));
+  component_subscribe($$self, ratio, ($$value) => $$invalidate(26, $ratioStore = $$value));
   component_subscribe($$self, maxGraphicWidth, ($$value) => $$invalidate(11, $maxGraphicWidth = $$value));
   let { $$slots: slots = {}, $$scope } = $$props;
   const dispatch = createEventDispatcher();
@@ -3116,6 +3132,12 @@ function instance$1($$self, $$props, $$invalidate) {
     marker = value;
     $$invalidate(6, marker);
   }
+  function load_handler(event) {
+    bubble.call(this, $$self, event);
+  }
+  function load_handler_1(event) {
+    bubble.call(this, $$self, event);
+  }
   function div0_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       scrollytellerRef = $$value;
@@ -3131,7 +3153,7 @@ function instance$1($$self, $$props, $$invalidate) {
     if ("discardSlot" in $$props2) $$invalidate(5, discardSlot = $$props2.discardSlot);
     if ("layout" in $$props2) $$invalidate(13, layout = $$props2.layout);
     if ("ratio" in $$props2) $$invalidate(14, ratio$1 = $$props2.ratio);
-    if ("$$scope" in $$props2) $$invalidate(19, $$scope = $$props2.$$scope);
+    if ("$$scope" in $$props2) $$invalidate(21, $$scope = $$props2.$$scope);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty & /*layout*/
@@ -3177,6 +3199,8 @@ function instance$1($$self, $$props, $$invalidate) {
     slots,
     progress_handler,
     panelobserver_marker_binding,
+    load_handler,
+    load_handler_1,
     div0_binding,
     $$scope
   ];

@@ -1,5 +1,4 @@
 <script>import { margin } from '../stores';
-import { onMount } from 'svelte';
 export let scrollytellerRef;
 function onResize() {
     if (!scrollytellerRef)

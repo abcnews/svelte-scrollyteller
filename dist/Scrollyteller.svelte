@@ -115,7 +115,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 
 <div class="scrollyteller-wrapper">
 	{#if !_layout.resizeInteractive}
-		<Viz layout={_layout} {isInViewport} {discardSlot}><slot /></Viz>
+		<Viz layout={_layout} {isInViewport} {discardSlot} on:load><slot /></Viz>
 	{/if}
 	<div
 		class="scrollyteller"
@@ -126,7 +126,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 		bind:this={scrollytellerRef}
 	>
 		{#if _layout.resizeInteractive}
-			<Viz layout={_layout} {isInViewport} {discardSlot}><slot /></Viz>
+			<Viz layout={_layout} {isInViewport} {discardSlot} on:load><slot /></Viz>
 		{/if}
 		<Panels layout={_layout} {panels} {customPanel} />
 	</div>

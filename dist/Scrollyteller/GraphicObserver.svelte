@@ -14,18 +14,20 @@
 		let observer;
 
 		observer = new ResizeObserver((entries) => {
-			entries.forEach((entry) => {
-				if (entry.target === graphicRootEl) {
-					$graphicRootDims = {
-						status: 'ready',
-						dims: [entry.contentRect.width, entry.contentRect.height]
-					};
-				} else {
-					$vizDims = {
-						status: 'ready',
-						dims: [entry.contentRect.width, entry.contentRect.height]
-					};
-				}
+			requestAnimationFrame(() => {
+				entries.forEach((entry) => {
+					if (entry.target === graphicRootEl) {
+						$graphicRootDims = {
+							status: 'ready',
+							dims: [entry.contentRect.width, entry.contentRect.height]
+						};
+					} else {
+						$vizDims = {
+							status: 'ready',
+							dims: [entry.contentRect.width, entry.contentRect.height]
+						};
+					}
+				});
 			});
 		});
 		retryUntil(() => graphicRootEl).then(() => {
@@ -35,8 +37,9 @@
 		// 1. wait for the viz to be inserted (graphicRootEl.children[0]). Sometimes
 		// this is async, namely when using the web component version. We don't
 		// watch for updates if the viz DOM node is replaced after the fact.
-		retryUntil(() => graphicRootEl?.children).then(() => {
-			observer.observe(graphicRootEl.children[0]);
+		retryUntil(() => graphicRootEl?.children?.length).then(() => {
+			const child = graphicRootEl.children[0];
+			observer.observe(child);
 		});
 
 		return () => {
