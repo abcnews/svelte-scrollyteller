@@ -5,12 +5,10 @@ import { getScrollingPos, getScrollSpeed } from './Scrollyteller/Scrollyteller.u
 import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
 import PanelObserver from './Scrollyteller/PanelObserver.svelte';
-import GraphicObserver from './Scrollyteller/GraphicObserver.svelte';
 import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
-import { MAX_SCROLLYTELLER_WIDTH, maxGraphicWidth, ratio as ratioStore } from './stores';
+import { maxGraphicWidth, maxScrollytellerWidth, ratio as ratioStore } from './stores';
 import Panels from './Panels.svelte';
 import Viz from './Viz.svelte';
-import ResizeObserver from './Scrollyteller/ResizeObserver.svelte';
 const dispatch = createEventDispatcher();
 export let customPanel = null;
 export let panels;
@@ -99,7 +97,6 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 <DeprecationNotice {onProgress} {onMarker} />
 <ScreenDimsStoreUpdater align={_layout.align} />
 <PanelObserver bind:marker {observerOptions} {isDebug} />
-<ResizeObserver {scrollytellerRef} />
 
 <svelte:head>
 	{#if isOdyssey}
@@ -121,8 +118,9 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 		class="scrollyteller"
 		class:scrollyteller--resized={_layout.resizeInteractive}
 		class:scrollyteller--debug={isDebug}
-		style:--maxScrollytellerWidthPx={MAX_SCROLLYTELLER_WIDTH + 'px'}
-		style:--rightColumnWidth={$maxGraphicWidth ? $maxGraphicWidth + 'px' : undefined}
+		class:scrollyteller--columns={['left', 'right'].includes(_layout.align)}
+		style:--maxScrollytellerWidthPx={$maxScrollytellerWidth + 'px'}
+		style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidth}px)`}
 		bind:this={scrollytellerRef}
 	>
 		{#if _layout.resizeInteractive}
@@ -139,32 +137,40 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 .scrollyteller {
   position: relative;
   --maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);
-  --marginOuter: 1.5rem;
+  --marginOuter: 1rem;
   margin: 0 auto;
   max-width: calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);
+  --vizMaxWidth: 1;
+  --vizMarginOuter: 1.5rem;
 }
 @media (min-width: 46.5rem) {
   .scrollyteller {
     --marginOuter: 2rem;
+    --vizMarginOuter: 3rem;
   }
 }
 @media (min-width: 62rem) {
   .scrollyteller {
     --marginOuter: 2rem;
+    --vizMarginOuter: 3rem;
+    --vizMaxWidth: 0.55;
+  }
+  .scrollyteller--columns {
+    width: fit-content;
   }
 }
 @media (min-width: 75rem) {
   .scrollyteller {
     --marginOuter: 3rem;
+    --vizMarginOuter: 4rem;
+    --vizMaxWidth: 0.6;
   }
 }
 @media (min-width: 90rem) {
   .scrollyteller {
     --marginOuter: 4rem;
+    --vizMarginOuter: 6rem;
   }
-}
-.scrollyteller--resized {
-  width: fit-content;
 }
 .scrollyteller--debug:after {
   content: "Mobile";

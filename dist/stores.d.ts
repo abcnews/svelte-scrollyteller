@@ -22,7 +22,7 @@ export declare const globalAlign: import("svelte/store").Writable<string>;
 /** Split screen mode happens when left/right aligned + not mobile */
 export declare const isSplitScreen: import("svelte/store").Readable<boolean>;
 /** The max width when the scrollyteller centres itself in the page */
-export declare const MAX_SCROLLYTELLER_WIDTH = 2040;
+export declare const maxScrollytellerWidth: import("svelte/store").Readable<2040 | 1000000>;
 /**
  * Given the ratio of the graphic, work out whether it fits in the column and if
  * not, return how wide the column should be so there's no whitespace;

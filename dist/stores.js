@@ -24,18 +24,18 @@ const LARGE_TABLET_BREAKPOINT = 992;
 /** Split screen mode happens when left/right aligned + not mobile */
 export const isSplitScreen = derived([screenDims, globalAlign], ([$screenDims, $globalAlign]) => ['left', 'right'].includes($globalAlign) && $screenDims[0] >= LARGE_TABLET_BREAKPOINT);
 /** The max width when the scrollyteller centres itself in the page */
-export const MAX_SCROLLYTELLER_WIDTH = 2040;
+export const maxScrollytellerWidth = derived([isSplitScreen], ([$isSplitScreen]) => $isSplitScreen ? 2040 : 1e6);
 /**
  * Given the ratio of the graphic, work out whether it fits in the column and if
  * not, return how wide the column should be so there's no whitespace;
  */
-export const maxGraphicWidth = derived([isSplitScreen, graphicRootDims, screenDims, ratio], ([$isSplitScreen, $graphicRootDims, $screenDims, $ratio]) => {
+export const maxGraphicWidth = derived([isSplitScreen, graphicRootDims, screenDims, ratio, maxScrollytellerWidth], ([$isSplitScreen, $graphicRootDims, $screenDims, $ratio, $maxScrollytellerWidth]) => {
     if (!$isSplitScreen) {
-        return null;
+        return 1e6;
     }
     const [screenWidth] = $screenDims;
     const [, columnHeight] = $graphicRootDims.dims;
-    const columnWidth = Math.min(screenWidth, MAX_SCROLLYTELLER_WIDTH) * 0.6;
+    const columnWidth = Math.min(screenWidth, $maxScrollytellerWidth) * 0.6;
     const widthBasedOnHeight = columnHeight * $ratio;
     return Math.min(widthBasedOnHeight, columnWidth);
 });
