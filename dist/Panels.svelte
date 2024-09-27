@@ -30,6 +30,7 @@ $: console.log({ panelGroups, panels, layout });
 {#each panelGroups as group}
 	<div
 		class="content"
+		class:content--centre={group.align === 'centre'}
 		class:content--right={group.align === 'right'}
 		class:content--left={group.align === 'left'}
 	>
@@ -55,28 +56,39 @@ $: console.log({ panelGroups, panels, layout });
   position: relative;
   z-index: 2;
   pointer-events: none;
+  font-size: 1.125rem;
 }
 
+@media (min-width: 62rem) {
+  .content--centre {
+    max-width: 48.75rem;
+  }
+}
+@media (min-width: 90rem) {
+  .content--centre {
+    max-width: 56.25rem;
+  }
+}
 .content--left, .content--right {
   max-width: 127.5rem;
   margin-left: 0;
 }
 @media (min-width: 62rem) {
   .content--left, .content--right {
-    --maxWidth: 0.45;
-    --actualMaxWidth: calc(min(100vw, var(--maxScrollytellerWidth)) * var(--maxWidth));
-    max-width: calc(var(--actualMaxWidth) - var(--marginOuter) * 1);
+    max-width: 40rem;
     margin-right: calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);
+    font-size: 1.125rem;
   }
 }
 @media (min-width: 75rem) {
   .content--left, .content--right {
-    --maxWidth: 0.4;
+    font-size: 1.125rem;
   }
 }
 @media (min-width: 90rem) {
   .content--left, .content--right {
-    --maxWidth: 0.4;
+    max-width: 45rem;
+    font-size: 1.25rem;
   }
 }
 .content--right {

@@ -35,7 +35,6 @@ onMount(() => {
   position: relative;
   z-index: 1;
   pointer-events: none;
-  font-size: 1.125rem;
 }
 @media (min-width: 46.5rem) {
   .st-panel-root {
@@ -57,21 +56,9 @@ onMount(() => {
   margin-bottom: 100vh;
 }
 @media (min-width: 62rem) {
-  .st-panel-root--centre {
-    max-width: 48.75rem;
-    font-size: 1.875;
-  }
-}
-@media (min-width: 90rem) {
-  .st-panel-root--centre {
-    max-width: 56.25rem;
-  }
-}
-@media (min-width: 62rem) {
   .st-panel-root--left, .st-panel-root--right {
     margin-top: 30vh;
     margin-bottom: 30vh;
-    font-size: 1.125rem;
   }
   .st-panel-root--left.st-panel-root--transparent-blocks, .st-panel-root--right.st-panel-root--transparent-blocks {
     --panel-filter: none;
@@ -83,17 +70,6 @@ onMount(() => {
     margin-top: 50dvh;
   }
 }
-@media (min-width: 75rem) {
-  .st-panel-root--left, .st-panel-root--right {
-    font-size: 1.125rem;
-  }
-}
-@media (min-width: 90rem) {
-  .st-panel-root--left, .st-panel-root--right {
-    font-size: 1.25rem;
-  }
-}
-
 .st-panel {
   -webkit-backdrop-filter: var(--panel-filter);
   backdrop-filter: var(--panel-filter);

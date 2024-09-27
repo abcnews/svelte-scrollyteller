@@ -35,6 +35,7 @@
 {#each panelGroups as group}
 	<div
 		class="content"
+		class:content--centre={group.align === 'centre'}
 		class:content--right={group.align === 'right'}
 		class:content--left={group.align === 'left'}
 	>
@@ -63,24 +64,37 @@
 		z-index: 2;
 		// This style doesn't apply to child blocks, just the container
 		pointer-events: none;
+		font-size: 1.125rem;
 	}
 	.content {
+		&--centre {
+			@media (min-width: $breakpointLargeTablet) {
+				max-width: 48.75rem;
+			}
+
+			@media (min-width: $breakpointDesktop) {
+			}
+
+			@media (min-width: $breakpointLargeDesktop) {
+				max-width: 56.25rem;
+			}
+		}
+
 		&--left,
 		&--right {
 			max-width: 127.5rem;
 			margin-left: 0;
 			@media (min-width: $breakpointLargeTablet) {
-				--maxWidth: 0.45;
-				--actualMaxWidth: calc(min(100vw, var(--maxScrollytellerWidth)) * var(--maxWidth));
-
-				max-width: calc(var(--actualMaxWidth) - calc(var(--marginOuter) * 1));
+				max-width: 40rem;
 				margin-right: calc(var(--rightColumnWidth, 100px) + calc(var(--marginOuter) * 1));
+				font-size: 1.125rem;
 			}
 			@media (min-width: $breakpointDesktop) {
-				--maxWidth: 0.4;
+				font-size: 1.125rem;
 			}
 			@media (min-width: $breakpointLargeDesktop) {
-				--maxWidth: 0.4;
+				max-width: 45rem;
+				font-size: 1.25rem;
 			}
 		}
 		&--right {

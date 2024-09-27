@@ -62,12 +62,9 @@
 		&.viz--right {
 			width: var(--rightColumnWidth);
 			@media (min-width: $breakpointLargeTablet) {
-				// --marginCentre: calc(var(--marginOuter) / 2);
 				align-items: center;
 				height: 84dvh;
 				top: 8dvh;
-				// FIXME: I don't think this matters. It doesn't work yet at least.
-				// max-width: calc(var(--maxWidth) - calc(var(--marginCentre) + var(--marginOuter)));
 			}
 			@media (min-width: $breakpointDesktop) {
 				height: 76dvh;
