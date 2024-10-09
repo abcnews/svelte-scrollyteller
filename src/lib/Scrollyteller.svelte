@@ -43,9 +43,15 @@
 	};
 
 	export let ratio: number = 1;
+	$: $ratioStore = ratio;
 
-	$: {
-		$ratioStore = ratio;
+	/**
+	 * Percent past the bottom of the viz the graphic has to be before it triggers. Default 20 (20%)
+	 */
+	export let vizMarkerThreshold = 20;
+
+	$: if (vizMarkerThreshold >= 50) {
+		throw new Error('vizMarkerThreshold must be <50% screen height');
 	}
 
 	/**
@@ -113,7 +119,7 @@
 
 <DeprecationNotice {onProgress} {onMarker} />
 <ScreenDimsStoreUpdater align={_layout.align} />
-<PanelObserver bind:marker {observerOptions} {isDebug} />
+<PanelObserver bind:marker {observerOptions} {isDebug} {vizMarkerThreshold} />
 
 <svelte:head>
 	{#if isOdyssey}

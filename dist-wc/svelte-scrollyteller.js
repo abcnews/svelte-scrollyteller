@@ -1133,18 +1133,20 @@ function create_fragment$6(ctx) {
   };
 }
 function instance$7($$self, $$props, $$invalidate) {
+  let vizMarkerThresholdMarginDecimal;
   let rootMargin;
   let $steps;
   let $vizDims;
   let $screenDims;
   let $isSplitScreen;
-  component_subscribe($$self, steps, ($$value) => $$invalidate(6, $steps = $$value));
-  component_subscribe($$self, vizDims, ($$value) => $$invalidate(7, $vizDims = $$value));
-  component_subscribe($$self, screenDims, ($$value) => $$invalidate(8, $screenDims = $$value));
-  component_subscribe($$self, isSplitScreen, ($$value) => $$invalidate(9, $isSplitScreen = $$value));
+  component_subscribe($$self, steps, ($$value) => $$invalidate(8, $steps = $$value));
+  component_subscribe($$self, vizDims, ($$value) => $$invalidate(9, $vizDims = $$value));
+  component_subscribe($$self, screenDims, ($$value) => $$invalidate(10, $screenDims = $$value));
+  component_subscribe($$self, isSplitScreen, ($$value) => $$invalidate(11, $isSplitScreen = $$value));
   let { marker } = $$props;
   let { observerOptions } = $$props;
   let { isDebug } = $$props;
+  let { vizMarkerThreshold = 20 } = $$props;
   let _observerOptions = observerOptions;
   let panelObserver;
   let intersectingPanels = [];
@@ -1153,30 +1155,42 @@ function instance$7($$self, $$props, $$invalidate) {
     if ("marker" in $$props2) $$invalidate(3, marker = $$props2.marker);
     if ("observerOptions" in $$props2) $$invalidate(0, observerOptions = $$props2.observerOptions);
     if ("isDebug" in $$props2) $$invalidate(1, isDebug = $$props2.isDebug);
+    if ("vizMarkerThreshold" in $$props2) $$invalidate(4, vizMarkerThreshold = $$props2.vizMarkerThreshold);
   };
   $$self.$$.update = () => {
-    if ($$self.$$.dirty & /*$isSplitScreen, $screenDims, $vizDims*/
-    896) {
-      $$invalidate(2, rootMargin = $isSplitScreen ? Math.round(($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * 0.6) / 2) : Math.round($screenDims[1] / 8));
+    if ($$self.$$.dirty & /*vizMarkerThreshold*/
+    16) {
+      $$invalidate(7, vizMarkerThresholdMarginDecimal = (100 - vizMarkerThreshold * 2) / 100);
+    }
+    if ($$self.$$.dirty & /*$isSplitScreen, $screenDims, $vizDims, vizMarkerThresholdMarginDecimal*/
+    3712) {
+      $$invalidate(2, rootMargin = $isSplitScreen ? (
+        // For split screens, trigger the intersection observer when the block is
+        // over {vizMarkerThreshold}% of the interactive.
+        Math.round(($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * vizMarkerThresholdMarginDecimal) / 2)
+      ) : (
+        // Otherwise 10% of the screen height.
+        Math.round($screenDims[1] / 8)
+      ));
     }
     if ($$self.$$.dirty & /*observerOptions, rootMargin*/
     5) {
       {
         if (observerOptions) {
-          $$invalidate(4, _observerOptions = observerOptions);
+          $$invalidate(5, _observerOptions = observerOptions);
         } else {
-          $$invalidate(4, _observerOptions = {
+          $$invalidate(5, _observerOptions = {
             rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
           });
         }
       }
     }
     if ($$self.$$.dirty & /*$vizDims, panelObserver, _observerOptions, $steps*/
-    240) {
+    864) {
       {
         if ($vizDims.status === "ready") {
           panelObserver == null ? void 0 : panelObserver.disconnect();
-          $$invalidate(5, panelObserver = new IntersectionObserver(
+          $$invalidate(6, panelObserver = new IntersectionObserver(
             (entries) => {
               entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -1208,8 +1222,10 @@ function instance$7($$self, $$props, $$invalidate) {
     isDebug,
     rootMargin,
     marker,
+    vizMarkerThreshold,
     _observerOptions,
     panelObserver,
+    vizMarkerThresholdMarginDecimal,
     $steps,
     $vizDims,
     $screenDims,
@@ -1228,7 +1244,8 @@ class PanelObserver extends SvelteComponent {
       {
         marker: 3,
         observerOptions: 0,
-        isDebug: 1
+        isDebug: 1,
+        vizMarkerThreshold: 4
       },
       add_css$4
     );
@@ -1254,8 +1271,15 @@ class PanelObserver extends SvelteComponent {
     this.$$set({ isDebug });
     flush();
   }
+  get vizMarkerThreshold() {
+    return this.$$.ctx[4];
+  }
+  set vizMarkerThreshold(vizMarkerThreshold) {
+    this.$$set({ vizMarkerThreshold });
+    flush();
+  }
 }
-create_custom_element(PanelObserver, { "marker": {}, "observerOptions": {}, "isDebug": {} }, [], [], true);
+create_custom_element(PanelObserver, { "marker": {}, "observerOptions": {}, "isDebug": {}, "vizMarkerThreshold": {} }, [], [], true);
 function create_fragment$5(ctx) {
   let mounted;
   let dispose;
@@ -2354,14 +2378,14 @@ function create_if_block_3(ctx) {
     props: {
       scrollytellerRef: (
         /*scrollytellerRef*/
-        ctx[7]
+        ctx[8]
       )
     }
   });
   onprogresshandler.$on(
     "progress",
     /*progress_handler*/
-    ctx[17]
+    ctx[18]
   );
   return {
     c() {
@@ -2374,8 +2398,8 @@ function create_if_block_3(ctx) {
     p(ctx2, dirty) {
       const onprogresshandler_changes = {};
       if (dirty[0] & /*scrollytellerRef*/
-      128) onprogresshandler_changes.scrollytellerRef = /*scrollytellerRef*/
-      ctx2[7];
+      256) onprogresshandler_changes.scrollytellerRef = /*scrollytellerRef*/
+      ctx2[8];
       onprogresshandler.$set(onprogresshandler_changes);
     },
     i(local) {
@@ -2416,11 +2440,11 @@ function create_if_block_1(ctx) {
     props: {
       layout: (
         /*_layout*/
-        ctx[10]
+        ctx[11]
       ),
       isInViewport: (
         /*isInViewport*/
-        ctx[8]
+        ctx[9]
       ),
       discardSlot: (
         /*discardSlot*/
@@ -2433,7 +2457,7 @@ function create_if_block_1(ctx) {
   viz.$on(
     "load",
     /*load_handler*/
-    ctx[19]
+    ctx[20]
   );
   return {
     c() {
@@ -2446,16 +2470,16 @@ function create_if_block_1(ctx) {
     p(ctx2, dirty) {
       const viz_changes = {};
       if (dirty[0] & /*_layout*/
-      1024) viz_changes.layout = /*_layout*/
-      ctx2[10];
+      2048) viz_changes.layout = /*_layout*/
+      ctx2[11];
       if (dirty[0] & /*isInViewport*/
-      256) viz_changes.isInViewport = /*isInViewport*/
-      ctx2[8];
+      512) viz_changes.isInViewport = /*isInViewport*/
+      ctx2[9];
       if (dirty[0] & /*discardSlot*/
       32) viz_changes.discardSlot = /*discardSlot*/
       ctx2[5];
       if (dirty[0] & /*$$scope*/
-      4194304) {
+      8388608) {
         viz_changes.$$scope = { dirty, ctx: ctx2 };
       }
       viz.$set(viz_changes);
@@ -2478,13 +2502,13 @@ function create_default_slot_1(ctx) {
   let current;
   const default_slot_template = (
     /*#slots*/
-    ctx[16].default
+    ctx[17].default
   );
   const default_slot = create_slot(
     default_slot_template,
     ctx,
     /*$$scope*/
-    ctx[22],
+    ctx[23],
     null
   );
   return {
@@ -2500,20 +2524,20 @@ function create_default_slot_1(ctx) {
     p(ctx2, dirty) {
       if (default_slot) {
         if (default_slot.p && (!current || dirty[0] & /*$$scope*/
-        4194304)) {
+        8388608)) {
           update_slot_base(
             default_slot,
             default_slot_template,
             ctx2,
             /*$$scope*/
-            ctx2[22],
+            ctx2[23],
             !current ? get_all_dirty_from_scope(
               /*$$scope*/
-              ctx2[22]
+              ctx2[23]
             ) : get_slot_changes(
               default_slot_template,
               /*$$scope*/
-              ctx2[22],
+              ctx2[23],
               dirty,
               null
             ),
@@ -2543,11 +2567,11 @@ function create_if_block$1(ctx) {
     props: {
       layout: (
         /*_layout*/
-        ctx[10]
+        ctx[11]
       ),
       isInViewport: (
         /*isInViewport*/
-        ctx[8]
+        ctx[9]
       ),
       discardSlot: (
         /*discardSlot*/
@@ -2560,7 +2584,7 @@ function create_if_block$1(ctx) {
   viz.$on(
     "load",
     /*load_handler_1*/
-    ctx[20]
+    ctx[21]
   );
   return {
     c() {
@@ -2573,16 +2597,16 @@ function create_if_block$1(ctx) {
     p(ctx2, dirty) {
       const viz_changes = {};
       if (dirty[0] & /*_layout*/
-      1024) viz_changes.layout = /*_layout*/
-      ctx2[10];
+      2048) viz_changes.layout = /*_layout*/
+      ctx2[11];
       if (dirty[0] & /*isInViewport*/
-      256) viz_changes.isInViewport = /*isInViewport*/
-      ctx2[8];
+      512) viz_changes.isInViewport = /*isInViewport*/
+      ctx2[9];
       if (dirty[0] & /*discardSlot*/
       32) viz_changes.discardSlot = /*discardSlot*/
       ctx2[5];
       if (dirty[0] & /*$$scope*/
-      4194304) {
+      8388608) {
         viz_changes.$$scope = { dirty, ctx: ctx2 };
       }
       viz.$set(viz_changes);
@@ -2605,13 +2629,13 @@ function create_default_slot(ctx) {
   let current;
   const default_slot_template = (
     /*#slots*/
-    ctx[16].default
+    ctx[17].default
   );
   const default_slot = create_slot(
     default_slot_template,
     ctx,
     /*$$scope*/
-    ctx[22],
+    ctx[23],
     null
   );
   return {
@@ -2627,20 +2651,20 @@ function create_default_slot(ctx) {
     p(ctx2, dirty) {
       if (default_slot) {
         if (default_slot.p && (!current || dirty[0] & /*$$scope*/
-        4194304)) {
+        8388608)) {
           update_slot_base(
             default_slot,
             default_slot_template,
             ctx2,
             /*$$scope*/
-            ctx2[22],
+            ctx2[23],
             !current ? get_all_dirty_from_scope(
               /*$$scope*/
-              ctx2[22]
+              ctx2[23]
             ) : get_slot_changes(
               default_slot_template,
               /*$$scope*/
-              ctx2[22],
+              ctx2[23],
               dirty,
               null
             ),
@@ -2699,11 +2723,11 @@ function create_fragment$1(ctx) {
   screendimsstoreupdater = new ScreenDimsStoreUpdater({
     props: { align: (
       /*_layout*/
-      ctx[10].align
+      ctx[11].align
     ) }
   });
   function panelobserver_marker_binding(value) {
-    ctx[18](value);
+    ctx[19](value);
   }
   let panelobserver_props = {
     observerOptions: (
@@ -2712,33 +2736,37 @@ function create_fragment$1(ctx) {
     ),
     isDebug: (
       /*isDebug*/
-      ctx[9]
+      ctx[10]
+    ),
+    vizMarkerThreshold: (
+      /*vizMarkerThreshold*/
+      ctx[6]
     )
   };
   if (
     /*marker*/
-    ctx[6] !== void 0
+    ctx[7] !== void 0
   ) {
     panelobserver_props.marker = /*marker*/
-    ctx[6];
+    ctx[7];
   }
   panelobserver = new PanelObserver({ props: panelobserver_props });
   binding_callbacks.push(() => bind(panelobserver, "marker", panelobserver_marker_binding));
   let if_block1 = (
     /*isOdyssey*/
-    ctx[13] && create_if_block_2()
+    ctx[14] && create_if_block_2()
   );
   let if_block2 = !/*_layout*/
-  ctx[10].resizeInteractive && create_if_block_1(ctx);
+  ctx[11].resizeInteractive && create_if_block_1(ctx);
   let if_block3 = (
     /*_layout*/
-    ctx[10].resizeInteractive && create_if_block$1(ctx)
+    ctx[11].resizeInteractive && create_if_block$1(ctx)
   );
   panels_1 = new Panels({
     props: {
       layout: (
         /*_layout*/
-        ctx[10]
+        ctx[11]
       ),
       panels: (
         /*panels*/
@@ -2775,26 +2803,26 @@ function create_fragment$1(ctx) {
         div0,
         "scrollyteller--resized",
         /*_layout*/
-        ctx[10].resizeInteractive
+        ctx[11].resizeInteractive
       );
       toggle_class(
         div0,
         "scrollyteller--debug",
         /*isDebug*/
-        ctx[9]
+        ctx[10]
       );
       toggle_class(div0, "scrollyteller--columns", ["left", "right"].includes(
         /*_layout*/
-        ctx[10].align
+        ctx[11].align
       ));
       set_style(
         div0,
         "--maxScrollytellerWidthPx",
         /*$maxScrollytellerWidth*/
-        ctx[11] + "px"
+        ctx[12] + "px"
       );
       set_style(div0, "--rightColumnWidth", `min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${/*$maxGraphicWidth*/
-      ctx[12]}px)`);
+      ctx[13]}px)`);
       attr(div1, "class", "scrollyteller-wrapper svelte-1unt8ub");
     },
     m(target, anchor) {
@@ -2816,7 +2844,7 @@ function create_fragment$1(ctx) {
       if (if_block3) if_block3.m(div0, null);
       append(div0, t6);
       mount_component(panels_1, div0, null);
-      ctx[21](div0);
+      ctx[22](div0);
       current = true;
     },
     p(ctx2, dirty) {
@@ -2853,30 +2881,33 @@ function create_fragment$1(ctx) {
       deprecationnotice.$set(deprecationnotice_changes);
       const screendimsstoreupdater_changes = {};
       if (dirty[0] & /*_layout*/
-      1024) screendimsstoreupdater_changes.align = /*_layout*/
-      ctx2[10].align;
+      2048) screendimsstoreupdater_changes.align = /*_layout*/
+      ctx2[11].align;
       screendimsstoreupdater.$set(screendimsstoreupdater_changes);
       const panelobserver_changes = {};
       if (dirty[0] & /*observerOptions*/
       16) panelobserver_changes.observerOptions = /*observerOptions*/
       ctx2[4];
       if (dirty[0] & /*isDebug*/
-      512) panelobserver_changes.isDebug = /*isDebug*/
-      ctx2[9];
+      1024) panelobserver_changes.isDebug = /*isDebug*/
+      ctx2[10];
+      if (dirty[0] & /*vizMarkerThreshold*/
+      64) panelobserver_changes.vizMarkerThreshold = /*vizMarkerThreshold*/
+      ctx2[6];
       if (!updating_marker && dirty[0] & /*marker*/
-      64) {
+      128) {
         updating_marker = true;
         panelobserver_changes.marker = /*marker*/
-        ctx2[6];
+        ctx2[7];
         add_flush_callback(() => updating_marker = false);
       }
       panelobserver.$set(panelobserver_changes);
       if (!/*_layout*/
-      ctx2[10].resizeInteractive) {
+      ctx2[11].resizeInteractive) {
         if (if_block2) {
           if_block2.p(ctx2, dirty);
           if (dirty[0] & /*_layout*/
-          1024) {
+          2048) {
             transition_in(if_block2, 1);
           }
         } else {
@@ -2894,12 +2925,12 @@ function create_fragment$1(ctx) {
       }
       if (
         /*_layout*/
-        ctx2[10].resizeInteractive
+        ctx2[11].resizeInteractive
       ) {
         if (if_block3) {
           if_block3.p(ctx2, dirty);
           if (dirty[0] & /*_layout*/
-          1024) {
+          2048) {
             transition_in(if_block3, 1);
           }
         } else {
@@ -2917,8 +2948,8 @@ function create_fragment$1(ctx) {
       }
       const panels_1_changes = {};
       if (dirty[0] & /*_layout*/
-      1024) panels_1_changes.layout = /*_layout*/
-      ctx2[10];
+      2048) panels_1_changes.layout = /*_layout*/
+      ctx2[11];
       if (dirty[0] & /*panels*/
       2) panels_1_changes.panels = /*panels*/
       ctx2[1];
@@ -2927,43 +2958,43 @@ function create_fragment$1(ctx) {
       ctx2[0];
       panels_1.$set(panels_1_changes);
       if (!current || dirty[0] & /*_layout*/
-      1024) {
+      2048) {
         toggle_class(
           div0,
           "scrollyteller--resized",
           /*_layout*/
-          ctx2[10].resizeInteractive
+          ctx2[11].resizeInteractive
         );
       }
       if (!current || dirty[0] & /*isDebug*/
-      512) {
+      1024) {
         toggle_class(
           div0,
           "scrollyteller--debug",
           /*isDebug*/
-          ctx2[9]
+          ctx2[10]
         );
       }
       if (!current || dirty[0] & /*_layout*/
-      1024) {
+      2048) {
         toggle_class(div0, "scrollyteller--columns", ["left", "right"].includes(
           /*_layout*/
-          ctx2[10].align
+          ctx2[11].align
         ));
       }
       if (dirty[0] & /*$maxScrollytellerWidth*/
-      2048) {
+      4096) {
         set_style(
           div0,
           "--maxScrollytellerWidthPx",
           /*$maxScrollytellerWidth*/
-          ctx2[11] + "px"
+          ctx2[12] + "px"
         );
       }
       if (dirty[0] & /*$maxGraphicWidth*/
-      4096) {
+      8192) {
         set_style(div0, "--rightColumnWidth", `min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${/*$maxGraphicWidth*/
-        ctx2[12]}px)`);
+        ctx2[13]}px)`);
       }
     },
     i(local) {
@@ -3005,7 +3036,7 @@ function create_fragment$1(ctx) {
       if (if_block2) if_block2.d();
       if (if_block3) if_block3.d();
       destroy_component(panels_1);
-      ctx[21](null);
+      ctx[22](null);
     }
   };
 }
@@ -3016,9 +3047,9 @@ function instance$1($$self, $$props, $$invalidate) {
   let $ratioStore;
   let $maxScrollytellerWidth;
   let $maxGraphicWidth;
-  component_subscribe($$self, ratio, ($$value) => $$invalidate(27, $ratioStore = $$value));
-  component_subscribe($$self, maxScrollytellerWidth, ($$value) => $$invalidate(11, $maxScrollytellerWidth = $$value));
-  component_subscribe($$self, maxGraphicWidth, ($$value) => $$invalidate(12, $maxGraphicWidth = $$value));
+  component_subscribe($$self, ratio, ($$value) => $$invalidate(28, $ratioStore = $$value));
+  component_subscribe($$self, maxScrollytellerWidth, ($$value) => $$invalidate(12, $maxScrollytellerWidth = $$value));
+  component_subscribe($$self, maxGraphicWidth, ($$value) => $$invalidate(13, $maxGraphicWidth = $$value));
   let { $$slots: slots = {}, $$scope } = $$props;
   const dispatch = createEventDispatcher();
   let { customPanel = null } = $$props;
@@ -3029,6 +3060,7 @@ function instance$1($$self, $$props, $$invalidate) {
   let { discardSlot = false } = $$props;
   let { layout = {} } = $$props;
   let { ratio: ratio$1 = 1 } = $$props;
+  let { vizMarkerThreshold = 20 } = $$props;
   const isOdyssey = window.__IS_ODYSSEY_FORMAT__;
   let scrollytellerRef;
   let marker;
@@ -3037,7 +3069,7 @@ function instance$1($$self, $$props, $$invalidate) {
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions = [];
   const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
-    $$invalidate(8, isInViewport = scrollytellerEntry.isIntersecting);
+    $$invalidate(9, isInViewport = scrollytellerEntry.isIntersecting);
   }));
   const deferUntilScrollSettles = (fn) => {
     if (scrollSpeed < maxScrollSpeed) {
@@ -3056,8 +3088,8 @@ function instance$1($$self, $$props, $$invalidate) {
   };
   onMount(() => {
     scrollingPos = getScrollingPos(scrollytellerRef);
-    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(6, marker = panels[0].data);
-    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(6, marker = panels[panels.length - 1].data);
+    if (scrollingPos === ScrollPositions.ABOVE) $$invalidate(7, marker = panels[0].data);
+    if (scrollingPos === ScrollPositions.BELOW) $$invalidate(7, marker = panels[panels.length - 1].data);
     if (discardSlot) {
       scrollytellerObserver.observe(scrollytellerRef);
     }
@@ -3071,7 +3103,7 @@ function instance$1($$self, $$props, $$invalidate) {
   }
   function panelobserver_marker_binding(value) {
     marker = value;
-    $$invalidate(6, marker);
+    $$invalidate(7, marker);
   }
   function load_handler(event) {
     bubble.call(this, $$self, event);
@@ -3082,7 +3114,7 @@ function instance$1($$self, $$props, $$invalidate) {
   function div0_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       scrollytellerRef = $$value;
-      $$invalidate(7, scrollytellerRef);
+      $$invalidate(8, scrollytellerRef);
     });
   }
   $$self.$$set = ($$props2) => {
@@ -3092,23 +3124,28 @@ function instance$1($$self, $$props, $$invalidate) {
     if ("onMarker" in $$props2) $$invalidate(3, onMarker = $$props2.onMarker);
     if ("observerOptions" in $$props2) $$invalidate(4, observerOptions = $$props2.observerOptions);
     if ("discardSlot" in $$props2) $$invalidate(5, discardSlot = $$props2.discardSlot);
-    if ("layout" in $$props2) $$invalidate(14, layout = $$props2.layout);
-    if ("ratio" in $$props2) $$invalidate(15, ratio$1 = $$props2.ratio);
-    if ("$$scope" in $$props2) $$invalidate(22, $$scope = $$props2.$$scope);
+    if ("layout" in $$props2) $$invalidate(15, layout = $$props2.layout);
+    if ("ratio" in $$props2) $$invalidate(16, ratio$1 = $$props2.ratio);
+    if ("vizMarkerThreshold" in $$props2) $$invalidate(6, vizMarkerThreshold = $$props2.vizMarkerThreshold);
+    if ("$$scope" in $$props2) $$invalidate(23, $$scope = $$props2.$$scope);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty[0] & /*layout*/
-    16384) {
-      $$invalidate(10, _layout = {
+    32768) {
+      $$invalidate(11, _layout = {
         align: layout.align || "centre",
         resizeInteractive: layout.resizeInteractive ?? true,
         transparentFloat: layout.transparentFloat ?? ["left", "right"].includes(layout.align)
       });
     }
     if ($$self.$$.dirty[0] & /*ratio*/
-    32768) {
-      {
-        set_store_value(ratio, $ratioStore = ratio$1, $ratioStore);
+    65536) {
+      set_store_value(ratio, $ratioStore = ratio$1, $ratioStore);
+    }
+    if ($$self.$$.dirty[0] & /*vizMarkerThreshold*/
+    64) {
+      if (vizMarkerThreshold >= 50) {
+        throw new Error("vizMarkerThreshold must be <50% screen height");
       }
     }
     if ($$self.$$.dirty[0] & /*discardSlot*/
@@ -3116,11 +3153,11 @@ function instance$1($$self, $$props, $$invalidate) {
       maxScrollSpeed = discardSlot ? 0.5 : Infinity;
     }
     if ($$self.$$.dirty[0] & /*marker*/
-    64) {
+    128) {
       marker && deferUntilScrollSettles(() => dispatch("marker", marker));
     }
   };
-  $$invalidate(9, isDebug = typeof location !== "undefined" && location.hash === "#debug=true");
+  $$invalidate(10, isDebug = typeof location !== "undefined" && location.hash === "#debug=true");
   return [
     customPanel,
     panels,
@@ -3128,6 +3165,7 @@ function instance$1($$self, $$props, $$invalidate) {
     onMarker,
     observerOptions,
     discardSlot,
+    vizMarkerThreshold,
     marker,
     scrollytellerRef,
     isInViewport,
@@ -3163,8 +3201,9 @@ class Scrollyteller extends SvelteComponent {
         onMarker: 3,
         observerOptions: 4,
         discardSlot: 5,
-        layout: 14,
-        ratio: 15
+        layout: 15,
+        ratio: 16,
+        vizMarkerThreshold: 6
       },
       add_css,
       [-1, -1]
@@ -3213,21 +3252,28 @@ class Scrollyteller extends SvelteComponent {
     flush();
   }
   get layout() {
-    return this.$$.ctx[14];
+    return this.$$.ctx[15];
   }
   set layout(layout) {
     this.$$set({ layout });
     flush();
   }
   get ratio() {
-    return this.$$.ctx[15];
+    return this.$$.ctx[16];
   }
   set ratio(ratio2) {
     this.$$set({ ratio: ratio2 });
     flush();
   }
+  get vizMarkerThreshold() {
+    return this.$$.ctx[6];
+  }
+  set vizMarkerThreshold(vizMarkerThreshold) {
+    this.$$set({ vizMarkerThreshold });
+    flush();
+  }
 }
-create_custom_element(Scrollyteller, { "customPanel": {}, "panels": {}, "onProgress": { "type": "Boolean" }, "onMarker": {}, "observerOptions": {}, "discardSlot": { "type": "Boolean" }, "layout": {}, "ratio": {} }, ["default"], [], true);
+create_custom_element(Scrollyteller, { "customPanel": {}, "panels": {}, "onProgress": { "type": "Boolean" }, "onMarker": {}, "observerOptions": {}, "discardSlot": { "type": "Boolean" }, "layout": {}, "ratio": {}, "vizMarkerThreshold": {} }, ["default"], [], true);
 function create_if_block(ctx) {
   let scrollyteller;
   let current;

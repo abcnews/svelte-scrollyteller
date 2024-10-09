@@ -25,14 +25,25 @@
 	export let marker;
 	export let observerOptions;
 	export let isDebug;
+	export let vizMarkerThreshold = 20;
 
 	/**
-	 * For split screens, trigger the intersection observer when the block is
-	 * over 20% of the interactive. Otherwise 10% of the screen height.
+	 * The root margin amount, includes space either side.
+	 *
+	 * E.g. 20% margin = 0.6 multiplier (60% in the block, 2*20% outside = 100%)
 	 */
+	$: vizMarkerThresholdMarginDecimal = (100 - vizMarkerThreshold * 2) / 100;
+
+	/** Intersection observer root margin */
 	$: rootMargin = $isSplitScreen
-		? Math.round(($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * 0.6) / 2)
-		: Math.round($screenDims[1] / 8);
+		? // For split screens, trigger the intersection observer when the block is
+			// over {vizMarkerThreshold}% of the interactive.
+			Math.round(
+				($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * vizMarkerThresholdMarginDecimal) /
+					2
+			)
+		: // Otherwise 10% of the screen height.
+			Math.round($screenDims[1] / 8);
 
 	/**
 	 * When observerOptions isn't set, default to either 0.5 for centred blocks
