@@ -53,7 +53,7 @@ onMount(() => {
   margin-top: 100dvh;
 }
 .st-panel-root.last {
-  margin-bottom: 100vh;
+  margin-bottom: 50vh;
 }
 @media (min-width: 62rem) {
   .st-panel-root--left, .st-panel-root--right {

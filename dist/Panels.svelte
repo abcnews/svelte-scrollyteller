@@ -53,6 +53,7 @@ $: console.log({ panelGroups, panels, layout });
 
 <style>.content {
   margin: -100dvh auto 0;
+  padding-bottom: 1px;
   position: relative;
   z-index: 2;
   pointer-events: none;

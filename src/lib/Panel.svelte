@@ -65,7 +65,7 @@
 		}
 
 		&.last {
-			margin-bottom: 100vh;
+			margin-bottom: 50vh;
 		}
 
 		&--left,

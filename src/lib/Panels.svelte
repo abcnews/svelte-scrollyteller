@@ -60,6 +60,8 @@
 	@import './breakpoints.scss';
 	.content {
 		margin: -100dvh auto 0;
+		// add bottom padding otherwise the `.last` panel margins collapse to 0
+		padding-bottom:1px;
 		position: relative;
 		z-index: 2;
 		// This style doesn't apply to child blocks, just the container
