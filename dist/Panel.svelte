@@ -1,8 +1,14 @@
-<script>import { onMount } from 'svelte';
+<script>import { getContext, onMount } from 'svelte';
 import { children } from './actions.js';
-import { steps } from './stores.js';
-export let props;
-const { align, transparentFloat, panelClass, data, nodes = [] } = props;
+const currentPanel = getContext('currentPanel');
+const steps = getContext('steps');
+export let align;
+export let transparentFloat;
+export let panelClass;
+export let data;
+export let nodes;
+export let i = -1;
+$: console.log({ i, $currentPanel });
 let panelRef;
 onMount(() => {
     panelRef.scrollyData = data;
@@ -12,11 +18,13 @@ onMount(() => {
 
 <div
 	data-align={align}
+	data-index={i}
 	class={`st-panel-root ${panelClass || ''}`}
 	class:st-panel-root--left={align === 'left'}
 	class:st-panel-root--right={align === 'right'}
 	class:st-panel-root--centre={align === 'centre'}
 	class:st-panel-root--transparent-blocks={transparentFloat}
+	class:st-panel-root--active={i === $currentPanel}
 	bind:this={panelRef}
 >
 	<div class="st-panel" use:children={nodes}></div>

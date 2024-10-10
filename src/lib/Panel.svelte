@@ -1,12 +1,19 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { children } from './actions.js';
 	import type { PanelDefinition, PanelRef } from './types.js';
-	import { steps } from './stores.js';
 
-	export let props: PanelDefinition;
+	const currentPanel = getContext('currentPanel');
+	const steps = getContext('steps');
 
-	const { align, transparentFloat, panelClass, data, nodes = [] } = props;
+	export let align: string;
+	export let transparentFloat: boolean;
+	export let panelClass: string;
+	export let data: any;
+	export let nodes: Element[];
+	export let i = -1;
+
+	$: console.log({ i, $currentPanel });
 
 	let panelRef: PanelRef;
 
@@ -18,11 +25,13 @@
 
 <div
 	data-align={align}
+	data-index={i}
 	class={`st-panel-root ${panelClass || ''}`}
 	class:st-panel-root--left={align === 'left'}
 	class:st-panel-root--right={align === 'right'}
 	class:st-panel-root--centre={align === 'centre'}
 	class:st-panel-root--transparent-blocks={transparentFloat}
+	class:st-panel-root--active={i === $currentPanel}
 	bind:this={panelRef}
 >
 	<div class="st-panel" use:children={nodes}></div>

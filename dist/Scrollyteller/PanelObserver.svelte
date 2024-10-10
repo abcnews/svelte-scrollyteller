@@ -1,5 +1,9 @@
-<script>import { onMount } from 'svelte';
-import { vizDims, isSplitScreen, screenDims, steps } from '../stores';
+<script>import { getContext, onMount } from 'svelte';
+const vizDims = getContext('vizDims');
+const isSplitScreen = getContext('isSplitScreen');
+const screenDims = getContext('screenDims');
+const steps = getContext('steps');
+const currentPanel = getContext('currentPanel');
 export let marker;
 export let observerOptions;
 export let isDebug;
@@ -60,6 +64,7 @@ $: {
                 const newPanel = intersectingPanels[intersectingPanels.length - 1];
                 if (newPanel) {
                     marker = newPanel.target.scrollyData;
+                    $currentPanel = $steps.findIndex((step) => step === newPanel.target);
                 }
             });
         }, _observerOptions);

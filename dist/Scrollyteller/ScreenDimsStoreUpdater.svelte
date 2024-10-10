@@ -1,4 +1,6 @@
-<script>import { globalAlign, isSplitScreen, screenDims } from '../stores';
+<script>import { getContext } from 'svelte';
+const globalAlign = getContext('globalAlign');
+const screenDims = getContext('screenDims');
 export let align = 'centre';
 let innerWidth = 0;
 let innerHeight = 0;

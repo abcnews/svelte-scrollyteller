@@ -234,6 +234,13 @@ function createEventDispatcher() {
     return true;
   };
 }
+function setContext(key, context) {
+  get_current_component().$$.context.set(key, context);
+  return context;
+}
+function getContext(key) {
+  return get_current_component().$$.context.get(key);
+}
 function bubble(component, event) {
   const callbacks = component.$$.callbacks[event.type];
   if (callbacks) {
@@ -913,6 +920,329 @@ class DeprecationNotice extends SvelteComponent {
   }
 }
 create_custom_element(DeprecationNotice, { "onProgress": {}, "onMarker": {} }, [], [], true);
+function add_css$4(target) {
+  append_styles(target, "svelte-1iywulw", ".panelobserver-debug.svelte-1iywulw{position:sticky;left:0;width:100%;background:rgba(0, 0, 0, 0.1);border:1px solid rgba(0, 255, 47, 0.4);border-style:solid none solid;z-index:0}");
+}
+function create_if_block$4(ctx) {
+  let div;
+  return {
+    c() {
+      div = element("div");
+      attr(div, "class", "panelobserver-debug svelte-1iywulw");
+      set_style(
+        div,
+        "top",
+        /*rootMargin*/
+        ctx[2] + "px"
+      );
+      set_style(div, "height", innerHeight - /*rootMargin*/
+      ctx[2] * 2 + "px");
+    },
+    m(target, anchor) {
+      insert(target, div, anchor);
+    },
+    p(ctx2, dirty) {
+      if (dirty & /*rootMargin*/
+      4) {
+        set_style(
+          div,
+          "top",
+          /*rootMargin*/
+          ctx2[2] + "px"
+        );
+      }
+      if (dirty & /*rootMargin*/
+      4) {
+        set_style(div, "height", innerHeight - /*rootMargin*/
+        ctx2[2] * 2 + "px");
+      }
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(div);
+      }
+    }
+  };
+}
+function create_fragment$6(ctx) {
+  let if_block_anchor;
+  let if_block = (
+    /*isDebug*/
+    ctx[1] && /*rootMargin*/
+    ctx[2] && !/*observerOptions*/
+    ctx[0] && create_if_block$4(ctx)
+  );
+  return {
+    c() {
+      if (if_block) if_block.c();
+      if_block_anchor = empty();
+    },
+    m(target, anchor) {
+      if (if_block) if_block.m(target, anchor);
+      insert(target, if_block_anchor, anchor);
+    },
+    p(ctx2, [dirty]) {
+      if (
+        /*isDebug*/
+        ctx2[1] && /*rootMargin*/
+        ctx2[2] && !/*observerOptions*/
+        ctx2[0]
+      ) {
+        if (if_block) {
+          if_block.p(ctx2, dirty);
+        } else {
+          if_block = create_if_block$4(ctx2);
+          if_block.c();
+          if_block.m(if_block_anchor.parentNode, if_block_anchor);
+        }
+      } else if (if_block) {
+        if_block.d(1);
+        if_block = null;
+      }
+    },
+    i: noop,
+    o: noop,
+    d(detaching) {
+      if (detaching) {
+        detach(if_block_anchor);
+      }
+      if (if_block) if_block.d(detaching);
+    }
+  };
+}
+function instance$7($$self, $$props, $$invalidate) {
+  let vizMarkerThresholdMarginDecimal;
+  let rootMargin;
+  let $steps;
+  let $currentPanel;
+  let $vizDims;
+  let $screenDims;
+  let $isSplitScreen;
+  const vizDims = getContext("vizDims");
+  component_subscribe($$self, vizDims, (value) => $$invalidate(14, $vizDims = value));
+  const isSplitScreen = getContext("isSplitScreen");
+  component_subscribe($$self, isSplitScreen, (value) => $$invalidate(16, $isSplitScreen = value));
+  const screenDims = getContext("screenDims");
+  component_subscribe($$self, screenDims, (value) => $$invalidate(15, $screenDims = value));
+  const steps = getContext("steps");
+  component_subscribe($$self, steps, (value) => $$invalidate(13, $steps = value));
+  const currentPanel = getContext("currentPanel");
+  component_subscribe($$self, currentPanel, (value) => $$invalidate(17, $currentPanel = value));
+  let { marker } = $$props;
+  let { observerOptions } = $$props;
+  let { isDebug } = $$props;
+  let { vizMarkerThreshold = 20 } = $$props;
+  let _observerOptions = observerOptions;
+  let panelObserver;
+  let intersectingPanels = [];
+  onMount(() => panelObserver == null ? void 0 : panelObserver.disconnect());
+  $$self.$$set = ($$props2) => {
+    if ("marker" in $$props2) $$invalidate(8, marker = $$props2.marker);
+    if ("observerOptions" in $$props2) $$invalidate(0, observerOptions = $$props2.observerOptions);
+    if ("isDebug" in $$props2) $$invalidate(1, isDebug = $$props2.isDebug);
+    if ("vizMarkerThreshold" in $$props2) $$invalidate(9, vizMarkerThreshold = $$props2.vizMarkerThreshold);
+  };
+  $$self.$$.update = () => {
+    if ($$self.$$.dirty & /*vizMarkerThreshold*/
+    512) {
+      $$invalidate(12, vizMarkerThresholdMarginDecimal = (100 - vizMarkerThreshold * 2) / 100);
+    }
+    if ($$self.$$.dirty & /*$isSplitScreen, $screenDims, $vizDims, vizMarkerThresholdMarginDecimal*/
+    118784) {
+      $$invalidate(2, rootMargin = $isSplitScreen ? (
+        // For split screens, trigger the intersection observer when the block is
+        // over {vizMarkerThreshold}% of the interactive.
+        Math.round(($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * vizMarkerThresholdMarginDecimal) / 2)
+      ) : (
+        // Otherwise 10% of the screen height.
+        Math.round($screenDims[1] / 8)
+      ));
+    }
+    if ($$self.$$.dirty & /*observerOptions, rootMargin*/
+    5) {
+      {
+        if (observerOptions) {
+          $$invalidate(10, _observerOptions = observerOptions);
+        } else {
+          $$invalidate(10, _observerOptions = {
+            rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
+          });
+        }
+      }
+    }
+    if ($$self.$$.dirty & /*$vizDims, panelObserver, $steps, _observerOptions*/
+    27648) {
+      {
+        if ($vizDims.status === "ready") {
+          panelObserver == null ? void 0 : panelObserver.disconnect();
+          $$invalidate(11, panelObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  intersectingPanels.push(entry);
+                } else {
+                  const itemToRemove = intersectingPanels.findIndex((panel) => panel.target === entry.target);
+                  if (itemToRemove === -1) return;
+                  intersectingPanels.splice(itemToRemove, 1);
+                }
+                const newPanel = intersectingPanels[intersectingPanels.length - 1];
+                if (newPanel) {
+                  $$invalidate(8, marker = newPanel.target.scrollyData);
+                  set_store_value(currentPanel, $currentPanel = $steps.findIndex((step) => step === newPanel.target), $currentPanel);
+                }
+              });
+            },
+            _observerOptions
+          ));
+          $steps.forEach((step) => {
+            panelObserver.observe(step);
+          });
+        } else {
+          panelObserver == null ? void 0 : panelObserver.disconnect();
+        }
+      }
+    }
+  };
+  return [
+    observerOptions,
+    isDebug,
+    rootMargin,
+    vizDims,
+    isSplitScreen,
+    screenDims,
+    steps,
+    currentPanel,
+    marker,
+    vizMarkerThreshold,
+    _observerOptions,
+    panelObserver,
+    vizMarkerThresholdMarginDecimal,
+    $steps,
+    $vizDims,
+    $screenDims,
+    $isSplitScreen
+  ];
+}
+class PanelObserver extends SvelteComponent {
+  constructor(options) {
+    super();
+    init(
+      this,
+      options,
+      instance$7,
+      create_fragment$6,
+      safe_not_equal,
+      {
+        marker: 8,
+        observerOptions: 0,
+        isDebug: 1,
+        vizMarkerThreshold: 9
+      },
+      add_css$4
+    );
+  }
+  get marker() {
+    return this.$$.ctx[8];
+  }
+  set marker(marker) {
+    this.$$set({ marker });
+    flush();
+  }
+  get observerOptions() {
+    return this.$$.ctx[0];
+  }
+  set observerOptions(observerOptions) {
+    this.$$set({ observerOptions });
+    flush();
+  }
+  get isDebug() {
+    return this.$$.ctx[1];
+  }
+  set isDebug(isDebug) {
+    this.$$set({ isDebug });
+    flush();
+  }
+  get vizMarkerThreshold() {
+    return this.$$.ctx[9];
+  }
+  set vizMarkerThreshold(vizMarkerThreshold) {
+    this.$$set({ vizMarkerThreshold });
+    flush();
+  }
+}
+create_custom_element(PanelObserver, { "marker": {}, "observerOptions": {}, "isDebug": {}, "vizMarkerThreshold": {} }, [], [], true);
+function create_fragment$5(ctx) {
+  let mounted;
+  let dispose;
+  add_render_callback(
+    /*onwindowresize*/
+    ctx[5]
+  );
+  return {
+    c: noop,
+    m(target, anchor) {
+      if (!mounted) {
+        dispose = listen(
+          window,
+          "resize",
+          /*onwindowresize*/
+          ctx[5]
+        );
+        mounted = true;
+      }
+    },
+    p: noop,
+    i: noop,
+    o: noop,
+    d(detaching) {
+      mounted = false;
+      dispose();
+    }
+  };
+}
+function instance$6($$self, $$props, $$invalidate) {
+  let $globalAlign;
+  let $screenDims;
+  const globalAlign = getContext("globalAlign");
+  component_subscribe($$self, globalAlign, (value) => $$invalidate(6, $globalAlign = value));
+  const screenDims = getContext("screenDims");
+  component_subscribe($$self, screenDims, (value) => $$invalidate(7, $screenDims = value));
+  let { align = "centre" } = $$props;
+  let innerWidth = 0;
+  let innerHeight2 = 0;
+  function onwindowresize() {
+    $$invalidate(0, innerWidth = window.innerWidth);
+    $$invalidate(1, innerHeight2 = window.innerHeight);
+  }
+  $$self.$$set = ($$props2) => {
+    if ("align" in $$props2) $$invalidate(4, align = $$props2.align);
+  };
+  $$self.$$.update = () => {
+    if ($$self.$$.dirty & /*innerWidth, innerHeight*/
+    3) {
+      set_store_value(screenDims, $screenDims = [innerWidth, innerHeight2], $screenDims);
+    }
+    if ($$self.$$.dirty & /*align*/
+    16) {
+      set_store_value(globalAlign, $globalAlign = align, $globalAlign);
+    }
+  };
+  return [innerWidth, innerHeight2, globalAlign, screenDims, align, onwindowresize];
+}
+class ScreenDimsStoreUpdater extends SvelteComponent {
+  constructor(options) {
+    super();
+    init(this, options, instance$6, create_fragment$5, safe_not_equal, { align: 4 });
+  }
+  get align() {
+    return this.$$.ctx[4];
+  }
+  set align(align) {
+    this.$$set({ align });
+    flush();
+  }
+}
+create_custom_element(ScreenDimsStoreUpdater, { "align": {} }, [], [], true);
 const subscriber_queue = [];
 function readable(value, start) {
   return {
@@ -1008,348 +1338,67 @@ function derived(stores, fn, initial_value) {
     };
   });
 }
-let steps = writable([]);
-const vizDims = writable({
-  status: "loading",
-  dims: [0, 0]
-});
-const graphicRootDims = writable({
-  status: "loading",
-  dims: [0, 0]
-});
-const ratio = writable(1);
-const screenDims = writable([0, 0]);
-const globalAlign = writable("centre");
+function setSteps() {
+  return writable([]);
+}
+function setMargin() {
+  return writable(0);
+}
+function setVizDims() {
+  return writable({
+    status: "loading",
+    dims: [0, 0]
+  });
+}
+function setGraphicRootDims() {
+  return writable({
+    status: "loading",
+    dims: [0, 0]
+  });
+}
+function setRatio() {
+  return writable(1);
+}
+function setScreenDims() {
+  return writable([0, 0]);
+}
+function setGlobalAlign() {
+  return writable("centre");
+}
 const LARGE_TABLET_BREAKPOINT = 992;
-const isSplitScreen = derived(
-  [screenDims, globalAlign],
-  ([$screenDims, $globalAlign]) => ["left", "right"].includes($globalAlign) && $screenDims[0] >= LARGE_TABLET_BREAKPOINT
-);
-const maxScrollytellerWidth = derived(
-  [isSplitScreen],
-  ([$isSplitScreen]) => $isSplitScreen ? 2040 : 1e6
-);
-const maxGraphicWidth = derived(
-  [isSplitScreen, graphicRootDims, screenDims, ratio, maxScrollytellerWidth],
-  ([$isSplitScreen, $graphicRootDims, $screenDims, $ratio, $maxScrollytellerWidth]) => {
-    if (!$isSplitScreen) {
-      return 1e6;
-    }
-    const [screenWidth] = $screenDims;
-    const [, columnHeight] = $graphicRootDims.dims;
-    const columnWidth = Math.min(screenWidth, $maxScrollytellerWidth) * 0.6;
-    const widthBasedOnHeight = columnHeight * $ratio;
-    return Math.min(widthBasedOnHeight, columnWidth);
-  }
-);
-function add_css$4(target) {
-  append_styles(target, "svelte-1iywulw", ".panelobserver-debug.svelte-1iywulw{position:sticky;left:0;width:100%;background:rgba(0, 0, 0, 0.1);border:1px solid rgba(0, 255, 47, 0.4);border-style:solid none solid;z-index:0}");
-}
-function create_if_block$4(ctx) {
-  let div;
-  return {
-    c() {
-      div = element("div");
-      attr(div, "class", "panelobserver-debug svelte-1iywulw");
-      set_style(
-        div,
-        "top",
-        /*rootMargin*/
-        ctx[2] + "px"
-      );
-      set_style(div, "height", innerHeight - /*rootMargin*/
-      ctx[2] * 2 + "px");
-    },
-    m(target, anchor) {
-      insert(target, div, anchor);
-    },
-    p(ctx2, dirty) {
-      if (dirty & /*rootMargin*/
-      4) {
-        set_style(
-          div,
-          "top",
-          /*rootMargin*/
-          ctx2[2] + "px"
-        );
-      }
-      if (dirty & /*rootMargin*/
-      4) {
-        set_style(div, "height", innerHeight - /*rootMargin*/
-        ctx2[2] * 2 + "px");
-      }
-    },
-    d(detaching) {
-      if (detaching) {
-        detach(div);
-      }
-    }
-  };
-}
-function create_fragment$6(ctx) {
-  let if_block_anchor;
-  let if_block = (
-    /*isDebug*/
-    ctx[1] && /*rootMargin*/
-    ctx[2] && !/*observerOptions*/
-    ctx[0] && create_if_block$4(ctx)
+function setIsSplitScreen([screenDims, globalAlign]) {
+  return derived(
+    [screenDims, globalAlign],
+    ([$screenDims, $globalAlign]) => ["left", "right"].includes($globalAlign) && $screenDims[0] >= LARGE_TABLET_BREAKPOINT
   );
-  return {
-    c() {
-      if (if_block) if_block.c();
-      if_block_anchor = empty();
-    },
-    m(target, anchor) {
-      if (if_block) if_block.m(target, anchor);
-      insert(target, if_block_anchor, anchor);
-    },
-    p(ctx2, [dirty]) {
-      if (
-        /*isDebug*/
-        ctx2[1] && /*rootMargin*/
-        ctx2[2] && !/*observerOptions*/
-        ctx2[0]
-      ) {
-        if (if_block) {
-          if_block.p(ctx2, dirty);
-        } else {
-          if_block = create_if_block$4(ctx2);
-          if_block.c();
-          if_block.m(if_block_anchor.parentNode, if_block_anchor);
-        }
-      } else if (if_block) {
-        if_block.d(1);
-        if_block = null;
-      }
-    },
-    i: noop,
-    o: noop,
-    d(detaching) {
-      if (detaching) {
-        detach(if_block_anchor);
-      }
-      if (if_block) if_block.d(detaching);
-    }
-  };
 }
-function instance$7($$self, $$props, $$invalidate) {
-  let vizMarkerThresholdMarginDecimal;
-  let rootMargin;
-  let $steps;
-  let $vizDims;
-  let $screenDims;
-  let $isSplitScreen;
-  component_subscribe($$self, steps, ($$value) => $$invalidate(8, $steps = $$value));
-  component_subscribe($$self, vizDims, ($$value) => $$invalidate(9, $vizDims = $$value));
-  component_subscribe($$self, screenDims, ($$value) => $$invalidate(10, $screenDims = $$value));
-  component_subscribe($$self, isSplitScreen, ($$value) => $$invalidate(11, $isSplitScreen = $$value));
-  let { marker } = $$props;
-  let { observerOptions } = $$props;
-  let { isDebug } = $$props;
-  let { vizMarkerThreshold = 20 } = $$props;
-  let _observerOptions = observerOptions;
-  let panelObserver;
-  let intersectingPanels = [];
-  onMount(() => panelObserver == null ? void 0 : panelObserver.disconnect());
-  $$self.$$set = ($$props2) => {
-    if ("marker" in $$props2) $$invalidate(3, marker = $$props2.marker);
-    if ("observerOptions" in $$props2) $$invalidate(0, observerOptions = $$props2.observerOptions);
-    if ("isDebug" in $$props2) $$invalidate(1, isDebug = $$props2.isDebug);
-    if ("vizMarkerThreshold" in $$props2) $$invalidate(4, vizMarkerThreshold = $$props2.vizMarkerThreshold);
-  };
-  $$self.$$.update = () => {
-    if ($$self.$$.dirty & /*vizMarkerThreshold*/
-    16) {
-      $$invalidate(7, vizMarkerThresholdMarginDecimal = (100 - vizMarkerThreshold * 2) / 100);
-    }
-    if ($$self.$$.dirty & /*$isSplitScreen, $screenDims, $vizDims, vizMarkerThresholdMarginDecimal*/
-    3712) {
-      $$invalidate(2, rootMargin = $isSplitScreen ? (
-        // For split screens, trigger the intersection observer when the block is
-        // over {vizMarkerThreshold}% of the interactive.
-        Math.round(($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * vizMarkerThresholdMarginDecimal) / 2)
-      ) : (
-        // Otherwise 10% of the screen height.
-        Math.round($screenDims[1] / 8)
-      ));
-    }
-    if ($$self.$$.dirty & /*observerOptions, rootMargin*/
-    5) {
-      {
-        if (observerOptions) {
-          $$invalidate(5, _observerOptions = observerOptions);
-        } else {
-          $$invalidate(5, _observerOptions = {
-            rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
-          });
-        }
-      }
-    }
-    if ($$self.$$.dirty & /*$vizDims, panelObserver, _observerOptions, $steps*/
-    864) {
-      {
-        if ($vizDims.status === "ready") {
-          panelObserver == null ? void 0 : panelObserver.disconnect();
-          $$invalidate(6, panelObserver = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                  intersectingPanels.push(entry);
-                } else {
-                  const itemToRemove = intersectingPanels.findIndex((panel) => panel.target === entry.target);
-                  if (itemToRemove === -1) return;
-                  intersectingPanels.splice(itemToRemove, 1);
-                }
-                const newPanel = intersectingPanels[intersectingPanels.length - 1];
-                if (newPanel) {
-                  $$invalidate(3, marker = newPanel.target.scrollyData);
-                }
-              });
-            },
-            _observerOptions
-          ));
-          $steps.forEach((step) => {
-            panelObserver.observe(step);
-          });
-        } else {
-          panelObserver == null ? void 0 : panelObserver.disconnect();
-        }
-      }
-    }
-  };
-  return [
-    observerOptions,
-    isDebug,
-    rootMargin,
-    marker,
-    vizMarkerThreshold,
-    _observerOptions,
-    panelObserver,
-    vizMarkerThresholdMarginDecimal,
-    $steps,
-    $vizDims,
-    $screenDims,
-    $isSplitScreen
-  ];
+function setMaxScrollytellerWidth([isSplitScreen]) {
+  return derived([isSplitScreen], ([$isSplitScreen]) => $isSplitScreen ? 2040 : 1e6);
 }
-class PanelObserver extends SvelteComponent {
-  constructor(options) {
-    super();
-    init(
-      this,
-      options,
-      instance$7,
-      create_fragment$6,
-      safe_not_equal,
-      {
-        marker: 3,
-        observerOptions: 0,
-        isDebug: 1,
-        vizMarkerThreshold: 4
-      },
-      add_css$4
-    );
-  }
-  get marker() {
-    return this.$$.ctx[3];
-  }
-  set marker(marker) {
-    this.$$set({ marker });
-    flush();
-  }
-  get observerOptions() {
-    return this.$$.ctx[0];
-  }
-  set observerOptions(observerOptions) {
-    this.$$set({ observerOptions });
-    flush();
-  }
-  get isDebug() {
-    return this.$$.ctx[1];
-  }
-  set isDebug(isDebug) {
-    this.$$set({ isDebug });
-    flush();
-  }
-  get vizMarkerThreshold() {
-    return this.$$.ctx[4];
-  }
-  set vizMarkerThreshold(vizMarkerThreshold) {
-    this.$$set({ vizMarkerThreshold });
-    flush();
-  }
-}
-create_custom_element(PanelObserver, { "marker": {}, "observerOptions": {}, "isDebug": {}, "vizMarkerThreshold": {} }, [], [], true);
-function create_fragment$5(ctx) {
-  let mounted;
-  let dispose;
-  add_render_callback(
-    /*onwindowresize*/
-    ctx[3]
+function setMaxGraphicWidth([
+  isSplitScreen,
+  graphicRootDims,
+  screenDims,
+  ratio,
+  maxScrollytellerWidth
+]) {
+  return derived(
+    [isSplitScreen, graphicRootDims, screenDims, ratio, maxScrollytellerWidth],
+    ([$isSplitScreen, $graphicRootDims, $screenDims, $ratio, $maxScrollytellerWidth]) => {
+      if (!$isSplitScreen) {
+        return 1e6;
+      }
+      const [screenWidth] = $screenDims;
+      const [, columnHeight] = $graphicRootDims.dims;
+      const columnWidth = Math.min(screenWidth, $maxScrollytellerWidth) * 0.6;
+      const widthBasedOnHeight = columnHeight * $ratio;
+      return Math.min(widthBasedOnHeight, columnWidth);
+    }
   );
-  return {
-    c: noop,
-    m(target, anchor) {
-      if (!mounted) {
-        dispose = listen(
-          window,
-          "resize",
-          /*onwindowresize*/
-          ctx[3]
-        );
-        mounted = true;
-      }
-    },
-    p: noop,
-    i: noop,
-    o: noop,
-    d(detaching) {
-      mounted = false;
-      dispose();
-    }
-  };
 }
-function instance$6($$self, $$props, $$invalidate) {
-  let $globalAlign;
-  let $screenDims;
-  component_subscribe($$self, globalAlign, ($$value) => $$invalidate(4, $globalAlign = $$value));
-  component_subscribe($$self, screenDims, ($$value) => $$invalidate(5, $screenDims = $$value));
-  let { align = "centre" } = $$props;
-  let innerWidth = 0;
-  let innerHeight2 = 0;
-  function onwindowresize() {
-    $$invalidate(0, innerWidth = window.innerWidth);
-    $$invalidate(1, innerHeight2 = window.innerHeight);
-  }
-  $$self.$$set = ($$props2) => {
-    if ("align" in $$props2) $$invalidate(2, align = $$props2.align);
-  };
-  $$self.$$.update = () => {
-    if ($$self.$$.dirty & /*innerWidth, innerHeight*/
-    3) {
-      set_store_value(screenDims, $screenDims = [innerWidth, innerHeight2], $screenDims);
-    }
-    if ($$self.$$.dirty & /*align*/
-    4) {
-      set_store_value(globalAlign, $globalAlign = align, $globalAlign);
-    }
-  };
-  return [innerWidth, innerHeight2, align, onwindowresize];
+function setCurrentPanel() {
+  return writable(0);
 }
-class ScreenDimsStoreUpdater extends SvelteComponent {
-  constructor(options) {
-    super();
-    init(this, options, instance$6, create_fragment$5, safe_not_equal, { align: 2 });
-  }
-  get align() {
-    return this.$$.ctx[2];
-  }
-  set align(align) {
-    this.$$set({ align });
-    flush();
-  }
-}
-create_custom_element(ScreenDimsStoreUpdater, { "align": {} }, [], [], true);
 const children = (el, children2) => {
   children2.forEach((node) => el.appendChild(node));
   return {
@@ -1364,6 +1413,8 @@ function add_css$3(target) {
 function create_fragment$4(ctx) {
   let div1;
   let div0;
+  let children_action;
+  let div1_class_value;
   let mounted;
   let dispose;
   return {
@@ -1375,57 +1426,146 @@ function create_fragment$4(ctx) {
         div1,
         "data-align",
         /*align*/
-        ctx[1]
+        ctx[0]
       );
-      attr(div1, "class", null_to_empty(`st-panel-root ${/*panelClass*/
-      ctx[3] || ""}`) + " svelte-4w1sst");
+      attr(
+        div1,
+        "data-index",
+        /*i*/
+        ctx[4]
+      );
+      attr(div1, "class", div1_class_value = null_to_empty(`st-panel-root ${/*panelClass*/
+      ctx[2] || ""}`) + " svelte-4w1sst");
       toggle_class(
         div1,
         "st-panel-root--left",
         /*align*/
-        ctx[1] === "left"
+        ctx[0] === "left"
       );
       toggle_class(
         div1,
         "st-panel-root--right",
         /*align*/
-        ctx[1] === "right"
+        ctx[0] === "right"
       );
       toggle_class(
         div1,
         "st-panel-root--centre",
         /*align*/
-        ctx[1] === "centre"
+        ctx[0] === "centre"
       );
       toggle_class(
         div1,
         "st-panel-root--transparent-blocks",
         /*transparentFloat*/
-        ctx[2]
+        ctx[1]
+      );
+      toggle_class(
+        div1,
+        "st-panel-root--active",
+        /*i*/
+        ctx[4] === /*$currentPanel*/
+        ctx[5]
       );
     },
     m(target, anchor) {
       insert(target, div1, anchor);
       append(div1, div0);
-      ctx[6](div1);
+      ctx[10](div1);
       if (!mounted) {
-        dispose = action_destroyer(children.call(
+        dispose = action_destroyer(children_action = children.call(
           null,
           div0,
           /*nodes*/
-          ctx[4]
+          ctx[3]
         ));
         mounted = true;
       }
     },
-    p: noop,
+    p(ctx2, [dirty]) {
+      if (children_action && is_function(children_action.update) && dirty & /*nodes*/
+      8) children_action.update.call(
+        null,
+        /*nodes*/
+        ctx2[3]
+      );
+      if (dirty & /*align*/
+      1) {
+        attr(
+          div1,
+          "data-align",
+          /*align*/
+          ctx2[0]
+        );
+      }
+      if (dirty & /*i*/
+      16) {
+        attr(
+          div1,
+          "data-index",
+          /*i*/
+          ctx2[4]
+        );
+      }
+      if (dirty & /*panelClass*/
+      4 && div1_class_value !== (div1_class_value = null_to_empty(`st-panel-root ${/*panelClass*/
+      ctx2[2] || ""}`) + " svelte-4w1sst")) {
+        attr(div1, "class", div1_class_value);
+      }
+      if (dirty & /*panelClass, align*/
+      5) {
+        toggle_class(
+          div1,
+          "st-panel-root--left",
+          /*align*/
+          ctx2[0] === "left"
+        );
+      }
+      if (dirty & /*panelClass, align*/
+      5) {
+        toggle_class(
+          div1,
+          "st-panel-root--right",
+          /*align*/
+          ctx2[0] === "right"
+        );
+      }
+      if (dirty & /*panelClass, align*/
+      5) {
+        toggle_class(
+          div1,
+          "st-panel-root--centre",
+          /*align*/
+          ctx2[0] === "centre"
+        );
+      }
+      if (dirty & /*panelClass, transparentFloat*/
+      6) {
+        toggle_class(
+          div1,
+          "st-panel-root--transparent-blocks",
+          /*transparentFloat*/
+          ctx2[1]
+        );
+      }
+      if (dirty & /*panelClass, i, $currentPanel*/
+      52) {
+        toggle_class(
+          div1,
+          "st-panel-root--active",
+          /*i*/
+          ctx2[4] === /*$currentPanel*/
+          ctx2[5]
+        );
+      }
+    },
     i: noop,
     o: noop,
     d(detaching) {
       if (detaching) {
         detach(div1);
       }
-      ctx[6](null);
+      ctx[10](null);
       mounted = false;
       dispose();
     }
@@ -1433,39 +1573,120 @@ function create_fragment$4(ctx) {
 }
 function instance$5($$self, $$props, $$invalidate) {
   let $steps;
-  component_subscribe($$self, steps, ($$value) => $$invalidate(7, $steps = $$value));
-  let { props } = $$props;
-  const { align, transparentFloat, panelClass, data, nodes = [] } = props;
+  let $currentPanel;
+  const currentPanel = getContext("currentPanel");
+  component_subscribe($$self, currentPanel, (value) => $$invalidate(5, $currentPanel = value));
+  const steps = getContext("steps");
+  component_subscribe($$self, steps, (value) => $$invalidate(11, $steps = value));
+  let { align } = $$props;
+  let { transparentFloat } = $$props;
+  let { panelClass } = $$props;
+  let { data } = $$props;
+  let { nodes } = $$props;
+  let { i = -1 } = $$props;
   let panelRef;
   onMount(() => {
-    $$invalidate(0, panelRef.scrollyData = data, panelRef);
+    $$invalidate(6, panelRef.scrollyData = data, panelRef);
     set_store_value(steps, $steps = [...$steps, panelRef], $steps);
   });
   function div1_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       panelRef = $$value;
-      $$invalidate(0, panelRef);
+      $$invalidate(6, panelRef);
     });
   }
   $$self.$$set = ($$props2) => {
-    if ("props" in $$props2) $$invalidate(5, props = $$props2.props);
+    if ("align" in $$props2) $$invalidate(0, align = $$props2.align);
+    if ("transparentFloat" in $$props2) $$invalidate(1, transparentFloat = $$props2.transparentFloat);
+    if ("panelClass" in $$props2) $$invalidate(2, panelClass = $$props2.panelClass);
+    if ("data" in $$props2) $$invalidate(9, data = $$props2.data);
+    if ("nodes" in $$props2) $$invalidate(3, nodes = $$props2.nodes);
+    if ("i" in $$props2) $$invalidate(4, i = $$props2.i);
   };
-  return [panelRef, align, transparentFloat, panelClass, nodes, props, div1_binding];
+  $$self.$$.update = () => {
+    if ($$self.$$.dirty & /*i, $currentPanel*/
+    48) {
+      console.log({ i, $currentPanel });
+    }
+  };
+  return [
+    align,
+    transparentFloat,
+    panelClass,
+    nodes,
+    i,
+    $currentPanel,
+    panelRef,
+    currentPanel,
+    steps,
+    data,
+    div1_binding
+  ];
 }
 class Panel extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$5, create_fragment$4, safe_not_equal, { props: 5 }, add_css$3);
+    init(
+      this,
+      options,
+      instance$5,
+      create_fragment$4,
+      safe_not_equal,
+      {
+        align: 0,
+        transparentFloat: 1,
+        panelClass: 2,
+        data: 9,
+        nodes: 3,
+        i: 4
+      },
+      add_css$3
+    );
   }
-  get props() {
-    return this.$$.ctx[5];
+  get align() {
+    return this.$$.ctx[0];
   }
-  set props(props) {
-    this.$$set({ props });
+  set align(align) {
+    this.$$set({ align });
+    flush();
+  }
+  get transparentFloat() {
+    return this.$$.ctx[1];
+  }
+  set transparentFloat(transparentFloat) {
+    this.$$set({ transparentFloat });
+    flush();
+  }
+  get panelClass() {
+    return this.$$.ctx[2];
+  }
+  set panelClass(panelClass) {
+    this.$$set({ panelClass });
+    flush();
+  }
+  get data() {
+    return this.$$.ctx[9];
+  }
+  set data(data) {
+    this.$$set({ data });
+    flush();
+  }
+  get nodes() {
+    return this.$$.ctx[3];
+  }
+  set nodes(nodes) {
+    this.$$set({ nodes });
+    flush();
+  }
+  get i() {
+    return this.$$.ctx[4];
+  }
+  set i(i) {
+    this.$$set({ i });
     flush();
   }
 }
-create_custom_element(Panel, { "props": {} }, [], [], true);
+create_custom_element(Panel, { "align": {}, "transparentFloat": {}, "panelClass": {}, "data": {}, "nodes": {}, "i": {} }, [], [], true);
 function add_css$2(target) {
   append_styles(target, "svelte-1qnkhkx", ".content.svelte-1qnkhkx{margin:-100dvh auto 0;padding-bottom:1px;position:relative;z-index:2;pointer-events:none;font-size:1.125rem}@media(min-width: 62rem){.content--centre.svelte-1qnkhkx{max-width:48.75rem}}@media(min-width: 90rem){.content--centre.svelte-1qnkhkx{max-width:56.25rem}}.content--left.svelte-1qnkhkx,.content--right.svelte-1qnkhkx{max-width:127.5rem;margin-left:0}@media(min-width: 62rem){.content--left.svelte-1qnkhkx,.content--right.svelte-1qnkhkx{max-width:40rem;margin-right:calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);font-size:1.125rem}}@media(min-width: 75rem){.content--left.svelte-1qnkhkx,.content--right.svelte-1qnkhkx{font-size:1.125rem}}@media(min-width: 90rem){.content--left.svelte-1qnkhkx,.content--right.svelte-1qnkhkx{max-width:45rem;font-size:1.25rem}}.content--right.svelte-1qnkhkx{margin-right:0;margin-left:calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1)}");
 }
@@ -1482,27 +1703,32 @@ function get_each_context_1(ctx, list, i) {
 function create_else_block(ctx) {
   let panel_1;
   let current;
-  panel_1 = new Panel({
-    props: {
-      props: {
-        .../*panel*/
-        ctx[8],
-        align: (
-          /*panel*/
-          ctx[8].align || /*layout*/
-          ctx[0].align
-        ),
-        transparentFloat: (
-          /*layout*/
-          ctx[0].transparentFloat
-        ),
-        steps: (
-          /*steps*/
-          ctx[2]
-        )
-      }
-    }
-  });
+  const panel_1_spread_levels = [
+    /*panel*/
+    ctx[8],
+    {
+      align: (
+        /*panel*/
+        ctx[8].align || /*layout*/
+        ctx[0].align
+      )
+    },
+    {
+      transparentFloat: (
+        /*layout*/
+        ctx[0].transparentFloat
+      )
+    },
+    { steps: (
+      /*steps*/
+      ctx[2]
+    ) }
+  ];
+  let panel_1_props = {};
+  for (let i = 0; i < panel_1_spread_levels.length; i += 1) {
+    panel_1_props = assign(panel_1_props, panel_1_spread_levels[i]);
+  }
+  panel_1 = new Panel({ props: panel_1_props });
   return {
     c() {
       create_component(panel_1.$$.fragment);
@@ -1512,25 +1738,34 @@ function create_else_block(ctx) {
       current = true;
     },
     p(ctx2, dirty) {
-      const panel_1_changes = {};
-      if (dirty & /*panelGroups, layout, steps*/
-      13) panel_1_changes.props = {
-        .../*panel*/
-        ctx2[8],
-        align: (
+      const panel_1_changes = dirty & /*panelGroups, layout, steps*/
+      13 ? get_spread_update(panel_1_spread_levels, [
+        dirty & /*panelGroups*/
+        8 && get_spread_object(
           /*panel*/
-          ctx2[8].align || /*layout*/
-          ctx2[0].align
+          ctx2[8]
         ),
-        transparentFloat: (
-          /*layout*/
-          ctx2[0].transparentFloat
-        ),
-        steps: (
+        dirty & /*panelGroups, layout*/
+        9 && {
+          align: (
+            /*panel*/
+            ctx2[8].align || /*layout*/
+            ctx2[0].align
+          )
+        },
+        dirty & /*layout*/
+        1 && {
+          transparentFloat: (
+            /*layout*/
+            ctx2[0].transparentFloat
+          )
+        },
+        dirty & /*steps*/
+        4 && { steps: (
           /*steps*/
           ctx2[2]
-        )
-      };
+        ) }
+      ]) : {};
       panel_1.$set(panel_1_changes);
     },
     i(local) {
@@ -1928,13 +2163,13 @@ function instance$4($$self, $$props, $$invalidate) {
   let { layout } = $$props;
   let { panels } = $$props;
   let { customPanel = null } = $$props;
-  let { steps: steps2 = [] } = $$props;
+  let { steps = [] } = $$props;
   let panelGroups = [];
   $$self.$$set = ($$props2) => {
     if ("layout" in $$props2) $$invalidate(0, layout = $$props2.layout);
     if ("panels" in $$props2) $$invalidate(4, panels = $$props2.panels);
     if ("customPanel" in $$props2) $$invalidate(1, customPanel = $$props2.customPanel);
-    if ("steps" in $$props2) $$invalidate(2, steps2 = $$props2.steps);
+    if ("steps" in $$props2) $$invalidate(2, steps = $$props2.steps);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty & /*panels, layout, panelGroups*/
@@ -1949,17 +2184,13 @@ function instance$4($$self, $$props, $$invalidate) {
           }
           if (i === 0) panelClass += " first";
           if (i === panels.length - 1) panelClass += " last";
-          group.panels.push({ ...panel, panelClass });
+          group.panels.push({ ...panel, panelClass, i });
         });
         panelGroups.push(group);
       }
     }
-    if ($$self.$$.dirty & /*panelGroups, panels, layout*/
-    25) {
-      console.log({ panelGroups, panels, layout });
-    }
   };
-  return [layout, customPanel, steps2, panelGroups, panels];
+  return [layout, customPanel, steps, panelGroups, panels];
 }
 class Panels extends SvelteComponent {
   constructor(options) {
@@ -2003,8 +2234,8 @@ class Panels extends SvelteComponent {
   get steps() {
     return this.$$.ctx[2];
   }
-  set steps(steps2) {
-    this.$$set({ steps: steps2 });
+  set steps(steps) {
+    this.$$set({ steps });
     flush();
   }
 }
@@ -2013,10 +2244,13 @@ function instance$3($$self, $$props, $$invalidate) {
   let $maxGraphicWidth;
   let $vizDims;
   let $graphicRootDims;
-  component_subscribe($$self, maxGraphicWidth, ($$value) => $$invalidate(1, $maxGraphicWidth = $$value));
-  component_subscribe($$self, vizDims, ($$value) => $$invalidate(2, $vizDims = $$value));
-  component_subscribe($$self, graphicRootDims, ($$value) => $$invalidate(3, $graphicRootDims = $$value));
   let { graphicRootEl } = $$props;
+  const vizDims = getContext("vizDims");
+  component_subscribe($$self, vizDims, (value) => $$invalidate(5, $vizDims = value));
+  const graphicRootDims = getContext("graphicRootDims");
+  component_subscribe($$self, graphicRootDims, (value) => $$invalidate(6, $graphicRootDims = value));
+  const maxGraphicWidth = getContext("maxGraphicWidth");
+  component_subscribe($$self, maxGraphicWidth, (value) => $$invalidate(4, $maxGraphicWidth = value));
   onMount(() => {
     let observer;
     observer = new ResizeObserver((entries) => {
@@ -2059,23 +2293,23 @@ function instance$3($$self, $$props, $$invalidate) {
     };
   });
   $$self.$$set = ($$props2) => {
-    if ("graphicRootEl" in $$props2) $$invalidate(0, graphicRootEl = $$props2.graphicRootEl);
+    if ("graphicRootEl" in $$props2) $$invalidate(3, graphicRootEl = $$props2.graphicRootEl);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty & /*$maxGraphicWidth*/
-    2) {
+    16) {
       console.log({ $maxGraphicWidth });
     }
   };
-  return [graphicRootEl, $maxGraphicWidth];
+  return [vizDims, graphicRootDims, maxGraphicWidth, graphicRootEl, $maxGraphicWidth];
 }
 class GraphicObserver extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$3, null, safe_not_equal, { graphicRootEl: 0 });
+    init(this, options, instance$3, null, safe_not_equal, { graphicRootEl: 3 });
   }
   get graphicRootEl() {
-    return this.$$.ctx[0];
+    return this.$$.ctx[3];
   }
   set graphicRootEl(graphicRootEl) {
     this.$$set({ graphicRootEl });
@@ -2385,7 +2619,7 @@ function create_if_block_3(ctx) {
   onprogresshandler.$on(
     "progress",
     /*progress_handler*/
-    ctx[18]
+    ctx[21]
   );
   return {
     c() {
@@ -2457,7 +2691,7 @@ function create_if_block_1(ctx) {
   viz.$on(
     "load",
     /*load_handler*/
-    ctx[20]
+    ctx[23]
   );
   return {
     c() {
@@ -2479,7 +2713,7 @@ function create_if_block_1(ctx) {
       32) viz_changes.discardSlot = /*discardSlot*/
       ctx2[5];
       if (dirty[0] & /*$$scope*/
-      8388608) {
+      67108864) {
         viz_changes.$$scope = { dirty, ctx: ctx2 };
       }
       viz.$set(viz_changes);
@@ -2502,13 +2736,13 @@ function create_default_slot_1(ctx) {
   let current;
   const default_slot_template = (
     /*#slots*/
-    ctx[17].default
+    ctx[20].default
   );
   const default_slot = create_slot(
     default_slot_template,
     ctx,
     /*$$scope*/
-    ctx[23],
+    ctx[26],
     null
   );
   return {
@@ -2524,20 +2758,20 @@ function create_default_slot_1(ctx) {
     p(ctx2, dirty) {
       if (default_slot) {
         if (default_slot.p && (!current || dirty[0] & /*$$scope*/
-        8388608)) {
+        67108864)) {
           update_slot_base(
             default_slot,
             default_slot_template,
             ctx2,
             /*$$scope*/
-            ctx2[23],
+            ctx2[26],
             !current ? get_all_dirty_from_scope(
               /*$$scope*/
-              ctx2[23]
+              ctx2[26]
             ) : get_slot_changes(
               default_slot_template,
               /*$$scope*/
-              ctx2[23],
+              ctx2[26],
               dirty,
               null
             ),
@@ -2584,7 +2818,7 @@ function create_if_block$1(ctx) {
   viz.$on(
     "load",
     /*load_handler_1*/
-    ctx[21]
+    ctx[24]
   );
   return {
     c() {
@@ -2606,7 +2840,7 @@ function create_if_block$1(ctx) {
       32) viz_changes.discardSlot = /*discardSlot*/
       ctx2[5];
       if (dirty[0] & /*$$scope*/
-      8388608) {
+      67108864) {
         viz_changes.$$scope = { dirty, ctx: ctx2 };
       }
       viz.$set(viz_changes);
@@ -2629,13 +2863,13 @@ function create_default_slot(ctx) {
   let current;
   const default_slot_template = (
     /*#slots*/
-    ctx[17].default
+    ctx[20].default
   );
   const default_slot = create_slot(
     default_slot_template,
     ctx,
     /*$$scope*/
-    ctx[23],
+    ctx[26],
     null
   );
   return {
@@ -2651,20 +2885,20 @@ function create_default_slot(ctx) {
     p(ctx2, dirty) {
       if (default_slot) {
         if (default_slot.p && (!current || dirty[0] & /*$$scope*/
-        8388608)) {
+        67108864)) {
           update_slot_base(
             default_slot,
             default_slot_template,
             ctx2,
             /*$$scope*/
-            ctx2[23],
+            ctx2[26],
             !current ? get_all_dirty_from_scope(
               /*$$scope*/
-              ctx2[23]
+              ctx2[26]
             ) : get_slot_changes(
               default_slot_template,
               /*$$scope*/
-              ctx2[23],
+              ctx2[26],
               dirty,
               null
             ),
@@ -2727,7 +2961,7 @@ function create_fragment$1(ctx) {
     ) }
   });
   function panelobserver_marker_binding(value) {
-    ctx[19](value);
+    ctx[22](value);
   }
   let panelobserver_props = {
     observerOptions: (
@@ -2754,7 +2988,7 @@ function create_fragment$1(ctx) {
   binding_callbacks.push(() => bind(panelobserver, "marker", panelobserver_marker_binding));
   let if_block1 = (
     /*isOdyssey*/
-    ctx[14] && create_if_block_2()
+    ctx[17] && create_if_block_2()
   );
   let if_block2 = !/*_layout*/
   ctx[11].resizeInteractive && create_if_block_1(ctx);
@@ -2818,10 +3052,10 @@ function create_fragment$1(ctx) {
       set_style(
         div0,
         "--maxScrollytellerWidthPx",
-        /*$maxScrollytellerWidth*/
+        /*$maxScrollytellerWidthStore*/
         ctx[12] + "px"
       );
-      set_style(div0, "--rightColumnWidth", `min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${/*$maxGraphicWidth*/
+      set_style(div0, "--rightColumnWidth", `min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${/*$maxGraphicWidthStore*/
       ctx[13]}px)`);
       attr(div1, "class", "scrollyteller-wrapper svelte-1unt8ub");
     },
@@ -2844,7 +3078,7 @@ function create_fragment$1(ctx) {
       if (if_block3) if_block3.m(div0, null);
       append(div0, t6);
       mount_component(panels_1, div0, null);
-      ctx[22](div0);
+      ctx[25](div0);
       current = true;
     },
     p(ctx2, dirty) {
@@ -2982,18 +3216,18 @@ function create_fragment$1(ctx) {
           ctx2[11].align
         ));
       }
-      if (dirty[0] & /*$maxScrollytellerWidth*/
+      if (dirty[0] & /*$maxScrollytellerWidthStore*/
       4096) {
         set_style(
           div0,
           "--maxScrollytellerWidthPx",
-          /*$maxScrollytellerWidth*/
+          /*$maxScrollytellerWidthStore*/
           ctx2[12] + "px"
         );
       }
-      if (dirty[0] & /*$maxGraphicWidth*/
+      if (dirty[0] & /*$maxGraphicWidthStore*/
       8192) {
-        set_style(div0, "--rightColumnWidth", `min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${/*$maxGraphicWidth*/
+        set_style(div0, "--rightColumnWidth", `min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${/*$maxGraphicWidthStore*/
         ctx2[13]}px)`);
       }
     },
@@ -3036,7 +3270,7 @@ function create_fragment$1(ctx) {
       if (if_block2) if_block2.d();
       if (if_block3) if_block3.d();
       destroy_component(panels_1);
-      ctx[22](null);
+      ctx[25](null);
     }
   };
 }
@@ -3045,13 +3279,30 @@ function instance$1($$self, $$props, $$invalidate) {
   let maxScrollSpeed;
   let isDebug;
   let $ratioStore;
-  let $maxScrollytellerWidth;
-  let $maxGraphicWidth;
-  component_subscribe($$self, ratio, ($$value) => $$invalidate(28, $ratioStore = $$value));
-  component_subscribe($$self, maxScrollytellerWidth, ($$value) => $$invalidate(12, $maxScrollytellerWidth = $$value));
-  component_subscribe($$self, maxGraphicWidth, ($$value) => $$invalidate(13, $maxGraphicWidth = $$value));
+  let $maxScrollytellerWidthStore;
+  let $maxGraphicWidthStore;
   let { $$slots: slots = {}, $$scope } = $$props;
   const dispatch = createEventDispatcher();
+  setContext("steps", setSteps());
+  setContext("margin", setMargin());
+  setContext("vizDims", setVizDims());
+  const graphicRootDimsStore = setContext("graphicRootDims", setGraphicRootDims());
+  const ratioStore = setContext("ratio", setRatio());
+  component_subscribe($$self, ratioStore, (value) => $$invalidate(31, $ratioStore = value));
+  const screenDimsStore = setContext("screenDims", setScreenDims());
+  const globalAlignStore = setContext("globalAlign", setGlobalAlign());
+  const isSplitScreenStore = setContext("isSplitScreen", setIsSplitScreen([screenDimsStore, globalAlignStore]));
+  const maxScrollytellerWidthStore = setContext("maxScrollytellerWidth", setMaxScrollytellerWidth([isSplitScreenStore]));
+  component_subscribe($$self, maxScrollytellerWidthStore, (value) => $$invalidate(12, $maxScrollytellerWidthStore = value));
+  const maxGraphicWidthStore = setContext("maxGraphicWidth", setMaxGraphicWidth([
+    isSplitScreenStore,
+    graphicRootDimsStore,
+    screenDimsStore,
+    ratioStore,
+    maxScrollytellerWidthStore
+  ]));
+  component_subscribe($$self, maxGraphicWidthStore, (value) => $$invalidate(13, $maxGraphicWidthStore = value));
+  setContext("currentPanel", setCurrentPanel());
   let { customPanel = null } = $$props;
   let { panels } = $$props;
   let { onProgress = false } = $$props;
@@ -3059,7 +3310,7 @@ function instance$1($$self, $$props, $$invalidate) {
   let { observerOptions = void 0 } = $$props;
   let { discardSlot = false } = $$props;
   let { layout = {} } = $$props;
-  let { ratio: ratio$1 = 1 } = $$props;
+  let { ratio = 1 } = $$props;
   let { vizMarkerThreshold = 20 } = $$props;
   const isOdyssey = window.__IS_ODYSSEY_FORMAT__;
   let scrollytellerRef;
@@ -3124,14 +3375,14 @@ function instance$1($$self, $$props, $$invalidate) {
     if ("onMarker" in $$props2) $$invalidate(3, onMarker = $$props2.onMarker);
     if ("observerOptions" in $$props2) $$invalidate(4, observerOptions = $$props2.observerOptions);
     if ("discardSlot" in $$props2) $$invalidate(5, discardSlot = $$props2.discardSlot);
-    if ("layout" in $$props2) $$invalidate(15, layout = $$props2.layout);
-    if ("ratio" in $$props2) $$invalidate(16, ratio$1 = $$props2.ratio);
+    if ("layout" in $$props2) $$invalidate(18, layout = $$props2.layout);
+    if ("ratio" in $$props2) $$invalidate(19, ratio = $$props2.ratio);
     if ("vizMarkerThreshold" in $$props2) $$invalidate(6, vizMarkerThreshold = $$props2.vizMarkerThreshold);
-    if ("$$scope" in $$props2) $$invalidate(23, $$scope = $$props2.$$scope);
+    if ("$$scope" in $$props2) $$invalidate(26, $$scope = $$props2.$$scope);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty[0] & /*layout*/
-    32768) {
+    262144) {
       $$invalidate(11, _layout = {
         align: layout.align || "centre",
         resizeInteractive: layout.resizeInteractive ?? true,
@@ -3139,8 +3390,8 @@ function instance$1($$self, $$props, $$invalidate) {
       });
     }
     if ($$self.$$.dirty[0] & /*ratio*/
-    65536) {
-      set_store_value(ratio, $ratioStore = ratio$1, $ratioStore);
+    524288) {
+      set_store_value(ratioStore, $ratioStore = ratio, $ratioStore);
     }
     if ($$self.$$.dirty[0] & /*vizMarkerThreshold*/
     64) {
@@ -3171,11 +3422,14 @@ function instance$1($$self, $$props, $$invalidate) {
     isInViewport,
     isDebug,
     _layout,
-    $maxScrollytellerWidth,
-    $maxGraphicWidth,
+    $maxScrollytellerWidthStore,
+    $maxGraphicWidthStore,
+    ratioStore,
+    maxScrollytellerWidthStore,
+    maxGraphicWidthStore,
     isOdyssey,
     layout,
-    ratio$1,
+    ratio,
     slots,
     progress_handler,
     panelobserver_marker_binding,
@@ -3201,8 +3455,8 @@ class Scrollyteller extends SvelteComponent {
         onMarker: 3,
         observerOptions: 4,
         discardSlot: 5,
-        layout: 15,
-        ratio: 16,
+        layout: 18,
+        ratio: 19,
         vizMarkerThreshold: 6
       },
       add_css,
@@ -3252,17 +3506,17 @@ class Scrollyteller extends SvelteComponent {
     flush();
   }
   get layout() {
-    return this.$$.ctx[15];
+    return this.$$.ctx[18];
   }
   set layout(layout) {
     this.$$set({ layout });
     flush();
   }
   get ratio() {
-    return this.$$.ctx[16];
+    return this.$$.ctx[19];
   }
-  set ratio(ratio2) {
-    this.$$set({ ratio: ratio2 });
+  set ratio(ratio) {
+    this.$$set({ ratio });
     flush();
   }
   get vizMarkerThreshold() {
