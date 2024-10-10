@@ -1408,7 +1408,7 @@ const children = (el, children2) => {
   };
 };
 function add_css$3(target) {
-  append_styles(target, "svelte-nadsn0", '.st-panel-root.svelte-nadsn0{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding:1rem;--panel-opacity-inactive:var(--color-panel-opacity-inactive, 0.5);box-sizing:border-box;margin:80vh auto;position:relative;z-index:1;pointer-events:none}@media(min-width: 46.5rem){.st-panel-root.svelte-nadsn0{--panel-padding:2rem}}[data-scheme="dark"] .st-panel-root.svelte-nadsn0,.is-dark-mode .st-panel-root.svelte-nadsn0{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb);--panel-border:var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15))}.scrollyteller--debug .st-panel-root.svelte-nadsn0{outline:5px solid limegreen}.st-panel-root.first.svelte-nadsn0{margin-top:100dvh}.st-panel-root.last.svelte-nadsn0{margin-bottom:50vh}@media(min-width: 62rem){.st-panel-root--left.svelte-nadsn0,.st-panel-root--right.svelte-nadsn0{margin-top:30vh;margin-bottom:30vh;opacity:1}.st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active.svelte-nadsn0,.st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active.svelte-nadsn0{opacity:1}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-nadsn0,.st-panel-root--right.st-panel-root--transparent-blocks.svelte-nadsn0{--panel-filter:none;--panel-background:none;--panel-border:none;--panel-padding:0;opacity:var(--panel-opacity-inactive)}.st-panel-root--left.first.svelte-nadsn0,.st-panel-root--right.first.svelte-nadsn0{margin-top:50dvh}}.st-panel.svelte-nadsn0{-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding)}.st-panel.svelte-nadsn0::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-nadsn0::after{content:"";display:table;clear:both}.st-panel.svelte-nadsn0 > *{font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-nadsn0 > *:last-child{margin-bottom:0}.st-panel.svelte-nadsn0>img{max-width:66%;display:block;margin:auto;height:auto}');
+  append_styles(target, "svelte-1sodncm", '.st-panel-root.svelte-1sodncm{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding:1rem;--panel-opacity-inactive:var(--color-panel-opacity-inactive, 1);--panel-column-margin:var(--color-panel-margin, 30vh);box-sizing:border-box;margin:80vh auto;position:relative;z-index:1;pointer-events:none}@media(min-width: 46.5rem){.st-panel-root.svelte-1sodncm{--panel-padding:2rem}}[data-scheme="dark"] .st-panel-root.svelte-1sodncm,.is-dark-mode .st-panel-root.svelte-1sodncm{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb);--panel-border:var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15))}.scrollyteller--debug .st-panel-root.svelte-1sodncm{outline:5px solid limegreen}.st-panel-root.first.svelte-1sodncm{margin-top:100dvh}.st-panel-root.last.svelte-1sodncm{margin-bottom:50vh}@media(min-width: 62rem){.st-panel-root--left.svelte-1sodncm,.st-panel-root--right.svelte-1sodncm{margin-top:var(--panel-column-margin);margin-bottom:var(--panel-column-margin);opacity:1}.st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active.svelte-1sodncm,.st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active.svelte-1sodncm{opacity:1}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-1sodncm,.st-panel-root--right.st-panel-root--transparent-blocks.svelte-1sodncm{--panel-filter:none;--panel-background:none;--panel-border:none;--panel-padding:0;opacity:var(--panel-opacity-inactive)}.st-panel-root--left.first.svelte-1sodncm,.st-panel-root--right.first.svelte-1sodncm{margin-top:50dvh}}.st-panel.svelte-1sodncm{-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding)}.st-panel.svelte-1sodncm::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-1sodncm::after{content:"";display:table;clear:both}.st-panel.svelte-1sodncm > *{font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-1sodncm > *:last-child{margin-bottom:0}.st-panel.svelte-1sodncm>img{max-width:66%;display:block;margin:auto;height:auto}');
 }
 function create_fragment$4(ctx) {
   let div1;
@@ -1421,7 +1421,7 @@ function create_fragment$4(ctx) {
     c() {
       div1 = element("div");
       div0 = element("div");
-      attr(div0, "class", "st-panel svelte-nadsn0");
+      attr(div0, "class", "st-panel svelte-1sodncm");
       attr(
         div1,
         "data-align",
@@ -1435,7 +1435,7 @@ function create_fragment$4(ctx) {
         ctx[4]
       );
       attr(div1, "class", div1_class_value = null_to_empty(`st-panel-root ${/*panelClass*/
-      ctx[2] || ""}`) + " svelte-nadsn0");
+      ctx[2] || ""}`) + " svelte-1sodncm");
       toggle_class(
         div1,
         "st-panel-root--left",
@@ -1509,7 +1509,7 @@ function create_fragment$4(ctx) {
       }
       if (dirty & /*panelClass*/
       4 && div1_class_value !== (div1_class_value = null_to_empty(`st-panel-root ${/*panelClass*/
-      ctx2[2] || ""}`) + " svelte-nadsn0")) {
+      ctx2[2] || ""}`) + " svelte-1sodncm")) {
         attr(div1, "class", div1_class_value);
       }
       if (dirty & /*panelClass, align*/

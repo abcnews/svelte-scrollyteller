@@ -37,8 +37,10 @@ onMount(() => {
   --panel-filter: var(--color-panel-filter, blur(2.5px));
   --panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));
   --panel-padding: 1rem;
-  /* How opaque do we make inactive panels on left/right aligned mode */
-  --panel-opacity-inactive: var(--color-panel-opacity-inactive, 0.5);
+  /* How opaque do we make inactive panels on 2 column mode */
+  --panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);
+  /** How much margin should we have between panels on 2 column mode */
+  --panel-column-margin: var(--color-panel-margin, 30vh);
   box-sizing: border-box;
   margin: 80vh auto;
   position: relative;
@@ -66,8 +68,8 @@ onMount(() => {
 }
 @media (min-width: 62rem) {
   .st-panel-root--left, .st-panel-root--right {
-    margin-top: 30vh;
-    margin-bottom: 30vh;
+    margin-top: var(--panel-column-margin);
+    margin-bottom: var(--panel-column-margin);
     opacity: 1;
   }
   .st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active, .st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active {
