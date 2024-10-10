@@ -1408,7 +1408,7 @@ const children = (el, children2) => {
   };
 };
 function add_css$3(target) {
-  append_styles(target, "svelte-4w1sst", '.st-panel-root.svelte-4w1sst{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding:1rem;box-sizing:border-box;margin:80vh auto;position:relative;z-index:1;pointer-events:none}@media(min-width: 46.5rem){.st-panel-root.svelte-4w1sst{--panel-padding:2rem}}[data-scheme="dark"] .st-panel-root.svelte-4w1sst,.is-dark-mode .st-panel-root.svelte-4w1sst{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb);--panel-border:var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15))}.scrollyteller--debug .st-panel-root.svelte-4w1sst{outline:5px solid limegreen}.st-panel-root.first.svelte-4w1sst{margin-top:100dvh}.st-panel-root.last.svelte-4w1sst{margin-bottom:50vh}@media(min-width: 62rem){.st-panel-root--left.svelte-4w1sst,.st-panel-root--right.svelte-4w1sst{margin-top:30vh;margin-bottom:30vh}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-4w1sst,.st-panel-root--right.st-panel-root--transparent-blocks.svelte-4w1sst{--panel-filter:none;--panel-background:none;--panel-border:none;--panel-padding:0}.st-panel-root--left.first.svelte-4w1sst,.st-panel-root--right.first.svelte-4w1sst{margin-top:50dvh}}.st-panel.svelte-4w1sst{-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding)}.st-panel.svelte-4w1sst::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-4w1sst::after{content:"";display:table;clear:both}.st-panel.svelte-4w1sst > *{font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-4w1sst > *:last-child{margin-bottom:0}.st-panel.svelte-4w1sst>img{max-width:66%;display:block;margin:auto;height:auto}');
+  append_styles(target, "svelte-nadsn0", '.st-panel-root.svelte-nadsn0{--panel-radius:0.75rem;--panel-background:var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color:var(--color-panel-text, #000);--panel-opacity:var(--color-panel-opacity, 1);--panel-filter:var(--color-panel-filter, blur(2.5px));--panel-border:var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding:1rem;--panel-opacity-inactive:var(--color-panel-opacity-inactive, 0.5);box-sizing:border-box;margin:80vh auto;position:relative;z-index:1;pointer-events:none}@media(min-width: 46.5rem){.st-panel-root.svelte-nadsn0{--panel-padding:2rem}}[data-scheme="dark"] .st-panel-root.svelte-nadsn0,.is-dark-mode .st-panel-root.svelte-nadsn0{--panel-background:var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color:var(--color-panel-text, #ebebeb);--panel-border:var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15))}.scrollyteller--debug .st-panel-root.svelte-nadsn0{outline:5px solid limegreen}.st-panel-root.first.svelte-nadsn0{margin-top:100dvh}.st-panel-root.last.svelte-nadsn0{margin-bottom:50vh}@media(min-width: 62rem){.st-panel-root--left.svelte-nadsn0,.st-panel-root--right.svelte-nadsn0{margin-top:30vh;margin-bottom:30vh;opacity:1}.st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active.svelte-nadsn0,.st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active.svelte-nadsn0{opacity:1}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-nadsn0,.st-panel-root--right.st-panel-root--transparent-blocks.svelte-nadsn0{--panel-filter:none;--panel-background:none;--panel-border:none;--panel-padding:0;opacity:var(--panel-opacity-inactive)}.st-panel-root--left.first.svelte-nadsn0,.st-panel-root--right.first.svelte-nadsn0{margin-top:50dvh}}.st-panel.svelte-nadsn0{-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding)}.st-panel.svelte-nadsn0::before{content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%}.st-panel.svelte-nadsn0::after{content:"";display:table;clear:both}.st-panel.svelte-nadsn0 > *{font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;pointer-events:all}.st-panel.svelte-nadsn0 > *:last-child{margin-bottom:0}.st-panel.svelte-nadsn0>img{max-width:66%;display:block;margin:auto;height:auto}');
 }
 function create_fragment$4(ctx) {
   let div1;
@@ -1421,7 +1421,7 @@ function create_fragment$4(ctx) {
     c() {
       div1 = element("div");
       div0 = element("div");
-      attr(div0, "class", "st-panel svelte-4w1sst");
+      attr(div0, "class", "st-panel svelte-nadsn0");
       attr(
         div1,
         "data-align",
@@ -1435,7 +1435,7 @@ function create_fragment$4(ctx) {
         ctx[4]
       );
       attr(div1, "class", div1_class_value = null_to_empty(`st-panel-root ${/*panelClass*/
-      ctx[2] || ""}`) + " svelte-4w1sst");
+      ctx[2] || ""}`) + " svelte-nadsn0");
       toggle_class(
         div1,
         "st-panel-root--left",
@@ -1465,7 +1465,7 @@ function create_fragment$4(ctx) {
         "st-panel-root--active",
         /*i*/
         ctx[4] === /*$currentPanel*/
-        ctx[5]
+        ctx[6]
       );
     },
     m(target, anchor) {
@@ -1509,7 +1509,7 @@ function create_fragment$4(ctx) {
       }
       if (dirty & /*panelClass*/
       4 && div1_class_value !== (div1_class_value = null_to_empty(`st-panel-root ${/*panelClass*/
-      ctx2[2] || ""}`) + " svelte-4w1sst")) {
+      ctx2[2] || ""}`) + " svelte-nadsn0")) {
         attr(div1, "class", div1_class_value);
       }
       if (dirty & /*panelClass, align*/
@@ -1549,13 +1549,13 @@ function create_fragment$4(ctx) {
         );
       }
       if (dirty & /*panelClass, i, $currentPanel*/
-      52) {
+      84) {
         toggle_class(
           div1,
           "st-panel-root--active",
           /*i*/
           ctx2[4] === /*$currentPanel*/
-          ctx2[5]
+          ctx2[6]
         );
       }
     },
@@ -1575,7 +1575,7 @@ function instance$5($$self, $$props, $$invalidate) {
   let $steps;
   let $currentPanel;
   const currentPanel = getContext("currentPanel");
-  component_subscribe($$self, currentPanel, (value) => $$invalidate(5, $currentPanel = value));
+  component_subscribe($$self, currentPanel, (value) => $$invalidate(6, $currentPanel = value));
   const steps = getContext("steps");
   component_subscribe($$self, steps, (value) => $$invalidate(11, $steps = value));
   let { align } = $$props;
@@ -1586,13 +1586,13 @@ function instance$5($$self, $$props, $$invalidate) {
   let { i = -1 } = $$props;
   let panelRef;
   onMount(() => {
-    $$invalidate(6, panelRef.scrollyData = data, panelRef);
+    $$invalidate(5, panelRef.scrollyData = data, panelRef);
     set_store_value(steps, $steps = [...$steps, panelRef], $steps);
   });
   function div1_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       panelRef = $$value;
-      $$invalidate(6, panelRef);
+      $$invalidate(5, panelRef);
     });
   }
   $$self.$$set = ($$props2) => {
@@ -1603,20 +1603,14 @@ function instance$5($$self, $$props, $$invalidate) {
     if ("nodes" in $$props2) $$invalidate(3, nodes = $$props2.nodes);
     if ("i" in $$props2) $$invalidate(4, i = $$props2.i);
   };
-  $$self.$$.update = () => {
-    if ($$self.$$.dirty & /*i, $currentPanel*/
-    48) {
-      console.log({ i, $currentPanel });
-    }
-  };
   return [
     align,
     transparentFloat,
     panelClass,
     nodes,
     i,
-    $currentPanel,
     panelRef,
+    $currentPanel,
     currentPanel,
     steps,
     data,

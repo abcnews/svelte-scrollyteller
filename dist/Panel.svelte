@@ -8,7 +8,6 @@ export let panelClass;
 export let data;
 export let nodes;
 export let i = -1;
-$: console.log({ i, $currentPanel });
 let panelRef;
 onMount(() => {
     panelRef.scrollyData = data;
@@ -38,6 +37,8 @@ onMount(() => {
   --panel-filter: var(--color-panel-filter, blur(2.5px));
   --panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));
   --panel-padding: 1rem;
+  /* How opaque do we make inactive panels on left/right aligned mode */
+  --panel-opacity-inactive: var(--color-panel-opacity-inactive, 0.5);
   box-sizing: border-box;
   margin: 80vh auto;
   position: relative;
@@ -67,12 +68,17 @@ onMount(() => {
   .st-panel-root--left, .st-panel-root--right {
     margin-top: 30vh;
     margin-bottom: 30vh;
+    opacity: 1;
+  }
+  .st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active, .st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active {
+    opacity: 1;
   }
   .st-panel-root--left.st-panel-root--transparent-blocks, .st-panel-root--right.st-panel-root--transparent-blocks {
     --panel-filter: none;
     --panel-background: none;
     --panel-border: none;
     --panel-padding: 0;
+    opacity: var(--panel-opacity-inactive);
   }
   .st-panel-root--left.first, .st-panel-root--right.first {
     margin-top: 50dvh;
