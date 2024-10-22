@@ -8,6 +8,7 @@
 	let align = 'centre';
 	let transparentFloat = undefined;
 	let resizeInteractive = undefined;
+	let vizMarkerThreshold = 20;
 	let ratio = 1;
 
 	$: layout = { align, transparentFloat, resizeInteractive };
@@ -63,6 +64,11 @@
 			<option value={1}>1x1</option>
 		</select>
 	</label>
+
+	<label>
+		Viz marker threshold:
+		<input type="number" bind:value={vizMarkerThreshold} min="0" max="49" />%
+	</label>
 </div>
 
 <div
@@ -74,8 +80,13 @@
 	<TestArticleData name="test1" />
 
 	<!-- Once the test data is loaded, load the scrollyteller -->
-	{#key JSON.stringify(layout)}
-		{#if status === 'ready'}<ScrollyAppTest name="test1" {layout} {ratio} />{/if}
+	{#key JSON.stringify([layout, vizMarkerThreshold])}
+		{#if status === 'ready'}<ScrollyAppTest
+				name="test1"
+				{layout}
+				{ratio}
+				{vizMarkerThreshold}
+			/>{/if}
 	{/key}
 
 	<div class="description">
@@ -136,6 +147,7 @@
 		position: fixed;
 		top: 0.5rem;
 		left: 0.5rem;
+		max-width: calc(100% - 10em);
 		display: inline-flex;
 		gap: 1rem;
 		background: white;

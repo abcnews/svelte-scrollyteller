@@ -22,6 +22,9 @@ declare const __propDef: {
              */ discardSlot?: boolean;
         layout?: Style;
         ratio?: number;
+        /**
+             * Percent past the bottom of the viz the graphic has to be before it triggers. Default 20 (20%)
+             */ vizMarkerThreshold?: number;
     };
     events: {
         progress: CustomEvent<any>;

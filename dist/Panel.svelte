@@ -1,8 +1,13 @@
-<script>import { onMount } from 'svelte';
+<script>import { getContext, onMount } from 'svelte';
 import { children } from './actions.js';
-import { steps } from './stores.js';
-export let props;
-const { align, transparentFloat, panelClass, data, nodes = [] } = props;
+const currentPanel = getContext('currentPanel');
+const steps = getContext('steps');
+export let align;
+export let transparentFloat;
+export let panelClass;
+export let data;
+export let nodes;
+export let i = -1;
 let panelRef;
 onMount(() => {
     panelRef.scrollyData = data;
@@ -12,11 +17,13 @@ onMount(() => {
 
 <div
 	data-align={align}
+	data-index={i}
 	class={`st-panel-root ${panelClass || ''}`}
 	class:st-panel-root--left={align === 'left'}
 	class:st-panel-root--right={align === 'right'}
 	class:st-panel-root--centre={align === 'centre'}
 	class:st-panel-root--transparent-blocks={transparentFloat}
+	class:st-panel-root--active={i === $currentPanel}
 	bind:this={panelRef}
 >
 	<div class="st-panel" use:children={nodes}></div>
@@ -30,6 +37,10 @@ onMount(() => {
   --panel-filter: var(--color-panel-filter, blur(2.5px));
   --panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));
   --panel-padding: 1rem;
+  /* How opaque do we make inactive panels on 2 column mode */
+  --panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);
+  /** How much margin should we have between panels on 2 column mode */
+  --panel-column-margin: var(--color-panel-margin, 40vh);
   box-sizing: border-box;
   margin: 80vh auto;
   position: relative;
@@ -53,18 +64,23 @@ onMount(() => {
   margin-top: 100dvh;
 }
 .st-panel-root.last {
-  margin-bottom: 100vh;
+  margin-bottom: 50vh;
 }
 @media (min-width: 62rem) {
   .st-panel-root--left, .st-panel-root--right {
-    margin-top: 40vh;
-    margin-bottom: 40vh;
+    margin-top: var(--panel-column-margin);
+    margin-bottom: var(--panel-column-margin);
+    opacity: 1;
+  }
+  .st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active, .st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active {
+    opacity: 1;
   }
   .st-panel-root--left.st-panel-root--transparent-blocks, .st-panel-root--right.st-panel-root--transparent-blocks {
     --panel-filter: none;
     --panel-background: none;
     --panel-border: none;
     --panel-padding: 0;
+    opacity: var(--panel-opacity-inactive);
   }
   .st-panel-root--left.first, .st-panel-root--right.first {
     margin-top: 50dvh;

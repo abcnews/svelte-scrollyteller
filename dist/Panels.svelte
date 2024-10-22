@@ -20,11 +20,10 @@ $: {
             panelClass += ' first';
         if (i === panels.length - 1)
             panelClass += ' last';
-        group.panels.push({ ...panel, panelClass });
+        group.panels.push({ ...panel, panelClass, i });
     });
     panelGroups.push(group);
 }
-$: console.log({ panelGroups, panels, layout });
 </script>
 
 {#each panelGroups as group}
@@ -39,12 +38,10 @@ $: console.log({ panelGroups, panels, layout });
 				<svelte:component this={customPanel} {...panel} {steps} />
 			{:else}
 				<Panel
-					props={{
-						...panel,
-						align: panel.align || layout.align,
-						transparentFloat: layout.transparentFloat,
-						steps
-					}}
+					{...panel}
+					align={panel.align || layout.align}
+					transparentFloat={layout.transparentFloat}
+					{steps}
 				/>
 			{/if}
 		{/each}
@@ -53,6 +50,7 @@ $: console.log({ panelGroups, panels, layout });
 
 <style>.content {
   margin: -100dvh auto 0;
+  padding-bottom: 1px;
   position: relative;
   z-index: 2;
   pointer-events: none;

@@ -24,12 +24,10 @@
 
 			if (i === 0) panelClass += ' first';
 			if (i === panels.length - 1) panelClass += ' last';
-			group.panels.push({ ...panel, panelClass });
+			group.panels.push({ ...panel, panelClass, i });
 		});
 		panelGroups.push(group);
 	}
-
-	$: console.log({ panelGroups, panels, layout });
 </script>
 
 {#each panelGroups as group}
@@ -44,12 +42,10 @@
 				<svelte:component this={customPanel} {...panel} {steps} />
 			{:else}
 				<Panel
-					props={{
-						...panel,
-						align: panel.align || layout.align,
-						transparentFloat: layout.transparentFloat,
-						steps
-					}}
+					{...panel}
+					align={panel.align || layout.align}
+					transparentFloat={layout.transparentFloat}
+					{steps}
 				/>
 			{/if}
 		{/each}
@@ -60,6 +56,8 @@
 	@import './breakpoints.scss';
 	.content {
 		margin: -100dvh auto 0;
+		// add bottom padding otherwise the `.last` panel margins collapse to 0
+		padding-bottom: 1px;
 		position: relative;
 		z-index: 2;
 		// This style doesn't apply to child blocks, just the container

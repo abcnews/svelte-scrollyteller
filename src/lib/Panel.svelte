@@ -1,12 +1,17 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { children } from './actions.js';
 	import type { PanelDefinition, PanelRef } from './types.js';
-	import { steps } from './stores.js';
 
-	export let props: PanelDefinition;
+	const currentPanel = getContext('currentPanel');
+	const steps = getContext('steps');
 
-	const { align, transparentFloat, panelClass, data, nodes = [] } = props;
+	export let align: string;
+	export let transparentFloat: boolean;
+	export let panelClass: string;
+	export let data: any;
+	export let nodes: Element[];
+	export let i = -1;
 
 	let panelRef: PanelRef;
 
@@ -18,11 +23,13 @@
 
 <div
 	data-align={align}
+	data-index={i}
 	class={`st-panel-root ${panelClass || ''}`}
 	class:st-panel-root--left={align === 'left'}
 	class:st-panel-root--right={align === 'right'}
 	class:st-panel-root--centre={align === 'centre'}
 	class:st-panel-root--transparent-blocks={transparentFloat}
+	class:st-panel-root--active={i === $currentPanel}
 	bind:this={panelRef}
 >
 	<div class="st-panel" use:children={nodes}></div>
@@ -39,6 +46,11 @@
 		--panel-filter: var(--color-panel-filter, blur(2.5px));
 		--panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));
 		--panel-padding: 1rem;
+		/* How opaque do we make inactive panels on 2 column mode */
+		--panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);
+
+		/** How much margin should we have between panels on 2 column mode */
+		--panel-column-margin: var(--color-panel-margin, 40vh);
 
 		box-sizing: border-box;
 		margin: 80vh auto;
@@ -65,20 +77,25 @@
 		}
 
 		&.last {
-			margin-bottom: 100vh;
+			margin-bottom: 50vh;
 		}
 
 		&--left,
 		&--right {
 			@media (min-width: $breakpointLargeTablet) {
-				margin-top: 40vh;
-				margin-bottom: 40vh;
+				margin-top: var(--panel-column-margin);
+				margin-bottom: var(--panel-column-margin);
+				opacity: 1;
 
+				&.st-panel-root--transparent-blocks.st-panel-root--active {
+					opacity: 1;
+				}
 				&.st-panel-root--transparent-blocks {
 					--panel-filter: none;
 					--panel-background: none;
 					--panel-border: none;
 					--panel-padding: 0;
+					opacity: var(--panel-opacity-inactive);
 				}
 				&.first {
 					margin-top: 50dvh;

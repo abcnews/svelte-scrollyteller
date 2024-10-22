@@ -1,8 +1,12 @@
 import { SvelteComponent } from "svelte";
-import type { PanelDefinition } from './types.js';
 declare const __propDef: {
     props: {
-        props: PanelDefinition;
+        align: string;
+        transparentFloat: boolean;
+        panelClass: string;
+        data: any;
+        nodes: Element[];
+        i?: number;
     };
     events: {
         [evt: string]: CustomEvent<any>;

@@ -1,4 +1,4 @@
-<script>import { onMount } from 'svelte';
+<script>import { onMount, setContext } from 'svelte';
 import { ScrollPositions } from './types.js';
 import { createEventDispatcher } from 'svelte';
 import { getScrollingPos, getScrollSpeed } from './Scrollyteller/Scrollyteller.util';
@@ -6,10 +6,27 @@ import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
 import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
-import { maxGraphicWidth, maxScrollytellerWidth, ratio as ratioStore } from './stores';
+import { setSteps, setMargin, setVizDims, setGraphicRootDims, setRatio, setScreenDims, setGlobalAlign, setIsSplitScreen, setMaxScrollytellerWidth, setMaxGraphicWidth, setCurrentPanel } from './stores';
 import Panels from './Panels.svelte';
 import Viz from './Viz.svelte';
 const dispatch = createEventDispatcher();
+const stepsStore = setContext('steps', setSteps());
+const marginStore = setContext('margin', setMargin());
+const vizDimsStore = setContext('vizDims', setVizDims());
+const graphicRootDimsStore = setContext('graphicRootDims', setGraphicRootDims());
+const ratioStore = setContext('ratio', setRatio());
+const screenDimsStore = setContext('screenDims', setScreenDims());
+const globalAlignStore = setContext('globalAlign', setGlobalAlign());
+const isSplitScreenStore = setContext('isSplitScreen', setIsSplitScreen([screenDimsStore, globalAlignStore]));
+const maxScrollytellerWidthStore = setContext('maxScrollytellerWidth', setMaxScrollytellerWidth([isSplitScreenStore]));
+const maxGraphicWidthStore = setContext('maxGraphicWidth', setMaxGraphicWidth([
+    isSplitScreenStore,
+    graphicRootDimsStore,
+    screenDimsStore,
+    ratioStore,
+    maxScrollytellerWidthStore
+]));
+const currentPanelStore = setContext('currentPanel', setCurrentPanel());
 export let customPanel = null;
 export let panels;
 /** Whether to enable the on:progress event. This is a somewhat heavy operation, so we don't enable it by default. */
@@ -37,8 +54,13 @@ $: _layout = {
     transparentFloat: layout.transparentFloat ?? ['left', 'right'].includes(layout.align)
 };
 export let ratio = 1;
-$: {
-    $ratioStore = ratio;
+$: $ratioStore = ratio;
+/**
+ * Percent past the bottom of the viz the graphic has to be before it triggers. Default 20 (20%)
+ */
+export let vizMarkerThreshold = 20;
+$: if (vizMarkerThreshold >= 50) {
+    throw new Error('vizMarkerThreshold must be <50% screen height');
 }
 /**
  * When the user is scrolling at a speed greater than this, don't mount
@@ -96,7 +118,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 
 <DeprecationNotice {onProgress} {onMarker} />
 <ScreenDimsStoreUpdater align={_layout.align} />
-<PanelObserver bind:marker {observerOptions} {isDebug} />
+<PanelObserver bind:marker {observerOptions} {isDebug} {vizMarkerThreshold} />
 
 <svelte:head>
 	{#if isOdyssey}
@@ -119,8 +141,8 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 		class:scrollyteller--resized={_layout.resizeInteractive}
 		class:scrollyteller--debug={isDebug}
 		class:scrollyteller--columns={['left', 'right'].includes(_layout.align)}
-		style:--maxScrollytellerWidthPx={$maxScrollytellerWidth + 'px'}
-		style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidth}px)`}
+		style:--maxScrollytellerWidthPx={$maxScrollytellerWidthStore + 'px'}
+		style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidthStore}px)`}
 		bind:this={scrollytellerRef}
 	>
 		{#if _layout.resizeInteractive}

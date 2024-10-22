@@ -4,6 +4,7 @@ declare const __propDef: {
         marker: any;
         observerOptions: any;
         isDebug: any;
+        vizMarkerThreshold?: number;
     };
     events: {
         [evt: string]: CustomEvent<any>;

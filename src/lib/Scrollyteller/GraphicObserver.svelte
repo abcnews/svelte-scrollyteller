@@ -5,10 +5,12 @@
 	 *
 	 * This component is responsible for keeping the graphicDims store updated.
 	 */
-	import { onMount } from 'svelte';
-	import { vizDims, graphicRootDims, maxGraphicWidth } from '../stores';
+	import { getContext, onMount } from 'svelte';
 	import { retryUntil } from './Scrollyteller.util';
 	export let graphicRootEl;
+	const vizDims = getContext('vizDims');
+	const graphicRootDims = getContext('graphicRootDims');
+	const maxGraphicWidth = getContext('maxGraphicWidth');
 
 	onMount(() => {
 		let observer;
