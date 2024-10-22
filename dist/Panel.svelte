@@ -57,8 +57,8 @@ onMount(() => {
 }
 @media (min-width: 62rem) {
   .st-panel-root--left, .st-panel-root--right {
-    margin-top: 30vh;
-    margin-bottom: 30vh;
+    margin-top: 40vh;
+    margin-bottom: 40vh;
   }
   .st-panel-root--left.st-panel-root--transparent-blocks, .st-panel-root--right.st-panel-root--transparent-blocks {
     --panel-filter: none;
@@ -96,21 +96,26 @@ onMount(() => {
   clear: both;
 }
 .st-panel :global(> *) {
-  font-family: ABCSans, sans-serif;
-  font-size: inherit;
-  line-height: 1.666666667;
+  pointer-events: all;
   color: var(--panel-color);
   margin-top: 0;
   margin-left: auto !important;
   margin-right: auto !important;
-  pointer-events: all;
 }
 .st-panel :global(> *):last-child {
   margin-bottom: 0;
+}
+.st-panel :global(> :is(div, p)) {
+  font-family: ABCSans, sans-serif;
+  font-size: inherit;
+  line-height: 1.666666667;
 }
 .st-panel > :global(img) {
   max-width: 66%;
   display: block;
   margin: auto;
   height: auto;
+}
+.st-panel :global(> :is(h1, h2, h3, h4)) {
+  font-family: var(--od-font-stack-serif);
 }</style>

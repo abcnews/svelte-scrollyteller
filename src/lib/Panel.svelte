@@ -71,8 +71,8 @@
 		&--left,
 		&--right {
 			@media (min-width: $breakpointLargeTablet) {
-				margin-top: 30vh;
-				margin-bottom: 30vh;
+				margin-top: 40vh;
+				margin-bottom: 40vh;
 
 				&.st-panel-root--transparent-blocks {
 					--panel-filter: none;
@@ -117,22 +117,23 @@
 			display: table;
 			clear: both;
 		}
-
 		:global(> *) {
-			font-family: ABCSans, sans-serif;
-			font-size: inherit;
-			line-height: 1.666666667;
+			pointer-events: all;
 			color: var(--panel-color);
 
 			margin-top: 0;
 			margin-left: auto !important;
 			margin-right: auto !important;
 
-			pointer-events: all;
-
 			&:last-child {
 				margin-bottom: 0;
 			}
+		}
+
+		:global(> :is(div, p)) {
+			font-family: ABCSans, sans-serif;
+			font-size: inherit;
+			line-height: 1.666666667;
 		}
 
 		& > :global(img) {
@@ -140,6 +141,10 @@
 			display: block;
 			margin: auto;
 			height: auto;
+		}
+
+		:global(> :is(h1, h2, h3, h4)) {
+			font-family: var(--od-font-stack-serif);
 		}
 	}
 </style>
