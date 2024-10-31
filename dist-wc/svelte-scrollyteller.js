@@ -2235,16 +2235,14 @@ class Panels extends SvelteComponent {
 }
 create_custom_element(Panels, { "layout": {}, "panels": {}, "customPanel": {}, "steps": {} }, [], [], true);
 function instance$3($$self, $$props, $$invalidate) {
-  let $maxGraphicWidth;
   let $vizDims;
   let $graphicRootDims;
   let { graphicRootEl } = $$props;
   const vizDims = getContext("vizDims");
-  component_subscribe($$self, vizDims, (value) => $$invalidate(5, $vizDims = value));
+  component_subscribe($$self, vizDims, (value) => $$invalidate(3, $vizDims = value));
   const graphicRootDims = getContext("graphicRootDims");
-  component_subscribe($$self, graphicRootDims, (value) => $$invalidate(6, $graphicRootDims = value));
-  const maxGraphicWidth = getContext("maxGraphicWidth");
-  component_subscribe($$self, maxGraphicWidth, (value) => $$invalidate(4, $maxGraphicWidth = value));
+  component_subscribe($$self, graphicRootDims, (value) => $$invalidate(4, $graphicRootDims = value));
+  getContext("maxGraphicWidth");
   onMount(() => {
     let observer;
     observer = new ResizeObserver((entries) => {
@@ -2287,23 +2285,17 @@ function instance$3($$self, $$props, $$invalidate) {
     };
   });
   $$self.$$set = ($$props2) => {
-    if ("graphicRootEl" in $$props2) $$invalidate(3, graphicRootEl = $$props2.graphicRootEl);
+    if ("graphicRootEl" in $$props2) $$invalidate(2, graphicRootEl = $$props2.graphicRootEl);
   };
-  $$self.$$.update = () => {
-    if ($$self.$$.dirty & /*$maxGraphicWidth*/
-    16) {
-      console.log({ $maxGraphicWidth });
-    }
-  };
-  return [vizDims, graphicRootDims, maxGraphicWidth, graphicRootEl, $maxGraphicWidth];
+  return [vizDims, graphicRootDims, graphicRootEl];
 }
 class GraphicObserver extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$3, null, safe_not_equal, { graphicRootEl: 3 });
+    init(this, options, instance$3, null, safe_not_equal, { graphicRootEl: 2 });
   }
   get graphicRootEl() {
-    return this.$$.ctx[3];
+    return this.$$.ctx[2];
   }
   set graphicRootEl(graphicRootEl) {
     this.$$set({ graphicRootEl });
