@@ -48,6 +48,4 @@
 			observer?.disconnect();
 		};
 	});
-
-	$: console.log({ $maxGraphicWidth });
 </script>
