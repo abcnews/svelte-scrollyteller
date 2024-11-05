@@ -65,14 +65,17 @@
 	}
 
 	// Set up observer for panel position ======================================
+
 	let panelObserver;
 	/**
 	 * Track intersecting panels. We can change the viz back to the last panel
 	 * which we otherwise can't do if there are 2 panels overlapping at once.
 	 */
 	let intersectingPanels = [];
+
 	$: {
 		if ($vizDims.status === 'ready') {
+			intersectingPanels = [];
 			panelObserver?.disconnect();
 			panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
 				entries.forEach((entry) => {
