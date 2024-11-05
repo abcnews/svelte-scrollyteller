@@ -1019,15 +1019,15 @@ function instance$7($$self, $$props, $$invalidate) {
   let $screenDims;
   let $isSplitScreen;
   const vizDims = getContext("vizDims");
-  component_subscribe($$self, vizDims, (value) => $$invalidate(14, $vizDims = value));
+  component_subscribe($$self, vizDims, (value) => $$invalidate(15, $vizDims = value));
   const isSplitScreen = getContext("isSplitScreen");
-  component_subscribe($$self, isSplitScreen, (value) => $$invalidate(16, $isSplitScreen = value));
+  component_subscribe($$self, isSplitScreen, (value) => $$invalidate(17, $isSplitScreen = value));
   const screenDims = getContext("screenDims");
-  component_subscribe($$self, screenDims, (value) => $$invalidate(15, $screenDims = value));
+  component_subscribe($$self, screenDims, (value) => $$invalidate(16, $screenDims = value));
   const steps = getContext("steps");
-  component_subscribe($$self, steps, (value) => $$invalidate(13, $steps = value));
+  component_subscribe($$self, steps, (value) => $$invalidate(14, $steps = value));
   const currentPanel = getContext("currentPanel");
-  component_subscribe($$self, currentPanel, (value) => $$invalidate(17, $currentPanel = value));
+  component_subscribe($$self, currentPanel, (value) => $$invalidate(18, $currentPanel = value));
   let { marker } = $$props;
   let { observerOptions } = $$props;
   let { isDebug } = $$props;
@@ -1045,10 +1045,10 @@ function instance$7($$self, $$props, $$invalidate) {
   $$self.$$.update = () => {
     if ($$self.$$.dirty & /*vizMarkerThreshold*/
     512) {
-      $$invalidate(12, vizMarkerThresholdMarginDecimal = (100 - vizMarkerThreshold * 2) / 100);
+      $$invalidate(13, vizMarkerThresholdMarginDecimal = (100 - vizMarkerThreshold * 2) / 100);
     }
     if ($$self.$$.dirty & /*$isSplitScreen, $screenDims, $vizDims, vizMarkerThresholdMarginDecimal*/
-    118784) {
+    237568) {
       $$invalidate(2, rootMargin = $isSplitScreen ? (
         // For split screens, trigger the intersection observer when the block is
         // over {vizMarkerThreshold}% of the interactive.
@@ -1070,10 +1070,11 @@ function instance$7($$self, $$props, $$invalidate) {
         }
       }
     }
-    if ($$self.$$.dirty & /*$vizDims, panelObserver, $steps, _observerOptions*/
-    27648) {
+    if ($$self.$$.dirty & /*$vizDims, panelObserver, intersectingPanels, $steps, _observerOptions*/
+    56320) {
       {
         if ($vizDims.status === "ready") {
+          $$invalidate(12, intersectingPanels = []);
           panelObserver == null ? void 0 : panelObserver.disconnect();
           $$invalidate(11, panelObserver = new IntersectionObserver(
             (entries) => {
@@ -1116,6 +1117,7 @@ function instance$7($$self, $$props, $$invalidate) {
     vizMarkerThreshold,
     _observerOptions,
     panelObserver,
+    intersectingPanels,
     vizMarkerThresholdMarginDecimal,
     $steps,
     $vizDims,

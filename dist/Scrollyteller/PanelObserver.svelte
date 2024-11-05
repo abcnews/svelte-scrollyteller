@@ -46,6 +46,7 @@ let panelObserver;
 let intersectingPanels = [];
 $: {
     if ($vizDims.status === 'ready') {
+        intersectingPanels = [];
         panelObserver?.disconnect();
         panelObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
