@@ -56,13 +56,11 @@
 	let _observerOptions: IntersectionObserverInit = observerOptions;
 	$: {
 		if (observerOptions) {
-			console.log('observer options found');
 			_observerOptions = observerOptions;
 		} else {
 			_observerOptions = {
 				rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
 			};
-			console.log('setting', { _observerOptions });
 		}
 	}
 
@@ -75,7 +73,7 @@
 	 */
 	let intersectingPanels = [];
 
-	function doPanelObserver(steps) {
+	function doPanelObserver(steps, _observerOptions) {
 		intersectingPanels = [];
 		panelObserver?.disconnect();
 		panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
@@ -107,7 +105,7 @@
 
 	$: {
 		if ($vizDims.status === 'ready') {
-			doPanelObserver($steps);
+			doPanelObserver($steps, _observerOptions);
 		} else {
 			panelObserver?.disconnect();
 		}
