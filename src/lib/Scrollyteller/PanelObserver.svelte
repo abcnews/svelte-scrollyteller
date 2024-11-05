@@ -56,49 +56,58 @@
 	let _observerOptions: IntersectionObserverInit = observerOptions;
 	$: {
 		if (observerOptions) {
+			console.log('observer options found');
 			_observerOptions = observerOptions;
 		} else {
 			_observerOptions = {
 				rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
 			};
+			console.log('setting', { _observerOptions });
 		}
 	}
 
 	// Set up observer for panel position ======================================
+
 	let panelObserver;
 	/**
 	 * Track intersecting panels. We can change the viz back to the last panel
 	 * which we otherwise can't do if there are 2 panels overlapping at once.
 	 */
 	let intersectingPanels = [];
+
+	function doPanelObserver(steps) {
+		intersectingPanels = [];
+		panelObserver?.disconnect();
+		panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					intersectingPanels.push(entry);
+				} else {
+					const itemToRemove = intersectingPanels.findIndex(
+						(panel) => panel.target === entry.target
+					);
+					if (itemToRemove === -1) return;
+					intersectingPanels.splice(itemToRemove, 1);
+				}
+
+				// The current panel is the most recently intersected panel.
+				// If the most recent panel scrolls out, this falls back to
+				// any earlier panels that are still intersecting.
+				const newPanel = intersectingPanels[intersectingPanels.length - 1];
+				if (newPanel) {
+					marker = newPanel.target.scrollyData;
+					$currentPanel = steps.findIndex((step) => step === newPanel.target);
+				}
+			});
+		}, _observerOptions);
+		steps.forEach((step) => {
+			panelObserver.observe(step);
+		});
+	}
+
 	$: {
 		if ($vizDims.status === 'ready') {
-			panelObserver?.disconnect();
-			panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						intersectingPanels.push(entry);
-					} else {
-						const itemToRemove = intersectingPanels.findIndex(
-							(panel) => panel.target === entry.target
-						);
-						if (itemToRemove === -1) return;
-						intersectingPanels.splice(itemToRemove, 1);
-					}
-
-					// The current panel is the most recently intersected panel.
-					// If the most recent panel scrolls out, this falls back to
-					// any earlier panels that are still intersecting.
-					const newPanel = intersectingPanels[intersectingPanels.length - 1];
-					if (newPanel) {
-						marker = newPanel.target.scrollyData;
-						$currentPanel = $steps.findIndex((step) => step === newPanel.target);
-					}
-				});
-			}, _observerOptions);
-			$steps.forEach((step) => {
-				panelObserver.observe(step);
-			});
+			doPanelObserver($steps);
 		} else {
 			panelObserver?.disconnect();
 		}
