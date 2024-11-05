@@ -73,39 +73,35 @@
 	 */
 	let intersectingPanels = [];
 
-	function doPanelObserver(steps, _observerOptions) {
-		intersectingPanels = [];
-		panelObserver?.disconnect();
-		panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					intersectingPanels.push(entry);
-				} else {
-					const itemToRemove = intersectingPanels.findIndex(
-						(panel) => panel.target === entry.target
-					);
-					if (itemToRemove === -1) return;
-					intersectingPanels.splice(itemToRemove, 1);
-				}
-
-				// The current panel is the most recently intersected panel.
-				// If the most recent panel scrolls out, this falls back to
-				// any earlier panels that are still intersecting.
-				const newPanel = intersectingPanels[intersectingPanels.length - 1];
-				if (newPanel) {
-					marker = newPanel.target.scrollyData;
-					$currentPanel = steps.findIndex((step) => step === newPanel.target);
-				}
-			});
-		}, _observerOptions);
-		steps.forEach((step) => {
-			panelObserver.observe(step);
-		});
-	}
-
 	$: {
 		if ($vizDims.status === 'ready') {
-			doPanelObserver($steps, _observerOptions);
+			intersectingPanels = [];
+			panelObserver?.disconnect();
+			panelObserver = new IntersectionObserver((entries: IntersectionEntries[]) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						intersectingPanels.push(entry);
+					} else {
+						const itemToRemove = intersectingPanels.findIndex(
+							(panel) => panel.target === entry.target
+						);
+						if (itemToRemove === -1) return;
+						intersectingPanels.splice(itemToRemove, 1);
+					}
+
+					// The current panel is the most recently intersected panel.
+					// If the most recent panel scrolls out, this falls back to
+					// any earlier panels that are still intersecting.
+					const newPanel = intersectingPanels[intersectingPanels.length - 1];
+					if (newPanel) {
+						marker = newPanel.target.scrollyData;
+						$currentPanel = $steps.findIndex((step) => step === newPanel.target);
+					}
+				});
+			}, _observerOptions);
+			$steps.forEach((step) => {
+				panelObserver.observe(step);
+			});
 		} else {
 			panelObserver?.disconnect();
 		}
