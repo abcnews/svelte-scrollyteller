@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ComponentType } from 'svelte';
 	import Panel from './Panel.svelte';
-	import type { PanelDefinition, PanelRef, Style } from './types';
+	import type { PanelDefinition, PanelRef, Style } from './types.js';
 
 	export let layout: Style;
 	export let panels: PanelDefinition[];

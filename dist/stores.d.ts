@@ -1,4 +1,4 @@
-import { type PanelRef } from './types';
+import { type PanelRef } from './types.js';
 /** Each panel inserts itself into this list when it instantiates */
 export declare function setSteps(): import("svelte/store").Writable<PanelRef[]>;
 export declare function setMargin(): import("svelte/store").Writable<number>;

@@ -1,4 +1,4 @@
-import type { ScrollytellerDefinition } from './types';
+import type { ScrollytellerDefinition } from './types.js';
 declare global {
     interface Window {
         __scrollytellers: {

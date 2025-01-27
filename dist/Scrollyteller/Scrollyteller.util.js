@@ -1,4 +1,4 @@
-import { ScrollPositions } from '../types';
+import { ScrollPositions } from '../types.js';
 export const getScrollingPos = (scrollytellerRef) => {
     const boundingRect = scrollytellerRef.getBoundingClientRect();
     if (boundingRect.bottom - window.innerHeight < 0) {

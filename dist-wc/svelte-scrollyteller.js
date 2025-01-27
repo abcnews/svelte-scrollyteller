@@ -2591,7 +2591,7 @@ class Viz extends SvelteComponent {
 }
 create_custom_element(Viz, { "layout": {}, "discardSlot": { "type": "Boolean" }, "isInViewport": { "type": "Boolean" } }, ["default"], [], true);
 function add_css(target) {
-  append_styles(target, "svelte-1unt8ub", '.scrollyteller-wrapper.svelte-1unt8ub{position:relative}.scrollyteller.svelte-1unt8ub{position:relative;--maxScrollytellerWidth:min(var(--maxScrollytellerWidthPx), 100vw);--marginOuter:1rem;margin:0 auto;max-width:calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);--vizMaxWidth:1;--vizMarginOuter:1.5rem}@media(min-width: 46.5rem){.scrollyteller.svelte-1unt8ub{--marginOuter:2rem;--vizMarginOuter:3rem}}@media(min-width: 62rem){.scrollyteller.svelte-1unt8ub{--marginOuter:2rem;--vizMarginOuter:3rem;--vizMaxWidth:0.55}.scrollyteller--columns.svelte-1unt8ub{width:fit-content}}@media(min-width: 75rem){.scrollyteller.svelte-1unt8ub{--marginOuter:3rem;--vizMarginOuter:4rem;--vizMaxWidth:0.6}}@media(min-width: 90rem){.scrollyteller.svelte-1unt8ub{--marginOuter:4rem;--vizMarginOuter:6rem}}.scrollyteller--debug.svelte-1unt8ub:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110}@media(min-width: 46.5rem){.scrollyteller--debug.svelte-1unt8ub:after{content:"Tablet"}}@media(min-width: 62rem){.scrollyteller--debug.svelte-1unt8ub:after{content:"LargeTablet"}}@media(min-width: 75rem){.scrollyteller--debug.svelte-1unt8ub:after{content:"Desktop"}}@media(min-width: 90rem){.scrollyteller--debug.svelte-1unt8ub:after{content:"LargeDesktop"}}');
+  append_styles(target, "svelte-3koitg", '.scrollyteller-wrapper.svelte-3koitg{position:relative}.scrollyteller.svelte-3koitg{position:relative;--maxScrollytellerWidth:min(var(--maxScrollytellerWidthPx), 100vw);--marginOuter:1rem;margin:0 auto;max-width:calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);--vizMaxWidth:1;--vizMarginOuter:1.5rem}@media(min-width: 46.5rem){.scrollyteller.svelte-3koitg{--marginOuter:2rem;--vizMarginOuter:3rem}}@media(min-width: 62rem){.scrollyteller.svelte-3koitg{--marginOuter:2rem;--vizMarginOuter:3rem;--vizMaxWidth:0.55}.scrollyteller--columns.svelte-3koitg{width:fit-content}}@media(min-width: 75rem){.scrollyteller.svelte-3koitg{--marginOuter:3rem;--vizMarginOuter:4rem;--vizMaxWidth:0.7}}@media(min-width: 90rem){.scrollyteller.svelte-3koitg{--marginOuter:4rem;--vizMarginOuter:6rem}}.scrollyteller--debug.svelte-3koitg:after{content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110}@media(min-width: 46.5rem){.scrollyteller--debug.svelte-3koitg:after{content:"Tablet"}}@media(min-width: 62rem){.scrollyteller--debug.svelte-3koitg:after{content:"LargeTablet"}}@media(min-width: 75rem){.scrollyteller--debug.svelte-3koitg:after{content:"Desktop"}}@media(min-width: 90rem){.scrollyteller--debug.svelte-3koitg:after{content:"LargeDesktop"}}');
 }
 function create_if_block_3(ctx) {
   let onprogresshandler;
@@ -3020,7 +3020,7 @@ function create_fragment$1(ctx) {
       if (if_block3) if_block3.c();
       t6 = space();
       create_component(panels_1.$$.fragment);
-      attr(div0, "class", "scrollyteller svelte-1unt8ub");
+      attr(div0, "class", "scrollyteller svelte-3koitg");
       toggle_class(
         div0,
         "scrollyteller--resized",
@@ -3045,7 +3045,7 @@ function create_fragment$1(ctx) {
       );
       set_style(div0, "--rightColumnWidth", `min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${/*$maxGraphicWidthStore*/
       ctx[13]}px)`);
-      attr(div1, "class", "scrollyteller-wrapper svelte-1unt8ub");
+      attr(div1, "class", "scrollyteller-wrapper svelte-3koitg");
     },
     m(target, anchor) {
       if (if_block0) if_block0.m(target, anchor);

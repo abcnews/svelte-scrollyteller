@@ -185,7 +185,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
   .scrollyteller {
     --marginOuter: 3rem;
     --vizMarginOuter: 4rem;
-    --vizMaxWidth: 0.6;
+    --vizMaxWidth: 0.7;
   }
 }
 @media (min-width: 90rem) {

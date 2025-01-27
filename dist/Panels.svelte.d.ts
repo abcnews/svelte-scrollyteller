@@ -1,6 +1,6 @@
 import { SvelteComponent } from "svelte";
 import type { ComponentType } from 'svelte';
-import type { PanelDefinition, PanelRef, Style } from './types';
+import type { PanelDefinition, PanelRef, Style } from './types.js';
 declare const __propDef: {
     props: {
         layout: Style;
