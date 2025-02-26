@@ -18,6 +18,11 @@ function enable_legacy_mode_flag() {
   legacy_mode_flag = true;
 }
 enable_legacy_mode_flag();
+const EACH_ITEM_REACTIVE = 1;
+const EACH_INDEX_REACTIVE = 1 << 1;
+const EACH_IS_CONTROLLED = 1 << 2;
+const EACH_IS_ANIMATED = 1 << 3;
+const EACH_ITEM_IMMUTABLE = 1 << 4;
 const PROPS_IS_IMMUTABLE = 1;
 const PROPS_IS_RUNES = 1 << 1;
 const PROPS_IS_UPDATED = 1 << 2;
@@ -52,6 +57,7 @@ const HEAD_EFFECT = 1 << 19;
 const EFFECT_HAS_DERIVED = 1 << 20;
 const STATE_SYMBOL = Symbol("$state");
 const LEGACY_PROPS = Symbol("legacy props");
+const LOADING_ATTR_SYMBOL = Symbol("");
 var is_array = Array.isArray;
 var index_of = Array.prototype.indexOf;
 var array_from = Array.from;
@@ -197,6 +203,13 @@ function push_derived_source(source2) {
     }
   }
   return source2;
+}
+function mutate(source2, value) {
+  set(
+    source2,
+    untrack(() => get$1(source2))
+  );
+  return value;
 }
 function set(source2, value) {
   if (active_reaction !== null && !untracking && is_runes() && (active_reaction.f & (DERIVED | BLOCK_EFFECT)) !== 0 && // If the source was created locally within the current derived, then
@@ -892,13 +905,13 @@ function update_reaction(reaction) {
 function remove_reaction(signal, dependency) {
   let reactions = dependency.reactions;
   if (reactions !== null) {
-    var index = index_of.call(reactions, signal);
-    if (index !== -1) {
+    var index2 = index_of.call(reactions, signal);
+    if (index2 !== -1) {
       var new_length = reactions.length - 1;
       if (new_length === 0) {
         reactions = dependency.reactions = null;
       } else {
-        reactions[index] = reactions[new_length];
+        reactions[index2] = reactions[new_length];
         reactions.pop();
       }
     }
@@ -1513,6 +1526,14 @@ let component_context = null;
 function set_component_context(context) {
   component_context = context;
 }
+function getContext(key) {
+  const context_map = get_or_init_context_map();
+  const result = (
+    /** @type {T} */
+    context_map.get(key)
+  );
+  return result;
+}
 function setContext(key, context) {
   const context_map = get_or_init_context_map();
   context_map.set(key, context);
@@ -1537,11 +1558,11 @@ function push(props, runes = false, fn) {
     };
   }
 }
-function pop(component) {
+function pop(component2) {
   const context_stack_item = component_context;
   if (context_stack_item !== null) {
-    if (component !== void 0) {
-      context_stack_item.x = component;
+    if (component2 !== void 0) {
+      context_stack_item.x = component2;
     }
     const component_effects = context_stack_item.e;
     if (component_effects !== null) {
@@ -1563,7 +1584,7 @@ function pop(component) {
     component_context = context_stack_item.p;
     context_stack_item.m = true;
   }
-  return component || /** @type {T} */
+  return component2 || /** @type {T} */
   {};
 }
 function is_runes() {
@@ -1590,28 +1611,82 @@ const PASSIVE_EVENTS = ["touchstart", "touchmove"];
 function is_passive_event(name) {
   return PASSIVE_EVENTS.includes(name);
 }
+function listen(target, events, handler, call_handler_immediately = true) {
+  if (call_handler_immediately) {
+    handler();
+  }
+  for (var name of events) {
+    target.addEventListener(name, handler);
+  }
+  teardown(() => {
+    for (var name2 of events) {
+      target.removeEventListener(name2, handler);
+    }
+  });
+}
+function without_reactive_context(fn) {
+  var previous_reaction = active_reaction;
+  var previous_effect = active_effect;
+  set_active_reaction(null);
+  set_active_effect(null);
+  try {
+    return fn();
+  } finally {
+    set_active_reaction(previous_reaction);
+    set_active_effect(previous_effect);
+  }
+}
 const all_registered_events = /* @__PURE__ */ new Set();
 const root_event_handles = /* @__PURE__ */ new Set();
-function handle_event_propagation(event) {
+function create_event(event_name, dom, handler, options = {}) {
+  function target_handler(event2) {
+    if (!options.capture) {
+      handle_event_propagation.call(dom, event2);
+    }
+    if (!event2.cancelBubble) {
+      return without_reactive_context(() => {
+        return handler == null ? void 0 : handler.call(this, event2);
+      });
+    }
+  }
+  if (event_name.startsWith("pointer") || event_name.startsWith("touch") || event_name === "wheel") {
+    queue_micro_task(() => {
+      dom.addEventListener(event_name, target_handler, options);
+    });
+  } else {
+    dom.addEventListener(event_name, target_handler, options);
+  }
+  return target_handler;
+}
+function event(event_name, dom, handler, capture, passive) {
+  var options = { capture, passive };
+  var target_handler = create_event(event_name, dom, handler, options);
+  if (dom === document.body || dom === window || dom === document) {
+    teardown(() => {
+      dom.removeEventListener(event_name, target_handler, options);
+    });
+  }
+}
+function handle_event_propagation(event2) {
   var _a;
   var handler_element = this;
   var owner_document = (
     /** @type {Node} */
     handler_element.ownerDocument
   );
-  var event_name = event.type;
-  var path = ((_a = event.composedPath) == null ? void 0 : _a.call(event)) || [];
+  var event_name = event2.type;
+  var path = ((_a = event2.composedPath) == null ? void 0 : _a.call(event2)) || [];
   var current_target = (
     /** @type {null | Element} */
-    path[0] || event.target
+    path[0] || event2.target
   );
   var path_idx = 0;
-  var handled_at = event.__root;
+  var handled_at = event2.__root;
   if (handled_at) {
     var at_idx = path.indexOf(handled_at);
     if (at_idx !== -1 && (handler_element === document || handler_element === /** @type {any} */
     window)) {
-      event.__root = handler_element;
+      event2.__root = handler_element;
       return;
     }
     var handler_idx = path.indexOf(handler_element);
@@ -1623,9 +1698,9 @@ function handle_event_propagation(event) {
     }
   }
   current_target = /** @type {Element} */
-  path[path_idx] || event.target;
+  path[path_idx] || event2.target;
   if (current_target === handler_element) return;
-  define_property(event, "currentTarget", {
+  define_property(event2, "currentTarget", {
     configurable: true,
     get() {
       return current_target || owner_document;
@@ -1646,12 +1721,12 @@ function handle_event_propagation(event) {
         if (delegated !== void 0 && (!/** @type {any} */
         current_target.disabled || // DOM could've been updated already by the time this is reached, so we check this as well
         // -> the target could not have been disabled because it emits the event in the first place
-        event.target === current_target)) {
+        event2.target === current_target)) {
           if (is_array(delegated)) {
             var [fn, ...data] = delegated;
-            fn.apply(current_target, [event, ...data]);
+            fn.apply(current_target, [event2, ...data]);
           } else {
-            delegated.call(current_target, event);
+            delegated.call(current_target, event2);
           }
         }
       } catch (error) {
@@ -1661,7 +1736,7 @@ function handle_event_propagation(event) {
           throw_error = error;
         }
       }
-      if (event.cancelBubble || parent_element === handler_element || parent_element === null) {
+      if (event2.cancelBubble || parent_element === handler_element || parent_element === null) {
         break;
       }
       current_target = parent_element;
@@ -1675,8 +1750,8 @@ function handle_event_propagation(event) {
       throw throw_error;
     }
   } finally {
-    event.__root = handler_element;
-    delete event.currentTarget;
+    event2.__root = handler_element;
+    delete event2.currentTarget;
     set_active_reaction(previous_reaction);
     set_active_effect(previous_effect);
   }
@@ -1802,10 +1877,10 @@ function append(anchor, dom) {
     dom
   );
 }
-function mount(component, options) {
-  return _mount(component, options);
+function mount(component2, options) {
+  return _mount(component2, options);
 }
-function hydrate(component, options) {
+function hydrate(component2, options) {
   init_operations();
   options.intro = options.intro ?? false;
   const target = options.target;
@@ -1830,7 +1905,7 @@ function hydrate(component, options) {
       anchor
     );
     hydrate_next();
-    const instance = _mount(component, { ...options, anchor });
+    const instance = _mount(component2, { ...options, anchor });
     if (hydrate_node === null || hydrate_node.nodeType !== 8 || /** @type {Comment} */
     hydrate_node.data !== HYDRATION_END) {
       hydration_mismatch();
@@ -1849,7 +1924,7 @@ function hydrate(component, options) {
       init_operations();
       clear_text_content(target);
       set_hydrating(false);
-      return mount(component, options);
+      return mount(component2, options);
     }
     throw error;
   } finally {
@@ -1880,7 +1955,7 @@ function _mount(Component, { target, anchor, props = {}, events, context, intro 
   };
   event_handle(array_from(all_registered_events));
   root_event_handles.add(event_handle);
-  var component = void 0;
+  var component2 = void 0;
   var unmount2 = component_root(() => {
     var anchor_node = anchor ?? target.appendChild(create_text());
     branch(() => {
@@ -1902,7 +1977,7 @@ function _mount(Component, { target, anchor, props = {}, events, context, intro 
           null
         );
       }
-      component = Component(anchor_node, props) || {};
+      component2 = Component(anchor_node, props) || {};
       if (hydrating) {
         active_effect.nodes_end = hydrate_node;
       }
@@ -1931,14 +2006,14 @@ function _mount(Component, { target, anchor, props = {}, events, context, intro 
       }
     };
   });
-  mounted_components.set(component, unmount2);
-  return component;
+  mounted_components.set(component2, unmount2);
+  return component2;
 }
 let mounted_components = /* @__PURE__ */ new WeakMap();
-function unmount(component, options) {
-  const fn = mounted_components.get(component);
+function unmount(component2, options) {
+  const fn = mounted_components.get(component2);
   if (fn) {
-    mounted_components.delete(component);
+    mounted_components.delete(component2);
     return fn(options);
   }
   return Promise.resolve();
@@ -2010,6 +2085,372 @@ function if_block(node, fn, elseif = false) {
     anchor = hydrate_node;
   }
 }
+function index(_, i) {
+  return i;
+}
+function pause_effects(state, items, controlled_anchor, items_map) {
+  var transitions = [];
+  var length = items.length;
+  for (var i = 0; i < length; i++) {
+    pause_children(items[i].e, transitions, true);
+  }
+  var is_controlled = length > 0 && transitions.length === 0 && controlled_anchor !== null;
+  if (is_controlled) {
+    var parent_node = (
+      /** @type {Element} */
+      /** @type {Element} */
+      controlled_anchor.parentNode
+    );
+    clear_text_content(parent_node);
+    parent_node.append(
+      /** @type {Element} */
+      controlled_anchor
+    );
+    items_map.clear();
+    link(state, items[0].prev, items[length - 1].next);
+  }
+  run_out_transitions(transitions, () => {
+    for (var i2 = 0; i2 < length; i2++) {
+      var item = items[i2];
+      if (!is_controlled) {
+        items_map.delete(item.k);
+        link(state, item.prev, item.next);
+      }
+      destroy_effect(item.e, !is_controlled);
+    }
+  });
+}
+function each(node, flags, get_collection, get_key, render_fn, fallback_fn = null) {
+  var anchor = node;
+  var state = { flags, items: /* @__PURE__ */ new Map(), first: null };
+  var is_controlled = (flags & EACH_IS_CONTROLLED) !== 0;
+  if (is_controlled) {
+    var parent_node = (
+      /** @type {Element} */
+      node
+    );
+    anchor = hydrating ? set_hydrate_node(
+      /** @type {Comment | Text} */
+      /* @__PURE__ */ get_first_child(parent_node)
+    ) : parent_node.appendChild(create_text());
+  }
+  if (hydrating) {
+    hydrate_next();
+  }
+  var fallback = null;
+  var was_empty = false;
+  var each_array = /* @__PURE__ */ derived_safe_equal(() => {
+    var collection = get_collection();
+    return is_array(collection) ? collection : collection == null ? [] : array_from(collection);
+  });
+  block(() => {
+    var array = get$1(each_array);
+    var length = array.length;
+    if (was_empty && length === 0) {
+      return;
+    }
+    was_empty = length === 0;
+    let mismatch = false;
+    if (hydrating) {
+      var is_else = (
+        /** @type {Comment} */
+        anchor.data === HYDRATION_START_ELSE
+      );
+      if (is_else !== (length === 0)) {
+        anchor = remove_nodes();
+        set_hydrate_node(anchor);
+        set_hydrating(false);
+        mismatch = true;
+      }
+    }
+    if (hydrating) {
+      var prev = null;
+      var item;
+      for (var i = 0; i < length; i++) {
+        if (hydrate_node.nodeType === 8 && /** @type {Comment} */
+        hydrate_node.data === HYDRATION_END) {
+          anchor = /** @type {Comment} */
+          hydrate_node;
+          mismatch = true;
+          set_hydrating(false);
+          break;
+        }
+        var value = array[i];
+        var key = get_key(value, i);
+        item = create_item(
+          hydrate_node,
+          state,
+          prev,
+          null,
+          value,
+          key,
+          i,
+          render_fn,
+          flags,
+          get_collection
+        );
+        state.items.set(key, item);
+        prev = item;
+      }
+      if (length > 0) {
+        set_hydrate_node(remove_nodes());
+      }
+    }
+    if (!hydrating) {
+      reconcile(array, state, anchor, render_fn, flags, get_key, get_collection);
+    }
+    if (fallback_fn !== null) {
+      if (length === 0) {
+        if (fallback) {
+          resume_effect(fallback);
+        } else {
+          fallback = branch(() => fallback_fn(anchor));
+        }
+      } else if (fallback !== null) {
+        pause_effect(fallback, () => {
+          fallback = null;
+        });
+      }
+    }
+    if (mismatch) {
+      set_hydrating(true);
+    }
+    get$1(each_array);
+  });
+  if (hydrating) {
+    anchor = hydrate_node;
+  }
+}
+function reconcile(array, state, anchor, render_fn, flags, get_key, get_collection) {
+  var _a, _b, _c, _d;
+  var is_animated = (flags & EACH_IS_ANIMATED) !== 0;
+  var should_update = (flags & (EACH_ITEM_REACTIVE | EACH_INDEX_REACTIVE)) !== 0;
+  var length = array.length;
+  var items = state.items;
+  var first = state.first;
+  var current = first;
+  var seen;
+  var prev = null;
+  var to_animate;
+  var matched = [];
+  var stashed = [];
+  var value;
+  var key;
+  var item;
+  var i;
+  if (is_animated) {
+    for (i = 0; i < length; i += 1) {
+      value = array[i];
+      key = get_key(value, i);
+      item = items.get(key);
+      if (item !== void 0) {
+        (_a = item.a) == null ? void 0 : _a.measure();
+        (to_animate ?? (to_animate = /* @__PURE__ */ new Set())).add(item);
+      }
+    }
+  }
+  for (i = 0; i < length; i += 1) {
+    value = array[i];
+    key = get_key(value, i);
+    item = items.get(key);
+    if (item === void 0) {
+      var child_anchor = current ? (
+        /** @type {TemplateNode} */
+        current.e.nodes_start
+      ) : anchor;
+      prev = create_item(
+        child_anchor,
+        state,
+        prev,
+        prev === null ? state.first : prev.next,
+        value,
+        key,
+        i,
+        render_fn,
+        flags,
+        get_collection
+      );
+      items.set(key, prev);
+      matched = [];
+      stashed = [];
+      current = prev.next;
+      continue;
+    }
+    if (should_update) {
+      update_item(item, value, i, flags);
+    }
+    if ((item.e.f & INERT) !== 0) {
+      resume_effect(item.e);
+      if (is_animated) {
+        (_b = item.a) == null ? void 0 : _b.unfix();
+        (to_animate ?? (to_animate = /* @__PURE__ */ new Set())).delete(item);
+      }
+    }
+    if (item !== current) {
+      if (seen !== void 0 && seen.has(item)) {
+        if (matched.length < stashed.length) {
+          var start = stashed[0];
+          var j;
+          prev = start.prev;
+          var a = matched[0];
+          var b = matched[matched.length - 1];
+          for (j = 0; j < matched.length; j += 1) {
+            move(matched[j], start, anchor);
+          }
+          for (j = 0; j < stashed.length; j += 1) {
+            seen.delete(stashed[j]);
+          }
+          link(state, a.prev, b.next);
+          link(state, prev, a);
+          link(state, b, start);
+          current = start;
+          prev = b;
+          i -= 1;
+          matched = [];
+          stashed = [];
+        } else {
+          seen.delete(item);
+          move(item, current, anchor);
+          link(state, item.prev, item.next);
+          link(state, item, prev === null ? state.first : prev.next);
+          link(state, prev, item);
+          prev = item;
+        }
+        continue;
+      }
+      matched = [];
+      stashed = [];
+      while (current !== null && current.k !== key) {
+        if ((current.e.f & INERT) === 0) {
+          (seen ?? (seen = /* @__PURE__ */ new Set())).add(current);
+        }
+        stashed.push(current);
+        current = current.next;
+      }
+      if (current === null) {
+        continue;
+      }
+      item = current;
+    }
+    matched.push(item);
+    prev = item;
+    current = item.next;
+  }
+  if (current !== null || seen !== void 0) {
+    var to_destroy = seen === void 0 ? [] : array_from(seen);
+    while (current !== null) {
+      if ((current.e.f & INERT) === 0) {
+        to_destroy.push(current);
+      }
+      current = current.next;
+    }
+    var destroy_length = to_destroy.length;
+    if (destroy_length > 0) {
+      var controlled_anchor = (flags & EACH_IS_CONTROLLED) !== 0 && length === 0 ? anchor : null;
+      if (is_animated) {
+        for (i = 0; i < destroy_length; i += 1) {
+          (_c = to_destroy[i].a) == null ? void 0 : _c.measure();
+        }
+        for (i = 0; i < destroy_length; i += 1) {
+          (_d = to_destroy[i].a) == null ? void 0 : _d.fix();
+        }
+      }
+      pause_effects(state, to_destroy, controlled_anchor, items);
+    }
+  }
+  if (is_animated) {
+    queue_micro_task(() => {
+      var _a2;
+      if (to_animate === void 0) return;
+      for (item of to_animate) {
+        (_a2 = item.a) == null ? void 0 : _a2.apply();
+      }
+    });
+  }
+  active_effect.first = state.first && state.first.e;
+  active_effect.last = prev && prev.e;
+}
+function update_item(item, value, index2, type) {
+  if ((type & EACH_ITEM_REACTIVE) !== 0) {
+    internal_set(item.v, value);
+  }
+  if ((type & EACH_INDEX_REACTIVE) !== 0) {
+    internal_set(
+      /** @type {Value<number>} */
+      item.i,
+      index2
+    );
+  } else {
+    item.i = index2;
+  }
+}
+function create_item(anchor, state, prev, next, value, key, index2, render_fn, flags, get_collection) {
+  var reactive = (flags & EACH_ITEM_REACTIVE) !== 0;
+  var mutable = (flags & EACH_ITEM_IMMUTABLE) === 0;
+  var v = reactive ? mutable ? /* @__PURE__ */ mutable_source(value) : source(value) : value;
+  var i = (flags & EACH_INDEX_REACTIVE) === 0 ? index2 : source(index2);
+  var item = {
+    i,
+    v,
+    k: key,
+    a: null,
+    // @ts-expect-error
+    e: null,
+    prev,
+    next
+  };
+  try {
+    item.e = branch(() => render_fn(anchor, v, i, get_collection), hydrating);
+    item.e.prev = prev && prev.e;
+    item.e.next = next && next.e;
+    if (prev === null) {
+      state.first = item;
+    } else {
+      prev.next = item;
+      prev.e.next = item.e;
+    }
+    if (next !== null) {
+      next.prev = item;
+      next.e.prev = item.e;
+    }
+    return item;
+  } finally {
+  }
+}
+function move(item, next, anchor) {
+  var end = item.next ? (
+    /** @type {TemplateNode} */
+    item.next.e.nodes_start
+  ) : anchor;
+  var dest = next ? (
+    /** @type {TemplateNode} */
+    next.e.nodes_start
+  ) : anchor;
+  var node = (
+    /** @type {TemplateNode} */
+    item.e.nodes_start
+  );
+  while (node !== end) {
+    var next_node = (
+      /** @type {TemplateNode} */
+      /* @__PURE__ */ get_next_sibling(node)
+    );
+    dest.before(node);
+    node = next_node;
+  }
+}
+function link(state, prev, next) {
+  if (prev === null) {
+    state.first = next;
+  } else {
+    prev.next = next;
+    prev.e.next = next && next.e;
+  }
+  if (next !== null) {
+    next.prev = prev;
+    next.e.prev = prev && prev.e;
+  }
+}
 function slot(anchor, $$props, name, slot_props, fallback_fn) {
   var _a;
   if (hydrating) {
@@ -2024,6 +2465,27 @@ function slot(anchor, $$props, name, slot_props, fallback_fn) {
   if (slot_fn === void 0) ;
   else {
     slot_fn(anchor, is_interop ? () => slot_props : slot_props);
+  }
+}
+function component(node, get_component, render_fn) {
+  if (hydrating) {
+    hydrate_next();
+  }
+  var anchor = node;
+  var component2;
+  var effect2;
+  block(() => {
+    if (component2 === (component2 = get_component())) return;
+    if (effect2) {
+      pause_effect(effect2);
+      effect2 = null;
+    }
+    if (component2) {
+      effect2 = branch(() => render_fn(anchor, component2));
+    }
+  }, EFFECT_TRANSPARENT);
+  if (hydrating) {
+    anchor = hydrate_node;
   }
 }
 function append_styles(anchor, css) {
@@ -2048,9 +2510,39 @@ function append_styles(anchor, css) {
     }
   });
 }
+function action(dom, action2, get_value) {
+  effect(() => {
+    var payload = untrack(() => action2(dom, get_value == null ? void 0 : get_value()) || {});
+    if (get_value && (payload == null ? void 0 : payload.update)) {
+      var inited = false;
+      var prev = (
+        /** @type {any} */
+        {}
+      );
+      render_effect(() => {
+        var value = get_value();
+        deep_read_state(value);
+        if (inited && safe_not_equal(prev, value)) {
+          prev = value;
+          payload.update(value);
+        }
+      });
+      inited = true;
+    }
+    if (payload == null ? void 0 : payload.destroy) {
+      return () => (
+        /** @type {Function} */
+        payload.destroy()
+      );
+    }
+  });
+}
 const whitespace = [..." 	\n\r\f \v\uFEFF"];
 function to_class(value, hash, directives) {
-  var classname = "" + value;
+  var classname = value == null ? "" : "" + value;
+  if (hash) {
+    classname = classname ? classname + " " + hash : hash;
+  }
   if (directives) {
     for (var key in directives) {
       if (directives[key]) {
@@ -2094,6 +2586,48 @@ function set_class(dom, is_html, value, hash, prev_classes, next_classes) {
   }
   return next_classes;
 }
+function set_attribute(element, attribute, value, skip_warning) {
+  var attributes = element.__attributes ?? (element.__attributes = {});
+  if (hydrating) {
+    attributes[attribute] = element.getAttribute(attribute);
+    if (attribute === "src" || attribute === "srcset" || attribute === "href" && element.nodeName === "LINK") {
+      return;
+    }
+  }
+  if (attributes[attribute] === (attributes[attribute] = value)) return;
+  if (attribute === "style" && "__styles" in element) {
+    element.__styles = {};
+  }
+  if (attribute === "loading") {
+    element[LOADING_ATTR_SYMBOL] = value;
+  }
+  if (value == null) {
+    element.removeAttribute(attribute);
+  } else if (typeof value !== "string" && get_setters(element).includes(attribute)) {
+    element[attribute] = value;
+  } else {
+    element.setAttribute(attribute, value);
+  }
+}
+var setters_cache = /* @__PURE__ */ new Map();
+function get_setters(element) {
+  var setters = setters_cache.get(element.nodeName);
+  if (setters) return setters;
+  setters_cache.set(element.nodeName, setters = []);
+  var descriptors;
+  var proto = element;
+  var element_proto = Element.prototype;
+  while (element_proto !== proto) {
+    descriptors = get_descriptors(proto);
+    for (var key in descriptors) {
+      if (descriptors[key].set) {
+        setters.push(key);
+      }
+    }
+    proto = get_prototype_of(proto);
+  }
+  return setters;
+}
 function set_style(dom, key, value, important) {
   var styles = dom.__styles ?? (dom.__styles = {});
   if (styles[key] === value) {
@@ -2134,6 +2668,9 @@ function bind_this(element_or_component = {}, update2, get_value, get_parts) {
     };
   });
   return element_or_component;
+}
+function bind_window_size(type, set2) {
+  listen(window, ["resize"], () => without_reactive_context(() => set2(window[type])));
 }
 function init(immutable = false) {
   const context = (
@@ -2192,15 +2729,15 @@ function observe_all(context, props) {
   }
   props();
 }
-function bubble_event($$props, event) {
+function bubble_event($$props, event2) {
   var _a;
   var events = (
     /** @type {Record<string, Function[] | Function>} */
-    (_a = $$props.$$events) == null ? void 0 : _a[event.type]
+    (_a = $$props.$$events) == null ? void 0 : _a[event2.type]
   );
   var callbacks = is_array(events) ? events.slice() : events == null ? [] : [events];
   for (var fn of callbacks) {
-    fn.call(this, event);
+    fn.call(this, event2);
   }
 }
 function onMount(fn) {
@@ -2238,16 +2775,16 @@ function createEventDispatcher() {
     );
     if (events) {
       const callbacks = is_array(events) ? events.slice() : [events];
-      const event = create_custom_event(
+      const event2 = create_custom_event(
         /** @type {string} */
         type,
         detail,
         options
       );
       for (const fn of callbacks) {
-        fn.call(active_component_context.x, event);
+        fn.call(active_component_context.x, event2);
       }
-      return !event.defaultPrevented;
+      return !event2.defaultPrevented;
     }
     return true;
   };
@@ -2747,12 +3284,12 @@ class Svelte4Component {
    * @param {(...args: any[]) => any} callback
    * @returns {any}
    */
-  $on(event, callback) {
-    __privateGet(this, _events)[event] = __privateGet(this, _events)[event] || [];
+  $on(event2, callback) {
+    __privateGet(this, _events)[event2] = __privateGet(this, _events)[event2] || [];
     const cb = (...args) => callback.call(this, ...args);
-    __privateGet(this, _events)[event].push(cb);
+    __privateGet(this, _events)[event2].push(cb);
     return () => {
-      __privateGet(this, _events)[event] = __privateGet(this, _events)[event].filter(
+      __privateGet(this, _events)[event2] = __privateGet(this, _events)[event2].filter(
         /** @param {any} fn */
         (fn) => fn !== cb
       );
@@ -3005,13 +3542,13 @@ function create_custom_element(Component, props_definition, slots, exports, use_
         var _a;
         value = get_custom_element_value(prop2, value, props_definition);
         this.$$d[prop2] = value;
-        var component = this.$$c;
-        if (component) {
-          var setter = (_a = get_descriptor(component, prop2)) == null ? void 0 : _a.get;
+        var component2 = this.$$c;
+        if (component2) {
+          var setter = (_a = get_descriptor(component2, prop2)) == null ? void 0 : _a.get;
           if (setter) {
-            component[prop2] = value;
+            component2[prop2] = value;
           } else {
-            component.$set({ [prop2]: value });
+            component2.$set({ [prop2]: value });
           }
         }
       }
@@ -3066,6 +3603,229 @@ const getScrollSpeed = (callback) => {
     window.removeEventListener("scrollend", onEndScroll);
   };
 };
+const retryUntil = (condition) => new Promise(
+  (resolve) => condition() ? resolve(0) : setInterval(() => condition() && resolve(0), 10)
+);
+function OnProgressHandler($$anchor, $$props) {
+  push($$props, true);
+  let onProgress = prop($$props, "onProgress", 7), scrollytellerRef = prop($$props, "scrollytellerRef", 7);
+  const scrollHandler = () => {
+    const rootRect = scrollytellerRef().getBoundingClientRect();
+    onProgress()("progress", {
+      boundingRect: rootRect,
+      rootPct: 1 - rootRect.bottom / (rootRect.height + window.innerHeight),
+      scrollPct: 1 - (rootRect.bottom - window.innerHeight) / (rootRect.height - window.innerHeight)
+    });
+  };
+  event("scroll", $window, scrollHandler);
+  return pop({
+    get onProgress() {
+      return onProgress();
+    },
+    set onProgress($$value) {
+      onProgress($$value);
+      flushSync();
+    },
+    get scrollytellerRef() {
+      return scrollytellerRef();
+    },
+    set scrollytellerRef($$value) {
+      scrollytellerRef($$value);
+      flushSync();
+    }
+  });
+}
+create_custom_element(OnProgressHandler, { onProgress: {}, scrollytellerRef: {} }, [], [], true);
+var root_1$1 = /* @__PURE__ */ template(`<div class="panelobserver-debug svelte-1iywulw"></div>`);
+const $$css$4 = {
+  hash: "svelte-1iywulw",
+  code: ".panelobserver-debug.svelte-1iywulw {position:sticky;left:0;width:100%;background:rgba(0, 0, 0, 0.1);border:1px solid rgba(0, 255, 47, 0.4);border-style:solid none solid;z-index:0;}"
+};
+function PanelObserver($$anchor, $$props) {
+  push($$props, false);
+  append_styles($$anchor, $$css$4);
+  const [$$stores, $$cleanup] = setup_stores();
+  const $isSplitScreen = () => store_get(isSplitScreen, "$isSplitScreen", $$stores);
+  const $screenDims = () => store_get(screenDims, "$screenDims", $$stores);
+  const $vizDims = () => store_get(vizDims, "$vizDims", $$stores);
+  const $steps = () => store_get(steps, "$steps", $$stores);
+  const vizMarkerThresholdMarginDecimal = mutable_state();
+  const rootMargin = mutable_state();
+  const vizDims = getContext("vizDims");
+  const isSplitScreen = getContext("isSplitScreen");
+  const screenDims = getContext("screenDims");
+  const steps = getContext("steps");
+  const currentPanel = getContext("currentPanel");
+  let marker = prop($$props, "marker", 12);
+  let observerOptions = prop($$props, "observerOptions", 12);
+  let isDebug = prop($$props, "isDebug", 12);
+  let vizMarkerThreshold = prop($$props, "vizMarkerThreshold", 12, 20);
+  let _observerOptions = mutable_state(observerOptions());
+  let panelObserver = mutable_state();
+  let intersectingPanels = mutable_state([]);
+  onMount(() => {
+    var _a;
+    return (_a = get$1(panelObserver)) == null ? void 0 : _a.disconnect();
+  });
+  legacy_pre_effect(
+    () => deep_read_state(vizMarkerThreshold()),
+    () => {
+      set(vizMarkerThresholdMarginDecimal, (100 - vizMarkerThreshold() * 2) / 100);
+    }
+  );
+  legacy_pre_effect(
+    () => ($isSplitScreen(), $screenDims(), $vizDims(), get$1(vizMarkerThresholdMarginDecimal)),
+    () => {
+      set(rootMargin, $isSplitScreen() ? (
+        // For split screens, trigger the intersection observer when the block is
+        // over {vizMarkerThreshold}% of the interactive.
+        Math.round(($screenDims()[1] - ($vizDims().dims[1] || $screenDims()[1]) * get$1(vizMarkerThresholdMarginDecimal)) / 2)
+      ) : (
+        // Otherwise 10% of the screen height.
+        Math.round($screenDims()[1] / 8)
+      ));
+    }
+  );
+  legacy_pre_effect(
+    () => (deep_read_state(observerOptions()), get$1(rootMargin)),
+    () => {
+      if (observerOptions()) {
+        set(_observerOptions, observerOptions());
+      } else {
+        set(_observerOptions, {
+          rootMargin: `-${get$1(rootMargin)}px 0px -${get$1(rootMargin)}px 0px`
+        });
+      }
+    }
+  );
+  legacy_pre_effect(
+    () => ($vizDims(), get$1(intersectingPanels), get$1(panelObserver), $steps(), get$1(_observerOptions)),
+    () => {
+      var _a, _b;
+      if ($vizDims().status === "ready") {
+        set(intersectingPanels, []);
+        (_a = get$1(panelObserver)) == null ? void 0 : _a.disconnect();
+        set(panelObserver, new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                get$1(intersectingPanels).push(entry);
+              } else {
+                const itemToRemove = get$1(intersectingPanels).findIndex((panel) => panel.target === entry.target);
+                if (itemToRemove === -1) return;
+                get$1(intersectingPanels).splice(itemToRemove, 1);
+              }
+              const newPanel = get$1(intersectingPanels)[get$1(intersectingPanels).length - 1];
+              if (newPanel) {
+                marker(newPanel.target.scrollyData);
+                store_set(currentPanel, $steps().findIndex((step) => step === newPanel.target));
+              }
+            });
+          },
+          get$1(_observerOptions)
+        ));
+        $steps().forEach((step) => {
+          get$1(panelObserver).observe(step);
+        });
+      } else {
+        (_b = get$1(panelObserver)) == null ? void 0 : _b.disconnect();
+      }
+    }
+  );
+  legacy_pre_effect_reset();
+  init();
+  var fragment = comment();
+  var node = first_child(fragment);
+  {
+    var consequent = ($$anchor2) => {
+      var div = root_1$1();
+      template_effect(() => {
+        set_style(div, "top", get$1(rootMargin) + "px");
+        set_style(div, "height", innerHeight - get$1(rootMargin) * 2 + "px");
+      });
+      append($$anchor2, div);
+    };
+    if_block(node, ($$render) => {
+      if (isDebug() && get$1(rootMargin) && !observerOptions()) $$render(consequent);
+    });
+  }
+  append($$anchor, fragment);
+  var $$pop = pop({
+    get marker() {
+      return marker();
+    },
+    set marker($$value) {
+      marker($$value);
+      flushSync();
+    },
+    get observerOptions() {
+      return observerOptions();
+    },
+    set observerOptions($$value) {
+      observerOptions($$value);
+      flushSync();
+    },
+    get isDebug() {
+      return isDebug();
+    },
+    set isDebug($$value) {
+      isDebug($$value);
+      flushSync();
+    },
+    get vizMarkerThreshold() {
+      return vizMarkerThreshold();
+    },
+    set vizMarkerThreshold($$value) {
+      vizMarkerThreshold($$value);
+      flushSync();
+    }
+  });
+  $$cleanup();
+  return $$pop;
+}
+create_custom_element(
+  PanelObserver,
+  {
+    marker: {},
+    observerOptions: {},
+    isDebug: {},
+    vizMarkerThreshold: {}
+  },
+  [],
+  [],
+  true
+);
+function ScreenDimsStoreUpdater($$anchor, $$props) {
+  push($$props, false);
+  const [$$stores, $$cleanup] = setup_stores();
+  const globalAlign = getContext("globalAlign");
+  const screenDims = getContext("screenDims");
+  let align = prop($$props, "align", 12, "centre");
+  let innerWidth = mutable_state(0);
+  let innerHeight2 = mutable_state(0);
+  legacy_pre_effect(() => (get$1(innerWidth), get$1(innerHeight2)), () => {
+    store_set(screenDims, [get$1(innerWidth), get$1(innerHeight2)]);
+  });
+  legacy_pre_effect(() => deep_read_state(align()), () => {
+    store_set(globalAlign, align());
+  });
+  legacy_pre_effect_reset();
+  init();
+  bind_window_size("innerWidth", ($$value) => set(innerWidth, $$value));
+  bind_window_size("innerHeight", ($$value) => set(innerHeight2, $$value));
+  var $$pop = pop({
+    get align() {
+      return align();
+    },
+    set align($$value) {
+      align($$value);
+      flushSync();
+    }
+  });
+  $$cleanup();
+  return $$pop;
+}
+create_custom_element(ScreenDimsStoreUpdater, { align: {} }, [], [], true);
 function setSteps() {
   return writable([]);
 }
@@ -3127,6 +3887,406 @@ function setMaxGraphicWidth([
 function setCurrentPanel() {
   return writable(0);
 }
+const children = (el, children2) => {
+  children2.forEach((node) => el.appendChild(node));
+  return {
+    destroy() {
+      children2.forEach((node) => el.removeChild(node));
+    }
+  };
+};
+var root$2 = /* @__PURE__ */ template(`<div><div class="st-panel svelte-pv2kpf"></div></div>`);
+const $$css$3 = {
+  hash: "svelte-pv2kpf",
+  code: '.st-panel-root.svelte-pv2kpf {--panel-radius: 0.75rem;--panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color: var(--color-panel-text, #000);--panel-opacity: var(--color-panel-opacity, 1);--panel-filter: var(--color-panel-filter, blur(2.5px));--panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding: 1rem;\n  /* How opaque do we make inactive panels on 2 column mode */--panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);\n  /** How much margin should we have between panels on 2 column mode */--panel-column-margin: var(--color-panel-margin, 40vh);box-sizing:border-box;margin:80vh auto;position:relative;z-index:1;pointer-events:none;}\n@media (min-width: 46.5rem) {.st-panel-root.svelte-pv2kpf {--panel-padding: 2rem;}\n}[data-scheme="dark"] .st-panel-root.svelte-pv2kpf, .is-dark-mode .st-panel-root.svelte-pv2kpf {--panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color: var(--color-panel-text, #ebebeb);--panel-border: var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15));}.scrollyteller--debug .st-panel-root.svelte-pv2kpf {outline:5px solid limegreen;}.st-panel-root.first.svelte-pv2kpf {margin-top:100dvh;}.st-panel-root.last.svelte-pv2kpf {margin-bottom:50vh;}\n@media (min-width: 62rem) {.st-panel-root--left.svelte-pv2kpf, .st-panel-root--right.svelte-pv2kpf {margin-top:var(--panel-column-margin);margin-bottom:var(--panel-column-margin);opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active.svelte-pv2kpf, .st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active.svelte-pv2kpf {opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-pv2kpf, .st-panel-root--right.st-panel-root--transparent-blocks.svelte-pv2kpf {--panel-filter: none;--panel-background: none;--panel-border: none;--panel-padding: 0;opacity:var(--panel-opacity-inactive);}.st-panel-root--left.first.svelte-pv2kpf, .st-panel-root--right.first.svelte-pv2kpf {margin-top:50dvh;}\n}.st-panel.svelte-pv2kpf {-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding);}.st-panel.svelte-pv2kpf::before {content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%;}.st-panel.svelte-pv2kpf::after {content:"";display:table;clear:both;}.st-panel.svelte-pv2kpf > * {pointer-events:all;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;}.st-panel.svelte-pv2kpf > *:last-child {margin-bottom:0;}.st-panel.svelte-pv2kpf > :is(div, p) {font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;}.st-panel.svelte-pv2kpf > img {max-width:66%;display:block;margin:auto;height:auto;}.st-panel.svelte-pv2kpf > :is(h1, h2, h3, h4) {font-family:var(--od-font-stack-serif);}'
+};
+function Panel($$anchor, $$props) {
+  push($$props, false);
+  append_styles($$anchor, $$css$3);
+  const [$$stores, $$cleanup] = setup_stores();
+  const $steps = () => store_get(steps, "$steps", $$stores);
+  const $currentPanel = () => store_get(currentPanel, "$currentPanel", $$stores);
+  const currentPanel = getContext("currentPanel");
+  const steps = getContext("steps");
+  let align = prop($$props, "align", 12);
+  let transparentFloat = prop($$props, "transparentFloat", 12);
+  let panelClass = prop($$props, "panelClass", 12);
+  let data = prop($$props, "data", 12);
+  let nodes = prop($$props, "nodes", 12);
+  let i = prop($$props, "i", 28, () => -1);
+  let panelRef = mutable_state();
+  onMount(() => {
+    mutate(panelRef, get$1(panelRef).scrollyData = data());
+    store_set(steps, [...$steps(), get$1(panelRef)]);
+  });
+  init();
+  var div = root$2();
+  let classes;
+  var div_1 = child(div);
+  action(div_1, ($$node, $$action_arg) => children == null ? void 0 : children($$node, $$action_arg), nodes);
+  reset(div);
+  bind_this(div, ($$value) => set(panelRef, $$value), () => get$1(panelRef));
+  template_effect(() => {
+    set_attribute(div, "data-align", align());
+    set_attribute(div, "data-index", i());
+    classes = set_class(div, 1, `st-panel-root ${panelClass() || ""}`, "svelte-pv2kpf", classes, {
+      "st-panel-root--left": align() === "left",
+      "st-panel-root--right": align() === "right",
+      "st-panel-root--centre": align() === "centre",
+      "st-panel-root--transparent-blocks": transparentFloat(),
+      "st-panel-root--active": i() === $currentPanel()
+    });
+  });
+  append($$anchor, div);
+  var $$pop = pop({
+    get align() {
+      return align();
+    },
+    set align($$value) {
+      align($$value);
+      flushSync();
+    },
+    get transparentFloat() {
+      return transparentFloat();
+    },
+    set transparentFloat($$value) {
+      transparentFloat($$value);
+      flushSync();
+    },
+    get panelClass() {
+      return panelClass();
+    },
+    set panelClass($$value) {
+      panelClass($$value);
+      flushSync();
+    },
+    get data() {
+      return data();
+    },
+    set data($$value) {
+      data($$value);
+      flushSync();
+    },
+    get nodes() {
+      return nodes();
+    },
+    set nodes($$value) {
+      nodes($$value);
+      flushSync();
+    },
+    get i() {
+      return i();
+    },
+    set i($$value) {
+      i($$value);
+      flushSync();
+    }
+  });
+  $$cleanup();
+  return $$pop;
+}
+create_custom_element(
+  Panel,
+  {
+    align: {},
+    transparentFloat: {},
+    panelClass: {},
+    data: {},
+    nodes: {},
+    i: {}
+  },
+  [],
+  [],
+  true
+);
+var root_1 = /* @__PURE__ */ template(`<div></div>`);
+const $$css$2 = {
+  hash: "svelte-1qnkhkx",
+  code: ".content.svelte-1qnkhkx {margin:-100dvh auto 0;padding-bottom:1px;position:relative;z-index:2;pointer-events:none;font-size:1.125rem;}\n\n@media (min-width: 62rem) {.content--centre.svelte-1qnkhkx {max-width:48.75rem;}\n}\n@media (min-width: 90rem) {.content--centre.svelte-1qnkhkx {max-width:56.25rem;}\n}.content--left.svelte-1qnkhkx, .content--right.svelte-1qnkhkx {max-width:127.5rem;margin-left:0;}\n@media (min-width: 62rem) {.content--left.svelte-1qnkhkx, .content--right.svelte-1qnkhkx {max-width:40rem;margin-right:calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);font-size:1.125rem;}\n}\n@media (min-width: 75rem) {.content--left.svelte-1qnkhkx, .content--right.svelte-1qnkhkx {font-size:1.125rem;}\n}\n@media (min-width: 90rem) {.content--left.svelte-1qnkhkx, .content--right.svelte-1qnkhkx {max-width:45rem;font-size:1.25rem;}\n}.content--right.svelte-1qnkhkx {margin-right:0;margin-left:calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);}"
+};
+function Panels($$anchor, $$props) {
+  push($$props, false);
+  append_styles($$anchor, $$css$2);
+  let layout = prop($$props, "layout", 12);
+  let panels = prop($$props, "panels", 12);
+  let customPanel = prop($$props, "customPanel", 12, null);
+  let steps = prop($$props, "steps", 28, () => []);
+  let panelGroups = mutable_state([]);
+  legacy_pre_effect(
+    () => (get$1(panelGroups), deep_read_state(panels()), deep_read_state(layout())),
+    () => {
+      set(panelGroups, []);
+      let group;
+      panels().forEach(({
+        align = layout().align,
+        panelClass = "",
+        ...panel
+      }, i) => {
+        if (align !== (group == null ? void 0 : group.align)) {
+          group && get$1(panelGroups).push(group);
+          group = { align, panels: [] };
+        }
+        if (i === 0) panelClass += " first";
+        if (i === panels().length - 1) panelClass += " last";
+        group.panels.push({ ...panel, panelClass, i });
+      });
+      get$1(panelGroups).push(group);
+    }
+  );
+  legacy_pre_effect_reset();
+  init();
+  var fragment = comment();
+  var node = first_child(fragment);
+  each(node, 1, () => get$1(panelGroups), index, ($$anchor2, group) => {
+    var div = root_1();
+    let classes;
+    each(div, 5, () => get$1(group).panels, index, ($$anchor3, panel) => {
+      var fragment_1 = comment();
+      var node_1 = first_child(fragment_1);
+      {
+        var consequent = ($$anchor4) => {
+          var fragment_2 = comment();
+          var node_2 = first_child(fragment_2);
+          component(node_2, customPanel, ($$anchor5, $$component) => {
+            $$component($$anchor5, spread_props(() => get$1(panel), {
+              get steps() {
+                return steps();
+              }
+            }));
+          });
+          append($$anchor4, fragment_2);
+        };
+        var alternate = ($$anchor4) => {
+          const expression = /* @__PURE__ */ derived_safe_equal(() => get$1(panel).align || layout().align);
+          Panel($$anchor4, spread_props(() => get$1(panel), {
+            get align() {
+              return get$1(expression);
+            },
+            get transparentFloat() {
+              return layout().transparentFloat;
+            },
+            get steps() {
+              return steps();
+            }
+          }));
+        };
+        if_block(node_1, ($$render) => {
+          if (customPanel()) $$render(consequent);
+          else $$render(alternate, false);
+        });
+      }
+      append($$anchor3, fragment_1);
+    });
+    reset(div);
+    template_effect(() => classes = set_class(div, 1, "content svelte-1qnkhkx", null, classes, {
+      "content--centre": get$1(group).align === "centre",
+      "content--right": get$1(group).align === "right",
+      "content--left": get$1(group).align === "left"
+    }));
+    append($$anchor2, div);
+  });
+  append($$anchor, fragment);
+  return pop({
+    get layout() {
+      return layout();
+    },
+    set layout($$value) {
+      layout($$value);
+      flushSync();
+    },
+    get panels() {
+      return panels();
+    },
+    set panels($$value) {
+      panels($$value);
+      flushSync();
+    },
+    get customPanel() {
+      return customPanel();
+    },
+    set customPanel($$value) {
+      customPanel($$value);
+      flushSync();
+    },
+    get steps() {
+      return steps();
+    },
+    set steps($$value) {
+      steps($$value);
+      flushSync();
+    }
+  });
+}
+create_custom_element(
+  Panels,
+  {
+    layout: {},
+    panels: {},
+    customPanel: {},
+    steps: {}
+  },
+  [],
+  [],
+  true
+);
+function GraphicObserver($$anchor, $$props) {
+  push($$props, false);
+  const [$$stores, $$cleanup] = setup_stores();
+  let graphicRootEl = prop($$props, "graphicRootEl", 12);
+  const vizDims = getContext("vizDims");
+  const graphicRootDims = getContext("graphicRootDims");
+  getContext("maxGraphicWidth");
+  onMount(() => {
+    let observer;
+    observer = new ResizeObserver((entries) => {
+      requestAnimationFrame(() => {
+        entries.forEach((entry) => {
+          if (entry.target === graphicRootEl()) {
+            store_set(graphicRootDims, {
+              status: "ready",
+              dims: [
+                entry.contentRect.width,
+                entry.contentRect.height
+              ]
+            });
+          } else {
+            store_set(vizDims, {
+              status: "ready",
+              dims: [
+                entry.contentRect.width,
+                entry.contentRect.height
+              ]
+            });
+          }
+        });
+      });
+    });
+    retryUntil(() => graphicRootEl()).then(() => {
+      observer.observe(graphicRootEl());
+    });
+    retryUntil(() => {
+      var _a, _b;
+      return (_b = (_a = graphicRootEl()) == null ? void 0 : _a.children) == null ? void 0 : _b.length;
+    }).then(() => {
+      const child2 = graphicRootEl().children[0];
+      observer.observe(child2);
+    });
+    return () => {
+      observer == null ? void 0 : observer.disconnect();
+    };
+  });
+  init();
+  var $$pop = pop({
+    get graphicRootEl() {
+      return graphicRootEl();
+    },
+    set graphicRootEl($$value) {
+      graphicRootEl($$value);
+      flushSync();
+    }
+  });
+  $$cleanup();
+  return $$pop;
+}
+create_custom_element(GraphicObserver, { graphicRootEl: {} }, [], [], true);
+var root$1 = /* @__PURE__ */ template(`<!> <div><!></div>`, 1);
+const $$css$1 = {
+  hash: "svelte-1uvy8v3",
+  code: ".viz.svelte-1uvy8v3 {transform:translate3d(0, 0, 0);height:100dvh;position:sticky;top:0;left:0;z-index:1;}.viz--resized.svelte-1uvy8v3 {container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;margin:0 auto;width:calc(100% - var(--marginOuter) * 2);max-width:calc(100vw - var(--vizMarginOuter) * 2);}\n@media (min-width: 46.5rem) {.viz--resized.svelte-1uvy8v3 {--margin: 4rem;top:8dvh;height:62dvh;}\n}.viz--resized.viz--left.svelte-1uvy8v3, .viz--resized.viz--right.svelte-1uvy8v3 {width:var(--rightColumnWidth);}\n@media (min-width: 62rem) {.viz--resized.viz--left.svelte-1uvy8v3, .viz--resized.viz--right.svelte-1uvy8v3 {align-items:center;height:84dvh;top:8dvh;}\n}\n@media (min-width: 75rem) {.viz--resized.viz--left.svelte-1uvy8v3, .viz--resized.viz--right.svelte-1uvy8v3 {height:76dvh;top:12dvh;}\n}\n@media (min-width: 90rem) {.viz--resized.viz--left.svelte-1uvy8v3, .viz--resized.viz--right.svelte-1uvy8v3 {top:10dvh;height:80dvh;}\n}\n@media (min-width: 62rem) {.viz--resized.viz--left.svelte-1uvy8v3 {margin:0 auto 0 0;}\n}\n@media (min-width: 62rem) {.viz--resized.viz--right.svelte-1uvy8v3 {margin:0 0 0 auto;}\n}\n@media (min-width: 62rem) {.viz--resized.viz--centre.svelte-1uvy8v3 {top:8dvh;height:62dvh;}\n}\n@media (min-width: 75rem) {.viz--resized.viz--centre.svelte-1uvy8v3 {top:12dvh;height:58dvh;}\n}\n@media (min-width: 90rem) {.viz--resized.viz--centre.svelte-1uvy8v3 {top:12dvh;height:58dvh;}\n}.scrollyteller--debug .viz--resized.svelte-1uvy8v3 {outline:5px solid limegreen;}"
+};
+function Viz($$anchor, $$props) {
+  push($$props, false);
+  append_styles($$anchor, $$css$1);
+  let layout = prop($$props, "layout", 12);
+  let discardSlot = prop($$props, "discardSlot", 12, false);
+  let isInViewport = prop($$props, "isInViewport", 12, false);
+  let onLoad = prop($$props, "onLoad", 12, () => {
+  });
+  createEventDispatcher();
+  let graphicRootEl = mutable_state();
+  legacy_pre_effect(
+    () => (get$1(graphicRootEl), deep_read_state(onLoad())),
+    () => {
+      if (get$1(graphicRootEl)) {
+        onLoad()(get$1(graphicRootEl));
+      }
+    }
+  );
+  legacy_pre_effect_reset();
+  init();
+  var fragment = root$1();
+  var node = first_child(fragment);
+  GraphicObserver(node, {
+    get graphicRootEl() {
+      return get$1(graphicRootEl);
+    }
+  });
+  var div = sibling(node, 2);
+  let classes;
+  var node_1 = child(div);
+  {
+    var consequent = ($$anchor2) => {
+      var fragment_1 = comment();
+      var node_2 = first_child(fragment_1);
+      slot(node_2, $$props, "default", {});
+      append($$anchor2, fragment_1);
+    };
+    if_block(node_1, ($$render) => {
+      if (isInViewport() || discardSlot() === false) $$render(consequent);
+    });
+  }
+  reset(div);
+  bind_this(div, ($$value) => set(graphicRootEl, $$value), () => get$1(graphicRootEl));
+  template_effect(() => classes = set_class(div, 1, "viz svelte-1uvy8v3", null, classes, {
+    "viz--resized": layout().resizeInteractive,
+    "viz--right": layout().resizeInteractive && layout().align === "left",
+    "viz--left": layout().resizeInteractive && layout().align === "right",
+    "viz--centre": layout().resizeInteractive && layout().align === "centre"
+  }));
+  append($$anchor, fragment);
+  return pop({
+    get layout() {
+      return layout();
+    },
+    set layout($$value) {
+      layout($$value);
+      flushSync();
+    },
+    get discardSlot() {
+      return discardSlot();
+    },
+    set discardSlot($$value) {
+      discardSlot($$value);
+      flushSync();
+    },
+    get isInViewport() {
+      return isInViewport();
+    },
+    set isInViewport($$value) {
+      isInViewport($$value);
+      flushSync();
+    },
+    get onLoad() {
+      return onLoad();
+    },
+    set onLoad($$value) {
+      onLoad($$value);
+      flushSync();
+    }
+  });
+}
+create_custom_element(
+  Viz,
+  {
+    layout: {},
+    discardSlot: {},
+    isInViewport: {},
+    onLoad: {}
+  },
+  ["default"],
+  [],
+  true
+);
 var root_2 = /* @__PURE__ */ template(`<style>/* styles required to make position sticky work */
 			/* existing styles on an Odyssey body are preventing position sticky from 'sticking' */
 			body {
@@ -3729,7 +4889,7 @@ const loadPanels = (nodes, initialConfig, name) => {
     });
     nextNodes = [];
   }
-  nodes.forEach((node, index) => {
+  nodes.forEach((node, index2) => {
     if (isMount(node, name)) {
       pushPanel();
       const configString = getMountValue(node, name);
@@ -3741,7 +4901,7 @@ const loadPanels = (nodes, initialConfig, name) => {
     } else {
       nextNodes.push(node);
     }
-    if (index === nodes.length - 1) {
+    if (index2 === nodes.length - 1) {
       pushPanel();
     }
     if (nextConfigAndMeta[piecemeal]) {

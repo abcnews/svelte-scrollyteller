@@ -1,4 +1,5 @@
 import { derived, writable } from 'svelte/store';
+import {} from './types.js';
 /** Each panel inserts itself into this list when it instantiates */
 export function setSteps() {
     return writable([]);

@@ -2,7 +2,12 @@
 import { ScrollPositions } from './types.js';
 import { createEventDispatcher } from 'svelte';
 import { getScrollingPos, getScrollSpeed } from './Scrollyteller/Scrollyteller.util';
+import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
+import PanelObserver from './Scrollyteller/PanelObserver.svelte';
+import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
 import { setSteps, setMargin, setVizDims, setGraphicRootDims, setRatio, setScreenDims, setGlobalAlign, setIsSplitScreen, setMaxScrollytellerWidth, setMaxGraphicWidth, setCurrentPanel } from './stores';
+import Panels from './Panels.svelte';
+import Viz from './Viz.svelte';
 const dispatch = createEventDispatcher();
 const stepsStore = setContext('steps', setSteps());
 const marginStore = setContext('margin', setMargin());

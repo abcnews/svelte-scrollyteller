@@ -1,4 +1,5 @@
 <script lang="ts">import { getContext, onMount } from 'svelte';
+import { children } from './actions.js';
 const currentPanel = getContext('currentPanel');
 const steps = getContext('steps');
 export let align;

@@ -13,22 +13,16 @@
 	let number = 0;
 	let stProgress;
 
-	const onMarker = ({ detail }) => {
+	const onMarker = (detail) => {
 		number = detail.number;
 	};
 
-	const onProgress = ({ detail }) => {
+	const onProgress = (detail) => {
 		stProgress = detail;
 	};
 </script>
 
-<Scrollyteller
-	panels={scrollyData.panels}
-	onProgress={true}
-	on:marker={onMarker}
-	on:progress={onProgress}
-	{...$$restProps}
->
+<Scrollyteller panels={scrollyData.panels} {onMarker} {onProgress} {...$$restProps}>
 	<div class="example-graphic">
 		<Worm />
 		<span class="number">{number}</span>
