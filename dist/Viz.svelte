@@ -1,5 +1,4 @@
-<script>import { createEventDispatcher } from 'svelte';
-import GraphicObserver from './Scrollyteller/GraphicObserver.svelte';
+<script lang="ts">import { createEventDispatcher } from 'svelte';
 export let layout;
 export let discardSlot = false;
 export let isInViewport = false;

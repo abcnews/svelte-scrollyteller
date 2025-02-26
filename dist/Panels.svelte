@@ -1,5 +1,4 @@
-<script>import Panel from './Panel.svelte';
-export let layout;
+<script lang="ts">export let layout;
 export let panels;
 export let customPanel = null;
 export let steps = [];

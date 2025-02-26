@@ -1,4 +1,4 @@
-<script>import { getContext } from 'svelte';
+<script lang="ts">import { getContext } from 'svelte';
 const globalAlign = getContext('globalAlign');
 const screenDims = getContext('screenDims');
 export let align = 'centre';

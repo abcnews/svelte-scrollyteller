@@ -1,18 +1,20 @@
-import { SvelteComponent } from "svelte";
-declare const __propDef: {
-    props: {
-        align?: string;
+interface $$__sveltets_2_IsomorphicComponent<Props extends Record<string, any> = any, Events extends Record<string, any> = any, Slots extends Record<string, any> = any, Exports = {}, Bindings = string> {
+    new (options: import('svelte').ComponentConstructorOptions<Props>): import('svelte').SvelteComponent<Props, Events, Slots> & {
+        $$bindings?: Bindings;
+    } & Exports;
+    (internal: unknown, props: Props & {
+        $$events?: Events;
+        $$slots?: Slots;
+    }): Exports & {
+        $set?: any;
+        $on?: any;
     };
-    events: {
-        [evt: string]: CustomEvent<any>;
-    };
-    slots: {};
-    exports?: {};
-    bindings?: string;
-};
-export type ScreenDimsStoreUpdaterProps = typeof __propDef.props;
-export type ScreenDimsStoreUpdaterEvents = typeof __propDef.events;
-export type ScreenDimsStoreUpdaterSlots = typeof __propDef.slots;
-export default class ScreenDimsStoreUpdater extends SvelteComponent<ScreenDimsStoreUpdaterProps, ScreenDimsStoreUpdaterEvents, ScreenDimsStoreUpdaterSlots> {
+    z_$$bindings?: Bindings;
 }
-export {};
+declare const ScreenDimsStoreUpdater: $$__sveltets_2_IsomorphicComponent<{
+    align?: string;
+}, {
+    [evt: string]: CustomEvent<any>;
+}, {}, {}, string>;
+type ScreenDimsStoreUpdater = InstanceType<typeof ScreenDimsStoreUpdater>;
+export default ScreenDimsStoreUpdater;

@@ -1,14 +1,8 @@
-<script>import { onMount, setContext } from 'svelte';
+<script lang="ts">import { onMount, setContext } from 'svelte';
 import { ScrollPositions } from './types.js';
 import { createEventDispatcher } from 'svelte';
 import { getScrollingPos, getScrollSpeed } from './Scrollyteller/Scrollyteller.util';
-import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
-import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
-import PanelObserver from './Scrollyteller/PanelObserver.svelte';
-import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
 import { setSteps, setMargin, setVizDims, setGraphicRootDims, setRatio, setScreenDims, setGlobalAlign, setIsSplitScreen, setMaxScrollytellerWidth, setMaxGraphicWidth, setCurrentPanel } from './stores';
-import Panels from './Panels.svelte';
-import Viz from './Viz.svelte';
 const dispatch = createEventDispatcher();
 const stepsStore = setContext('steps', setSteps());
 const marginStore = setContext('margin', setMargin());
@@ -29,10 +23,8 @@ const maxGraphicWidthStore = setContext('maxGraphicWidth', setMaxGraphicWidth([
 const currentPanelStore = setContext('currentPanel', setCurrentPanel());
 export let customPanel = null;
 export let panels;
-/** Whether to enable the on:progress event. This is a somewhat heavy operation, so we don't enable it by default. */
-export let onProgress = false;
-/** @deprecated please use on:marker instead */
-export let onMarker = null;
+export let onProgress = () => { };
+export let onMarker = () => { };
 export let observerOptions = undefined;
 /**
  * When `true` we remove the slot from the DOM when not in the viewport, and
@@ -107,16 +99,15 @@ onMount(() => {
         runDeferredActions();
     });
 });
-$: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
+$: marker && deferUntilScrollSettles(() => onMarker(marker));
 // Debug mode should highlight blocks, graphic & show which breakpoint we're at
 $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 </script>
 
 {#if onProgress}
-	<OnProgressHandler {scrollytellerRef} on:progress />
+	<OnProgressHandler {scrollytellerRef} {onProgress} />
 {/if}
 
-<DeprecationNotice {onProgress} {onMarker} />
 <ScreenDimsStoreUpdater align={_layout.align} />
 <PanelObserver bind:marker {observerOptions} {isDebug} {vizMarkerThreshold} />
 

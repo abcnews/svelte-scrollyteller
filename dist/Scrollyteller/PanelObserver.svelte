@@ -1,4 +1,4 @@
-<script>import { getContext, onMount } from 'svelte';
+<script lang="ts">import { getContext, onMount } from 'svelte';
 const vizDims = getContext('vizDims');
 const isSplitScreen = getContext('isSplitScreen');
 const screenDims = getContext('screenDims');

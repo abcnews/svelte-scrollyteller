@@ -1,32 +1,4 @@
-/** @typedef {typeof __propDef.props}  ScrollytellerProps */
-/** @typedef {typeof __propDef.events}  ScrollytellerEvents */
-/** @typedef {typeof __propDef.slots}  ScrollytellerSlots */
-export default class Scrollyteller extends SvelteComponent<{
-    [x: string]: any;
-}, {
-    [evt: string]: CustomEvent<any>;
-}, {}> {
-    constructor();
-    /**accessor*/
-    set panels(_: any);
-    get panels(): any;
-    /**accessor*/
-    set layout(_: any);
-    get layout(): any;
-}
-export type ScrollytellerProps = typeof __propDef.props;
-export type ScrollytellerEvents = typeof __propDef.events;
-export type ScrollytellerSlots = typeof __propDef.slots;
-import { SvelteComponent } from "svelte";
-declare const __propDef: {
-    props: {
-        [x: string]: any;
-    };
-    events: {
-        [evt: string]: CustomEvent<any>;
-    };
-    slots: {};
-    exports?: {};
-    bindings?: string;
-};
-export {};
+export default Scrollyteller;
+type Scrollyteller = any;
+declare const Scrollyteller: any;
+import Scrollyteller from './Scrollyteller.svelte';

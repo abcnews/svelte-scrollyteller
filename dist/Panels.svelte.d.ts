@@ -1,23 +1,25 @@
-import { SvelteComponent } from "svelte";
 import type { ComponentType } from 'svelte';
 import type { PanelDefinition, PanelRef, Style } from './types.js';
-declare const __propDef: {
-    props: {
-        layout: Style;
-        panels: PanelDefinition[];
-        customPanel?: ComponentType | null;
-        steps?: PanelRef[];
+interface $$__sveltets_2_IsomorphicComponent<Props extends Record<string, any> = any, Events extends Record<string, any> = any, Slots extends Record<string, any> = any, Exports = {}, Bindings = string> {
+    new (options: import('svelte').ComponentConstructorOptions<Props>): import('svelte').SvelteComponent<Props, Events, Slots> & {
+        $$bindings?: Bindings;
+    } & Exports;
+    (internal: unknown, props: Props & {
+        $$events?: Events;
+        $$slots?: Slots;
+    }): Exports & {
+        $set?: any;
+        $on?: any;
     };
-    events: {
-        [evt: string]: CustomEvent<any>;
-    };
-    slots: {};
-    exports?: {};
-    bindings?: string;
-};
-export type PanelsProps = typeof __propDef.props;
-export type PanelsEvents = typeof __propDef.events;
-export type PanelsSlots = typeof __propDef.slots;
-export default class Panels extends SvelteComponent<PanelsProps, PanelsEvents, PanelsSlots> {
+    z_$$bindings?: Bindings;
 }
-export {};
+declare const Panels: $$__sveltets_2_IsomorphicComponent<{
+    layout: Style;
+    panels: PanelDefinition[];
+    customPanel?: ComponentType | null;
+    steps?: PanelRef[];
+}, {
+    [evt: string]: CustomEvent<any>;
+}, {}, {}, string>;
+type Panels = InstanceType<typeof Panels>;
+export default Panels;

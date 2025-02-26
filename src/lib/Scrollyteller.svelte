@@ -6,7 +6,6 @@
 	import { createEventDispatcher } from 'svelte';
 	import { getScrollingPos, getScrollSpeed } from './Scrollyteller/Scrollyteller.util';
 	import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
-	import DeprecationNotice from './Scrollyteller/DeprecationNotice.svelte';
 	import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 	import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
 	import {
@@ -55,10 +54,8 @@
 
 	export let customPanel: ComponentType | null = null;
 	export let panels: PanelDefinition[];
-	/** Whether to enable the on:progress event. This is a somewhat heavy operation, so we don't enable it by default. */
-	export let onProgress: boolean = false;
-	/** @deprecated please use on:marker instead */
-	export let onMarker: () => void = null;
+	export let onProgress = () => {};
+	export let onMarker = () => {};
 	export let observerOptions: IntersectionObserverInit = undefined;
 	/**
 	 * When `true` we remove the slot from the DOM when not in the viewport, and
@@ -146,17 +143,16 @@
 		});
 	});
 
-	$: marker && deferUntilScrollSettles(() => dispatch('marker', marker));
+	$: marker && deferUntilScrollSettles(() => onMarker(marker));
 
 	// Debug mode should highlight blocks, graphic & show which breakpoint we're at
 	$: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 </script>
 
 {#if onProgress}
-	<OnProgressHandler {scrollytellerRef} on:progress />
+	<OnProgressHandler {scrollytellerRef} {onProgress} />
 {/if}
 
-<DeprecationNotice {onProgress} {onMarker} />
 <ScreenDimsStoreUpdater align={_layout.align} />
 <PanelObserver bind:marker {observerOptions} {isDebug} {vizMarkerThreshold} />
 

@@ -1,21 +1,23 @@
-import { SvelteComponent } from "svelte";
-declare const __propDef: {
-    props: {
-        marker: any;
-        observerOptions: any;
-        isDebug: any;
-        vizMarkerThreshold?: number;
+interface $$__sveltets_2_IsomorphicComponent<Props extends Record<string, any> = any, Events extends Record<string, any> = any, Slots extends Record<string, any> = any, Exports = {}, Bindings = string> {
+    new (options: import('svelte').ComponentConstructorOptions<Props>): import('svelte').SvelteComponent<Props, Events, Slots> & {
+        $$bindings?: Bindings;
+    } & Exports;
+    (internal: unknown, props: Props & {
+        $$events?: Events;
+        $$slots?: Slots;
+    }): Exports & {
+        $set?: any;
+        $on?: any;
     };
-    events: {
-        [evt: string]: CustomEvent<any>;
-    };
-    slots: {};
-    exports?: {};
-    bindings?: string;
-};
-export type PanelObserverProps = typeof __propDef.props;
-export type PanelObserverEvents = typeof __propDef.events;
-export type PanelObserverSlots = typeof __propDef.slots;
-export default class PanelObserver extends SvelteComponent<PanelObserverProps, PanelObserverEvents, PanelObserverSlots> {
+    z_$$bindings?: Bindings;
 }
-export {};
+declare const PanelObserver: $$__sveltets_2_IsomorphicComponent<{
+    marker: any;
+    observerOptions: any;
+    isDebug: any;
+    vizMarkerThreshold?: number;
+}, {
+    [evt: string]: CustomEvent<any>;
+}, {}, {}, string>;
+type PanelObserver = InstanceType<typeof PanelObserver>;
+export default PanelObserver;
