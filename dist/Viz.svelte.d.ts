@@ -20,11 +20,10 @@ declare const Viz: $$__sveltets_2_IsomorphicComponent<$$__sveltets_2_PropsWithCh
     layout: any;
     discardSlot?: boolean;
     isInViewport?: boolean;
+    onLoad?: () => void;
 }, {
     default: {};
 }>, {
-    load: CustomEvent<any>;
-} & {
     [evt: string]: CustomEvent<any>;
 }, {
     default: {};

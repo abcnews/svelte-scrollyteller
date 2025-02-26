@@ -5,13 +5,14 @@
 	export let layout;
 	export let discardSlot = false;
 	export let isInViewport = false;
+	export let onLoad = () => {};
 	const dispatch = createEventDispatcher();
 
 	// emit an event with the viz root, because the web component doesn't
 	// support slots & must insert content  manually.
 	let graphicRootEl;
 	$: if (graphicRootEl) {
-		dispatch('load', graphicRootEl);
+		onLoad(graphicRootEl);
 	}
 </script>
 

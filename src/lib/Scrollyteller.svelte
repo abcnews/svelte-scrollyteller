@@ -56,6 +56,7 @@
 	export let panels: PanelDefinition[];
 	export let onProgress = () => {};
 	export let onMarker = () => {};
+	export let onLoad = () => {};
 	export let observerOptions: IntersectionObserverInit = undefined;
 	/**
 	 * When `true` we remove the slot from the DOM when not in the viewport, and
@@ -170,7 +171,7 @@
 
 <div class="scrollyteller-wrapper">
 	{#if !_layout.resizeInteractive}
-		<Viz layout={_layout} {isInViewport} {discardSlot} on:load><slot /></Viz>
+		<Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
 	{/if}
 	<div
 		class="scrollyteller"
@@ -182,7 +183,7 @@
 		bind:this={scrollytellerRef}
 	>
 		{#if _layout.resizeInteractive}
-			<Viz layout={_layout} {isInViewport} {discardSlot} on:load><slot /></Viz>
+			<Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
 		{/if}
 		<Panels layout={_layout} {panels} {customPanel} />
 	</div>

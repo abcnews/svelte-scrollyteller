@@ -25,6 +25,7 @@ export let customPanel = null;
 export let panels;
 export let onProgress = () => { };
 export let onMarker = () => { };
+export let onLoad = () => { };
 export let observerOptions = undefined;
 /**
  * When `true` we remove the slot from the DOM when not in the viewport, and
@@ -125,7 +126,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 
 <div class="scrollyteller-wrapper">
 	{#if !_layout.resizeInteractive}
-		<Viz layout={_layout} {isInViewport} {discardSlot} on:load><slot /></Viz>
+		<Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
 	{/if}
 	<div
 		class="scrollyteller"
@@ -137,7 +138,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 		bind:this={scrollytellerRef}
 	>
 		{#if _layout.resizeInteractive}
-			<Viz layout={_layout} {isInViewport} {discardSlot} on:load><slot /></Viz>
+			<Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
 		{/if}
 		<Panels layout={_layout} {panels} {customPanel} />
 	</div>

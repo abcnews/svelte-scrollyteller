@@ -23,6 +23,7 @@ declare const Scrollyteller: $$__sveltets_2_IsomorphicComponent<$$__sveltets_2_P
     panels: PanelDefinition[];
     onProgress?: () => void;
     onMarker?: () => void;
+    onLoad?: () => void;
     observerOptions?: IntersectionObserverInit;
     /**
          * When `true` we remove the slot from the DOM when not in the viewport, and
@@ -44,8 +45,6 @@ declare const Scrollyteller: $$__sveltets_2_IsomorphicComponent<$$__sveltets_2_P
 }, {
     default: {};
 }>, {
-    load: CustomEvent<any>;
-} & {
     [evt: string]: CustomEvent<any>;
 }, {
     default: {};

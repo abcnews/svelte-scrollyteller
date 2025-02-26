@@ -3170,6 +3170,8 @@ function Scrollyteller($$anchor, $$props) {
   });
   let onMarker = prop($$props, "onMarker", 12, () => {
   });
+  let onLoad = prop($$props, "onLoad", 12, () => {
+  });
   let observerOptions = prop($$props, "observerOptions", 12, void 0);
   let discardSlot = prop($$props, "discardSlot", 12, false);
   let layout = prop($$props, "layout", 28, () => ({}));
@@ -3315,10 +3317,8 @@ function Scrollyteller($$anchor, $$props) {
         get discardSlot() {
           return discardSlot();
         },
-        $$events: {
-          load($$arg) {
-            bubble_event.call(this, $$props, $$arg);
-          }
+        get onLoad() {
+          return onLoad();
         },
         children: ($$anchor3, $$slotProps) => {
           var fragment_4 = comment();
@@ -3348,10 +3348,8 @@ function Scrollyteller($$anchor, $$props) {
         get discardSlot() {
           return discardSlot();
         },
-        $$events: {
-          load($$arg) {
-            bubble_event.call(this, $$props, $$arg);
-          }
+        get onLoad() {
+          return onLoad();
         },
         children: ($$anchor3, $$slotProps) => {
           var fragment_6 = comment();
@@ -3426,6 +3424,13 @@ function Scrollyteller($$anchor, $$props) {
       onMarker($$value);
       flushSync();
     },
+    get onLoad() {
+      return onLoad();
+    },
+    set onLoad($$value) {
+      onLoad($$value);
+      flushSync();
+    },
     get observerOptions() {
       return observerOptions();
     },
@@ -3472,6 +3477,7 @@ create_custom_element(
     panels: {},
     onProgress: {},
     onMarker: {},
+    onLoad: {},
     observerOptions: {},
     discardSlot: {},
     layout: {},
