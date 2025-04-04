@@ -69,9 +69,8 @@ When a new box comes into view the `on:marker` event will fire with the `data` o
 
 <Scrollyteller
 	{panels}
-	on:marker="{markerChangeHandler}"
-	onProgress="{true}"
-	on:progress="{progressChangeHandler}"
+	onMarker={markerChangeHandler}
+	onProgress={progressChangeHandler}
   layout={{
     align: 'left',
     // resizeInteractive: true
