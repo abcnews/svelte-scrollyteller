@@ -54,12 +54,7 @@ $: {
 	</div>
 {/each}
 
-<style>/* :global(.scrollyteller--mobile-row-variant) { */
-/*   .content { */
-/*     position: fixed; */
-/*   } */
-/* } */
-.content {
+<style>.content {
   margin: -100dvh auto 0;
   padding-bottom: 1px;
   position: relative;

@@ -1,10 +1,10 @@
 import type { ScrollytellerDefinition } from './types.js';
 declare global {
-	interface Window {
-		__scrollytellers: {
-			[key: string]: any;
-		};
-	}
+    interface Window {
+        __scrollytellers: {
+            [key: string]: any;
+        };
+    }
 }
 /**
  * Finds and grabs any nodes between #scrollyteller and #endscrollyteller
@@ -12,8 +12,4 @@ declare global {
  * @param className The className to apply to the mount node
  * @param markerName The hash name for markers
  */
-export declare const loadScrollyteller: (
-	name?: string,
-	className?: string,
-	markerName?: string
-) => ScrollytellerDefinition;
+export declare const loadScrollyteller: (name?: string, className?: string, markerName?: string) => ScrollytellerDefinition;
