@@ -39,7 +39,7 @@ $: if (graphicRootEl) {
     background: white;
     margin: 0;
     /* height: 40dvh; */
-    height: inherit;
+    /* height: inherit; */
   }
 }
 
