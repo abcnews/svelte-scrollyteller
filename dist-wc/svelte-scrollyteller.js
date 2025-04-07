@@ -3879,11 +3879,7 @@ function setIsSplitScreen([screenDims, globalAlign]) {
 function setIsMobileRowMode([screenDims, mobileVariant]) {
   return derived(
     [screenDims, mobileVariant],
-    ([$screenDims, $mobileVariant]) => {
-      console.log($screenDims, $mobileVariant);
-      console.log($mobileVariant === "rows" && $screenDims[0] < LARGE_TABLET_BREAKPOINT);
-      return $mobileVariant === "rows" && $screenDims[0] < LARGE_TABLET_BREAKPOINT;
-    }
+    ([$screenDims, $mobileVariant]) => $mobileVariant === "rows" && $screenDims[0] < LARGE_TABLET_BREAKPOINT
   );
 }
 function setMaxScrollytellerWidth([isSplitScreen]) {

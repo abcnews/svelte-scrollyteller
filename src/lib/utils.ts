@@ -1,13 +1,13 @@
 import acto from '@abcnews/alternating-case-to-object';
 import { selectMounts, isMount, getMountValue } from '@abcnews/mount-utils';
-import type { PanelAlignment, PanelDefinition, ScrollytellerDefinition } from './types.js';
+import type { PanelDefinition, ScrollytellerDefinition } from './types.js';
 
 const piecemeal = Symbol('piecemeal');
 const SELECTOR_COMMON = 'scrollyteller';
 
 type PanelMeta = {
 	[piecemeal]?: boolean;
-	align?: PanelAlignment;
+	align?: string;
 };
 declare global {
 	interface Window {

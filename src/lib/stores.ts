@@ -59,11 +59,8 @@ export function setIsSplitScreen([screenDims, globalAlign]) {
 export function setIsMobileRowMode([screenDims, mobileVariant]) {
   return derived(
     [screenDims, mobileVariant],
-    ([$screenDims, $mobileVariant]) => {
-      console.log($screenDims, $mobileVariant);
-      console.log($mobileVariant === 'rows' && $screenDims[0] < LARGE_TABLET_BREAKPOINT);
-      return $mobileVariant === 'rows' && $screenDims[0] < LARGE_TABLET_BREAKPOINT;
-    }
+    ([$screenDims, $mobileVariant]) =>
+      $mobileVariant === 'rows' && $screenDims[0] < LARGE_TABLET_BREAKPOINT
   );
 
   /** The max width when the scrollyteller centres itself in the page */
