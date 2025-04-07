@@ -39,7 +39,7 @@ $: if (graphicRootEl) {
     margin: 0;
     background: white;
     width: 100% !important;
-    height: unset !important;
+    max-height: calc(45vh + 50px);
     aspect-ratio: 1;
     container-type: normal;
     padding-bottom: 40px;
