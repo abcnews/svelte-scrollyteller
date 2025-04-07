@@ -3645,14 +3645,15 @@ function PanelObserver($$anchor, $$props) {
   push($$props, false);
   append_styles($$anchor, $$css$4);
   const [$$stores, $$cleanup] = setup_stores();
-  const $isSplitScreen = () => store_get(isSplitScreen, "$isSplitScreen", $$stores);
-  const $screenDims = () => store_get(screenDims, "$screenDims", $$stores);
+  const $isMobileRowMode = () => store_get(isMobileRowMode, "$isMobileRowMode", $$stores);
   const $vizDims = () => store_get(vizDims, "$vizDims", $$stores);
+  const $screenDims = () => store_get(screenDims, "$screenDims", $$stores);
+  const $isSplitScreen = () => store_get(isSplitScreen, "$isSplitScreen", $$stores);
   const $steps = () => store_get(steps, "$steps", $$stores);
   const vizMarkerThresholdMarginDecimal = mutable_state();
-  const rootMargin = mutable_state();
   const vizDims = getContext("vizDims");
   const isSplitScreen = getContext("isSplitScreen");
+  const isMobileRowMode = getContext("isMobileRowMode");
   const screenDims = getContext("screenDims");
   const steps = getContext("steps");
   const currentPanel = getContext("currentPanel");
@@ -3660,7 +3661,8 @@ function PanelObserver($$anchor, $$props) {
   let observerOptions = prop($$props, "observerOptions", 12);
   let isDebug = prop($$props, "isDebug", 12);
   let vizMarkerThreshold = prop($$props, "vizMarkerThreshold", 12, 20);
-  let _observerOptions = mutable_state(observerOptions());
+  let rootMargin = mutable_state();
+  let _observerOptions = mutable_state();
   let panelObserver = mutable_state();
   let intersectingPanels = mutable_state([]);
   onMount(() => {
@@ -3674,28 +3676,27 @@ function PanelObserver($$anchor, $$props) {
     }
   );
   legacy_pre_effect(
-    () => ($isSplitScreen(), $screenDims(), $vizDims(), get$1(vizMarkerThresholdMarginDecimal)),
+    () => ($isMobileRowMode(), $vizDims(), $screenDims(), $isSplitScreen(), get$1(vizMarkerThresholdMarginDecimal)),
     () => {
-      set(rootMargin, $isSplitScreen() ? (
-        // For split screens, trigger the intersection observer when the block is
-        // over {vizMarkerThreshold}% of the interactive.
-        Math.round(($screenDims()[1] - ($vizDims().dims[1] || $screenDims()[1]) * get$1(vizMarkerThresholdMarginDecimal)) / 2)
-      ) : (
-        // Otherwise 10% of the screen height.
-        Math.round($screenDims()[1] / 8)
-      ));
+      if ($isMobileRowMode()) {
+        const threshold = $vizDims().dims[1] / $screenDims()[1] * 100;
+        set(rootMargin, `-${threshold}% 0px 0px 0px`);
+      } else if ($isSplitScreen()) {
+        const threshold = Math.round(($screenDims()[1] - ($vizDims().dims[1] || $screenDims()[1]) * get$1(vizMarkerThresholdMarginDecimal)) / 2);
+        set(rootMargin, `-${threshold}px 0px -${threshold}px 0px`);
+      } else {
+        const threshold = Math.round($screenDims()[1] / 8);
+        set(rootMargin, `-${threshold}px 0px -${threshold}px 0px`);
+      }
     }
   );
   legacy_pre_effect(
     () => (deep_read_state(observerOptions()), get$1(rootMargin)),
     () => {
-      if (observerOptions()) {
-        set(_observerOptions, observerOptions());
-      } else {
-        set(_observerOptions, {
-          rootMargin: `-${get$1(rootMargin)}px 0px -${get$1(rootMargin)}px 0px`
-        });
-      }
+      set(_observerOptions, {
+        ...observerOptions() || {},
+        rootMargin: get$1(rootMargin)
+      });
     }
   );
   legacy_pre_effect(
@@ -3800,7 +3801,9 @@ function ScreenDimsStoreUpdater($$anchor, $$props) {
   const [$$stores, $$cleanup] = setup_stores();
   const globalAlign = getContext("globalAlign");
   const screenDims = getContext("screenDims");
+  const globalMobileVariant = getContext("mobileVariant");
   let align = prop($$props, "align", 12, "centre");
+  let mobileVariant = prop($$props, "mobileVariant", 12, "blocks");
   let innerWidth = mutable_state(0);
   let innerHeight2 = mutable_state(0);
   legacy_pre_effect(() => (get$1(innerWidth), get$1(innerHeight2)), () => {
@@ -3808,6 +3811,9 @@ function ScreenDimsStoreUpdater($$anchor, $$props) {
   });
   legacy_pre_effect(() => deep_read_state(align()), () => {
     store_set(globalAlign, align());
+  });
+  legacy_pre_effect(() => deep_read_state(mobileVariant()), () => {
+    store_set(globalMobileVariant, mobileVariant());
   });
   legacy_pre_effect_reset();
   init();
@@ -3820,12 +3826,19 @@ function ScreenDimsStoreUpdater($$anchor, $$props) {
     set align($$value) {
       align($$value);
       flushSync();
+    },
+    get mobileVariant() {
+      return mobileVariant();
+    },
+    set mobileVariant($$value) {
+      mobileVariant($$value);
+      flushSync();
     }
   });
   $$cleanup();
   return $$pop;
 }
-create_custom_element(ScreenDimsStoreUpdater, { align: {} }, [], [], true);
+create_custom_element(ScreenDimsStoreUpdater, { align: {}, mobileVariant: {} }, [], [], true);
 function setSteps() {
   return writable([]);
 }
@@ -3853,11 +3866,24 @@ function setScreenDims() {
 function setGlobalAlign() {
   return writable("centre");
 }
+function setMobileVariant() {
+  return writable("blocks");
+}
 const LARGE_TABLET_BREAKPOINT = 992;
 function setIsSplitScreen([screenDims, globalAlign]) {
   return derived(
     [screenDims, globalAlign],
     ([$screenDims, $globalAlign]) => ["left", "right"].includes($globalAlign) && $screenDims[0] >= LARGE_TABLET_BREAKPOINT
+  );
+}
+function setIsMobileRowMode([screenDims, mobileVariant]) {
+  return derived(
+    [screenDims, mobileVariant],
+    ([$screenDims, $mobileVariant]) => {
+      console.log($screenDims, $mobileVariant);
+      console.log($mobileVariant === "rows" && $screenDims[0] < LARGE_TABLET_BREAKPOINT);
+      return $mobileVariant === "rows" && $screenDims[0] < LARGE_TABLET_BREAKPOINT;
+    }
   );
 }
 function setMaxScrollytellerWidth([isSplitScreen]) {
@@ -3895,10 +3921,10 @@ const children = (el, children2) => {
     }
   };
 };
-var root$2 = /* @__PURE__ */ template(`<div><div class="st-panel svelte-pv2kpf"></div></div>`);
+var root$2 = /* @__PURE__ */ template(`<div><div class="st-panel svelte-j6scue"></div></div>`);
 const $$css$3 = {
-  hash: "svelte-pv2kpf",
-  code: '.st-panel-root.svelte-pv2kpf {--panel-radius: 0.75rem;--panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color: var(--color-panel-text, #000);--panel-opacity: var(--color-panel-opacity, 1);--panel-filter: var(--color-panel-filter, blur(2.5px));--panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding: 1rem;\n  /* How opaque do we make inactive panels on 2 column mode */--panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);\n  /** How much margin should we have between panels on 2 column mode */--panel-column-margin: var(--color-panel-margin, 40vh);box-sizing:border-box;margin:80vh auto;position:relative;z-index:1;pointer-events:none;}\n@media (min-width: 46.5rem) {.st-panel-root.svelte-pv2kpf {--panel-padding: 2rem;}\n}[data-scheme="dark"] .st-panel-root.svelte-pv2kpf, .is-dark-mode .st-panel-root.svelte-pv2kpf {--panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color: var(--color-panel-text, #ebebeb);--panel-border: var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15));}.scrollyteller--debug .st-panel-root.svelte-pv2kpf {outline:5px solid limegreen;}.st-panel-root.first.svelte-pv2kpf {margin-top:100dvh;}.st-panel-root.last.svelte-pv2kpf {margin-bottom:50vh;}\n@media (min-width: 62rem) {.st-panel-root--left.svelte-pv2kpf, .st-panel-root--right.svelte-pv2kpf {margin-top:var(--panel-column-margin);margin-bottom:var(--panel-column-margin);opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active.svelte-pv2kpf, .st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active.svelte-pv2kpf {opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-pv2kpf, .st-panel-root--right.st-panel-root--transparent-blocks.svelte-pv2kpf {--panel-filter: none;--panel-background: none;--panel-border: none;--panel-padding: 0;opacity:var(--panel-opacity-inactive);}.st-panel-root--left.first.svelte-pv2kpf, .st-panel-root--right.first.svelte-pv2kpf {margin-top:50dvh;}\n}.st-panel.svelte-pv2kpf {-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding);}.st-panel.svelte-pv2kpf::before {content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%;}.st-panel.svelte-pv2kpf::after {content:"";display:table;clear:both;}.st-panel.svelte-pv2kpf > * {pointer-events:all;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;}.st-panel.svelte-pv2kpf > *:last-child {margin-bottom:0;}.st-panel.svelte-pv2kpf > :is(div, p) {font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;}.st-panel.svelte-pv2kpf > img {max-width:66%;display:block;margin:auto;height:auto;}.st-panel.svelte-pv2kpf > :is(h1, h2, h3, h4) {font-family:var(--od-font-stack-serif);}'
+  hash: "svelte-j6scue",
+  code: '@media (max-width: 62rem) {.scrollyteller--mobile-row-variant .st-panel.svelte-j6scue::before {opacity:0 !important;}\n}.st-panel-root.svelte-j6scue {--panel-radius: 0.75rem;--panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color: var(--color-panel-text, #000);--panel-opacity: var(--color-panel-opacity, 1);--panel-filter: var(--color-panel-filter, blur(2.5px));--panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding: 1rem;\n  /* How opaque do we make inactive panels on 2 column mode */--panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);\n  /** How much margin should we have between panels on 2 column mode */--panel-column-margin: var(--color-panel-margin, 40vh);box-sizing:border-box;margin:80vh auto;position:relative;z-index:1;pointer-events:none;}\n@media (min-width: 46.5rem) {.st-panel-root.svelte-j6scue {--panel-padding: 2rem;}\n}[data-scheme="dark"] .st-panel-root.svelte-j6scue, .is-dark-mode .st-panel-root.svelte-j6scue {--panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color: var(--color-panel-text, #ebebeb);--panel-border: var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15));}.scrollyteller--debug .st-panel-root.svelte-j6scue {outline:5px solid limegreen;}.st-panel-root.first.svelte-j6scue {margin-top:100dvh;}.st-panel-root.last.svelte-j6scue {margin-bottom:50vh;}\n@media (min-width: 62rem) {.st-panel-root--left.svelte-j6scue, .st-panel-root--right.svelte-j6scue {margin-top:var(--panel-column-margin);margin-bottom:var(--panel-column-margin);opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active.svelte-j6scue, .st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active.svelte-j6scue {opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-j6scue, .st-panel-root--right.st-panel-root--transparent-blocks.svelte-j6scue {--panel-filter: none;--panel-background: none;--panel-border: none;--panel-padding: 0;opacity:var(--panel-opacity-inactive);}.st-panel-root--left.first.svelte-j6scue, .st-panel-root--right.first.svelte-j6scue {margin-top:50dvh;}\n}.st-panel.svelte-j6scue {-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding);}.st-panel.svelte-j6scue::before {content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%;}.st-panel.svelte-j6scue::after {content:"";display:table;clear:both;}.st-panel.svelte-j6scue > * {pointer-events:all;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;}.st-panel.svelte-j6scue > *:last-child {margin-bottom:0;}.st-panel.svelte-j6scue > :is(div, p) {font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;}.st-panel.svelte-j6scue > img {max-width:66%;display:block;margin:auto;height:auto;}.st-panel.svelte-j6scue > :is(h1, h2, h3, h4) {font-family:var(--od-font-stack-serif);}'
 };
 function Panel($$anchor, $$props) {
   push($$props, false);
@@ -3929,7 +3955,7 @@ function Panel($$anchor, $$props) {
   template_effect(() => {
     set_attribute(div, "data-align", align());
     set_attribute(div, "data-index", i());
-    classes = set_class(div, 1, `st-panel-root ${panelClass() || ""}`, "svelte-pv2kpf", classes, {
+    classes = set_class(div, 1, `st-panel-root ${panelClass() || ""}`, "svelte-j6scue", classes, {
       "st-panel-root--left": align() === "left",
       "st-panel-root--right": align() === "right",
       "st-panel-root--centre": align() === "centre",
@@ -3999,14 +4025,15 @@ create_custom_element(
   [],
   true
 );
-var root_1 = /* @__PURE__ */ template(`<div></div>`);
+var root_1 = /* @__PURE__ */ template(`<div class="panel-wrapper"><div></div></div>`);
 const $$css$2 = {
-  hash: "svelte-1qnkhkx",
-  code: ".content.svelte-1qnkhkx {margin:-100dvh auto 0;padding-bottom:1px;position:relative;z-index:2;pointer-events:none;font-size:1.125rem;}\n\n@media (min-width: 62rem) {.content--centre.svelte-1qnkhkx {max-width:48.75rem;}\n}\n@media (min-width: 90rem) {.content--centre.svelte-1qnkhkx {max-width:56.25rem;}\n}.content--left.svelte-1qnkhkx, .content--right.svelte-1qnkhkx {max-width:127.5rem;margin-left:0;}\n@media (min-width: 62rem) {.content--left.svelte-1qnkhkx, .content--right.svelte-1qnkhkx {max-width:40rem;margin-right:calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);font-size:1.125rem;}\n}\n@media (min-width: 75rem) {.content--left.svelte-1qnkhkx, .content--right.svelte-1qnkhkx {font-size:1.125rem;}\n}\n@media (min-width: 90rem) {.content--left.svelte-1qnkhkx, .content--right.svelte-1qnkhkx {max-width:45rem;font-size:1.25rem;}\n}.content--right.svelte-1qnkhkx {margin-right:0;margin-left:calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);}"
+  hash: "svelte-csaqt1",
+  code: "/* :global(.scrollyteller--mobile-row-variant) { */\n/*   .content { */\n/*     position: fixed; */\n/*   } */\n/* } */.content.svelte-csaqt1 {margin:-100dvh auto 0;padding-bottom:1px;position:relative;z-index:2;pointer-events:none;font-size:1.125rem;}\n\n@media (min-width: 62rem) {.content--centre.svelte-csaqt1 {max-width:48.75rem;}\n}\n@media (min-width: 90rem) {.content--centre.svelte-csaqt1 {max-width:56.25rem;}\n}.content--left.svelte-csaqt1, .content--right.svelte-csaqt1 {max-width:127.5rem;margin-left:0;}\n@media (min-width: 62rem) {.content--left.svelte-csaqt1, .content--right.svelte-csaqt1 {max-width:40rem;margin-right:calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);font-size:1.125rem;}\n}\n@media (min-width: 75rem) {.content--left.svelte-csaqt1, .content--right.svelte-csaqt1 {font-size:1.125rem;}\n}\n@media (min-width: 90rem) {.content--left.svelte-csaqt1, .content--right.svelte-csaqt1 {max-width:45rem;font-size:1.25rem;}\n}.content--right.svelte-csaqt1 {margin-right:0;margin-left:calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);}"
 };
 function Panels($$anchor, $$props) {
   push($$props, false);
   append_styles($$anchor, $$css$2);
+  let panelRoot = prop($$props, "panelRoot", 12);
   let layout = prop($$props, "layout", 12);
   let panels = prop($$props, "panels", 12);
   let customPanel = prop($$props, "customPanel", 12, null);
@@ -4039,8 +4066,9 @@ function Panels($$anchor, $$props) {
   var node = first_child(fragment);
   each(node, 1, () => get$1(panelGroups), index, ($$anchor2, group) => {
     var div = root_1();
+    var div_1 = child(div);
     let classes;
-    each(div, 5, () => get$1(group).panels, index, ($$anchor3, panel) => {
+    each(div_1, 5, () => get$1(group).panels, index, ($$anchor3, panel) => {
       var fragment_1 = comment();
       var node_1 = first_child(fragment_1);
       {
@@ -4077,8 +4105,10 @@ function Panels($$anchor, $$props) {
       }
       append($$anchor3, fragment_1);
     });
+    reset(div_1);
     reset(div);
-    template_effect(() => classes = set_class(div, 1, "content svelte-1qnkhkx", null, classes, {
+    bind_this(div, ($$value) => panelRoot($$value), () => panelRoot());
+    template_effect(() => classes = set_class(div_1, 1, "content svelte-csaqt1", null, classes, {
       "content--centre": get$1(group).align === "centre",
       "content--right": get$1(group).align === "right",
       "content--left": get$1(group).align === "left"
@@ -4087,6 +4117,13 @@ function Panels($$anchor, $$props) {
   });
   append($$anchor, fragment);
   return pop({
+    get panelRoot() {
+      return panelRoot();
+    },
+    set panelRoot($$value) {
+      panelRoot($$value);
+      flushSync();
+    },
     get layout() {
       return layout();
     },
@@ -4120,6 +4157,7 @@ function Panels($$anchor, $$props) {
 create_custom_element(
   Panels,
   {
+    panelRoot: {},
     layout: {},
     panels: {},
     customPanel: {},
@@ -4191,8 +4229,8 @@ function GraphicObserver($$anchor, $$props) {
 create_custom_element(GraphicObserver, { graphicRootEl: {} }, [], [], true);
 var root$1 = /* @__PURE__ */ template(`<!> <div><!></div>`, 1);
 const $$css$1 = {
-  hash: "svelte-1uvy8v3",
-  code: ".viz.svelte-1uvy8v3 {transform:translate3d(0, 0, 0);height:100dvh;position:sticky;top:0;left:0;z-index:1;}.viz--resized.svelte-1uvy8v3 {container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;margin:0 auto;width:calc(100% - var(--marginOuter) * 2);max-width:calc(100vw - var(--vizMarginOuter) * 2);}\n@media (min-width: 46.5rem) {.viz--resized.svelte-1uvy8v3 {--margin: 4rem;top:8dvh;height:62dvh;}\n}.viz--resized.viz--left.svelte-1uvy8v3, .viz--resized.viz--right.svelte-1uvy8v3 {width:var(--rightColumnWidth);}\n@media (min-width: 62rem) {.viz--resized.viz--left.svelte-1uvy8v3, .viz--resized.viz--right.svelte-1uvy8v3 {align-items:center;height:84dvh;top:8dvh;}\n}\n@media (min-width: 75rem) {.viz--resized.viz--left.svelte-1uvy8v3, .viz--resized.viz--right.svelte-1uvy8v3 {height:76dvh;top:12dvh;}\n}\n@media (min-width: 90rem) {.viz--resized.viz--left.svelte-1uvy8v3, .viz--resized.viz--right.svelte-1uvy8v3 {top:10dvh;height:80dvh;}\n}\n@media (min-width: 62rem) {.viz--resized.viz--left.svelte-1uvy8v3 {margin:0 auto 0 0;}\n}\n@media (min-width: 62rem) {.viz--resized.viz--right.svelte-1uvy8v3 {margin:0 0 0 auto;}\n}\n@media (min-width: 62rem) {.viz--resized.viz--centre.svelte-1uvy8v3 {top:8dvh;height:62dvh;}\n}\n@media (min-width: 75rem) {.viz--resized.viz--centre.svelte-1uvy8v3 {top:12dvh;height:58dvh;}\n}\n@media (min-width: 90rem) {.viz--resized.viz--centre.svelte-1uvy8v3 {top:12dvh;height:58dvh;}\n}.scrollyteller--debug .viz--resized.svelte-1uvy8v3 {outline:5px solid limegreen;}"
+  hash: "svelte-1ozogkt",
+  code: ".scrollyteller--mobile-row-variant {--marginOuter: 0;--vizMarginOuter: 0;}\n@media (max-width: 62rem) {.scrollyteller--mobile-row-variant .viz--resized.svelte-1ozogkt {z-index:10;top:0;background:white;margin:0;height:40dvh;}\n}.viz.svelte-1ozogkt {transform:translate3d(0, 0, 0);height:100dvh;position:sticky;top:0;left:0;z-index:1;}.viz--resized.svelte-1ozogkt {container-type:size;height:60dvh;top:10dvh;display:flex;justify-content:center;align-items:flex-start;margin:0 auto;margin:0 auto;width:calc(100% - var(--marginOuter) * 2);max-width:calc(100vw - var(--vizMarginOuter) * 2);}\n@media (min-width: 46.5rem) {.viz--resized.svelte-1ozogkt {--margin: 4rem;top:8dvh;height:62dvh;}\n}.viz--resized.viz--left.svelte-1ozogkt, .viz--resized.viz--right.svelte-1ozogkt {width:var(--rightColumnWidth);}\n@media (min-width: 62rem) {.viz--resized.viz--left.svelte-1ozogkt, .viz--resized.viz--right.svelte-1ozogkt {align-items:center;height:84dvh;top:8dvh;}\n}\n@media (min-width: 75rem) {.viz--resized.viz--left.svelte-1ozogkt, .viz--resized.viz--right.svelte-1ozogkt {height:76dvh;top:12dvh;}\n}\n@media (min-width: 90rem) {.viz--resized.viz--left.svelte-1ozogkt, .viz--resized.viz--right.svelte-1ozogkt {top:10dvh;height:80dvh;}\n}\n@media (min-width: 62rem) {.viz--resized.viz--left.svelte-1ozogkt {margin:0 auto 0 0;}\n}\n@media (min-width: 62rem) {.viz--resized.viz--right.svelte-1ozogkt {margin:0 0 0 auto;}\n}\n@media (min-width: 62rem) {.viz--resized.viz--centre.svelte-1ozogkt {top:8dvh;height:62dvh;}\n}\n@media (min-width: 75rem) {.viz--resized.viz--centre.svelte-1ozogkt {top:12dvh;height:58dvh;}\n}\n@media (min-width: 90rem) {.viz--resized.viz--centre.svelte-1ozogkt {top:12dvh;height:58dvh;}\n}.scrollyteller--debug .viz--resized.svelte-1ozogkt {outline:5px solid limegreen;}"
 };
 function Viz($$anchor, $$props) {
   push($$props, false);
@@ -4237,7 +4275,7 @@ function Viz($$anchor, $$props) {
   }
   reset(div);
   bind_this(div, ($$value) => set(graphicRootEl, $$value), () => get$1(graphicRootEl));
-  template_effect(() => classes = set_class(div, 1, "viz svelte-1uvy8v3", null, classes, {
+  template_effect(() => classes = set_class(div, 1, "viz svelte-1ozogkt", null, classes, {
     "viz--resized": layout().resizeInteractive,
     "viz--right": layout().resizeInteractive && layout().align === "left",
     "viz--left": layout().resizeInteractive && layout().align === "right",
@@ -4292,10 +4330,10 @@ var root_2 = /* @__PURE__ */ template(`<style>/* styles required to make positio
 			body {
 				overflow: visible;
 			}</style>`);
-var root = /* @__PURE__ */ template(`<!> <!> <!> <div class="scrollyteller-wrapper svelte-3koitg"><!> <div><!> <!></div></div>`, 1);
+var root = /* @__PURE__ */ template(`<!> <!> <!> <div class="scrollyteller-wrapper svelte-unolp6"><!> <div><!> <!></div></div>`, 1);
 const $$css = {
-  hash: "svelte-3koitg",
-  code: '.scrollyteller-wrapper.svelte-3koitg {position:relative;}.scrollyteller.svelte-3koitg {position:relative;--maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);--marginOuter: 1rem;margin:0 auto;max-width:calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);--vizMaxWidth: 1;--vizMarginOuter: 1.5rem;}\n@media (min-width: 46.5rem) {.scrollyteller.svelte-3koitg {--marginOuter: 2rem;--vizMarginOuter: 3rem;}\n}\n@media (min-width: 62rem) {.scrollyteller.svelte-3koitg {--marginOuter: 2rem;--vizMarginOuter: 3rem;--vizMaxWidth: 0.55;}.scrollyteller--columns.svelte-3koitg {width:fit-content;}\n}\n@media (min-width: 75rem) {.scrollyteller.svelte-3koitg {--marginOuter: 3rem;--vizMarginOuter: 4rem;--vizMaxWidth: 0.7;}\n}\n@media (min-width: 90rem) {.scrollyteller.svelte-3koitg {--marginOuter: 4rem;--vizMarginOuter: 6rem;}\n}.scrollyteller--debug.svelte-3koitg:after {content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110;}\n@media (min-width: 46.5rem) {.scrollyteller--debug.svelte-3koitg:after {content:"Tablet";}\n}\n@media (min-width: 62rem) {.scrollyteller--debug.svelte-3koitg:after {content:"LargeTablet";}\n}\n@media (min-width: 75rem) {.scrollyteller--debug.svelte-3koitg:after {content:"Desktop";}\n}\n@media (min-width: 90rem) {.scrollyteller--debug.svelte-3koitg:after {content:"LargeDesktop";}\n}'
+  hash: "svelte-unolp6",
+  code: '.scrollyteller-wrapper.svelte-unolp6 {position:relative;}.scrollyteller.svelte-unolp6 {position:relative;--maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);--marginOuter: 1rem;margin:0 auto;max-width:calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);--vizMaxWidth: 1;--vizMarginOuter: 1.5rem;\n  /* Force full width when using the mobile row variant */}\n@media (max-width: 62rem) {.scrollyteller.scrollyteller--mobile-row-variant.svelte-unolp6 {--marginOuter: 0;--vizMarginOuter: 0;}\n}\n@media (min-width: 46.5rem) {.scrollyteller.svelte-unolp6 {--marginOuter: 2rem;--vizMarginOuter: 3rem;}\n}\n@media (min-width: 62rem) {.scrollyteller.svelte-unolp6 {--marginOuter: 2rem;--vizMarginOuter: 3rem;--vizMaxWidth: 0.55;}.scrollyteller--columns.svelte-unolp6 {width:fit-content;}\n}\n@media (min-width: 75rem) {.scrollyteller.svelte-unolp6 {--marginOuter: 3rem;--vizMarginOuter: 4rem;--vizMaxWidth: 0.7;}\n}\n@media (min-width: 90rem) {.scrollyteller.svelte-unolp6 {--marginOuter: 4rem;--vizMarginOuter: 6rem;}\n}.scrollyteller--debug.svelte-unolp6:after {content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110;}\n@media (min-width: 46.5rem) {.scrollyteller--debug.svelte-unolp6:after {content:"Tablet";}\n}\n@media (min-width: 62rem) {.scrollyteller--debug.svelte-unolp6:after {content:"LargeTablet";}\n}\n@media (min-width: 75rem) {.scrollyteller--debug.svelte-unolp6:after {content:"Desktop";}\n}\n@media (min-width: 90rem) {.scrollyteller--debug.svelte-unolp6:after {content:"LargeDesktop";}\n}'
 };
 function Scrollyteller($$anchor, $$props) {
   push($$props, false);
@@ -4304,6 +4342,7 @@ function Scrollyteller($$anchor, $$props) {
   const $maxScrollytellerWidthStore = () => store_get(maxScrollytellerWidthStore, "$maxScrollytellerWidthStore", $$stores);
   const $maxGraphicWidthStore = () => store_get(maxGraphicWidthStore, "$maxGraphicWidthStore", $$stores);
   const _layout = mutable_state();
+  const _observerOptions = mutable_state();
   const maxScrollSpeed = mutable_state();
   const isDebug = mutable_state();
   createEventDispatcher();
@@ -4314,7 +4353,9 @@ function Scrollyteller($$anchor, $$props) {
   const ratioStore = setContext("ratio", setRatio());
   const screenDimsStore = setContext("screenDims", setScreenDims());
   const globalAlignStore = setContext("globalAlign", setGlobalAlign());
+  const mobileVariantStore = setContext("mobileVariant", setMobileVariant());
   const isSplitScreenStore = setContext("isSplitScreen", setIsSplitScreen([screenDimsStore, globalAlignStore]));
+  setContext("isMobileRowMode", setIsMobileRowMode([screenDimsStore, mobileVariantStore]));
   const maxScrollytellerWidthStore = setContext("maxScrollytellerWidth", setMaxScrollytellerWidth([isSplitScreenStore]));
   const maxGraphicWidthStore = setContext("maxGraphicWidth", setMaxGraphicWidth([
     isSplitScreenStore,
@@ -4344,6 +4385,7 @@ function Scrollyteller($$anchor, $$props) {
   let isInViewport = mutable_state(false);
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions = [];
+  let panelRoot = mutable_state();
   const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
     set(isInViewport, scrollytellerEntry.isIntersecting);
   }));
@@ -4377,10 +4419,21 @@ function Scrollyteller($$anchor, $$props) {
   legacy_pre_effect(() => deep_read_state(layout()), () => {
     set(_layout, {
       align: layout().align || "centre",
+      mobileVariant: layout().mobileVariant || "blocks",
+      // or rows
       resizeInteractive: layout().resizeInteractive ?? true,
       transparentFloat: layout().transparentFloat ?? ["left", "right"].includes(layout().align)
     });
   });
+  legacy_pre_effect(
+    () => (get$1(_layout), deep_read_state(observerOptions())),
+    () => {
+      set(_observerOptions, {
+        rootMargin: get$1(_layout).mobileVariant === "rows" ? "-50% 0% 0% 0%" : void 0,
+        ...observerOptions() || {}
+      });
+    }
+  );
   legacy_pre_effect(() => deep_read_state(ratio()), () => {
     store_set(ratioStore, ratio());
   });
@@ -4442,12 +4495,15 @@ function Scrollyteller($$anchor, $$props) {
   ScreenDimsStoreUpdater(node_2, {
     get align() {
       return get$1(_layout).align;
+    },
+    get mobileVariant() {
+      return get$1(_layout).mobileVariant;
     }
   });
   var node_3 = sibling(node_2, 2);
   PanelObserver(node_3, {
     get observerOptions() {
-      return observerOptions();
+      return get$1(_observerOptions);
     },
     get isDebug() {
       return get$1(isDebug);
@@ -4534,23 +4590,32 @@ function Scrollyteller($$anchor, $$props) {
     },
     get customPanel() {
       return customPanel();
-    }
+    },
+    get panelRoot() {
+      return get$1(panelRoot);
+    },
+    set panelRoot($$value) {
+      set(panelRoot, $$value);
+    },
+    $$legacy: true
   });
   reset(div_1);
   bind_this(div_1, ($$value) => set(scrollytellerRef, $$value), () => get$1(scrollytellerRef));
   reset(div);
   template_effect(
-    ($0) => {
-      classes = set_class(div_1, 1, "scrollyteller svelte-3koitg", null, classes, {
+    ($0, $1) => {
+      classes = set_class(div_1, 1, "scrollyteller svelte-unolp6", null, classes, {
         "scrollyteller--resized": get$1(_layout).resizeInteractive,
         "scrollyteller--debug": get$1(isDebug),
-        "scrollyteller--columns": $0
+        "scrollyteller--columns": $0,
+        "scrollyteller--mobile-row-variant": $1
       });
       set_style(div_1, "--maxScrollytellerWidthPx", $maxScrollytellerWidthStore() + "px");
       set_style(div_1, "--rightColumnWidth", `min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidthStore()}px)`);
     },
     [
-      () => ["left", "right"].includes(get$1(_layout).align)
+      () => ["left", "right"].includes(get$1(_layout).align),
+      () => ["rows"].includes(get$1(_layout).mobileVariant)
     ],
     derived_safe_equal
   );

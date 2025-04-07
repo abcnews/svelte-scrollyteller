@@ -38,6 +38,14 @@
 <style lang="scss">
 	@import './breakpoints.scss';
 
+  :global(.scrollyteller--mobile-row-variant) {
+		@media (max-width: $breakpointLargeTablet) {
+      .st-panel::before {
+        opacity: 0 !important;
+      }
+    }
+  }
+
 	.st-panel-root {
 		--panel-radius: 0.75rem;
 		--panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));

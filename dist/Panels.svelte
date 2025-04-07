@@ -1,4 +1,5 @@
 <script lang="ts">import Panel from './Panel.svelte';
+export let panelRoot;
 export let layout;
 export let panels;
 export let customPanel = null;
@@ -27,28 +28,38 @@ $: {
 </script>
 
 {#each panelGroups as group}
-	<div
-		class="content"
-		class:content--centre={group.align === 'centre'}
-		class:content--right={group.align === 'right'}
-		class:content--left={group.align === 'left'}
-	>
-		{#each group.panels as panel}
-			{#if customPanel}
-				<svelte:component this={customPanel} {...panel} {steps} />
-			{:else}
-				<Panel
-					{...panel}
-					align={panel.align || layout.align}
-					transparentFloat={layout.transparentFloat}
-					{steps}
-				/>
-			{/if}
-		{/each}
+  <div
+    class="panel-wrapper"
+    bind:this={panelRoot}
+  >
+    <div
+      class="content"
+      class:content--centre={group.align === 'centre'}
+      class:content--right={group.align === 'right'}
+      class:content--left={group.align === 'left'}
+    >
+      {#each group.panels as panel}
+        {#if customPanel}
+          <svelte:component this={customPanel} {...panel} {steps} />
+        {:else}
+          <Panel
+            {...panel}
+            align={panel.align || layout.align}
+            transparentFloat={layout.transparentFloat}
+            {steps}
+          />
+        {/if}
+      {/each}
+    </div>
 	</div>
 {/each}
 
-<style>.content {
+<style>/* :global(.scrollyteller--mobile-row-variant) { */
+/*   .content { */
+/*     position: fixed; */
+/*   } */
+/* } */
+.content {
   margin: -100dvh auto 0;
   padding-bottom: 1px;
   position: relative;

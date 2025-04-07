@@ -29,7 +29,13 @@ onMount(() => {
 	<div class="st-panel" use:children={nodes}></div>
 </div>
 
-<style>.st-panel-root {
+<style>@media (max-width: 62rem) {
+  :global(.scrollyteller--mobile-row-variant) .st-panel::before {
+    opacity: 0 !important;
+  }
+}
+
+.st-panel-root {
   --panel-radius: 0.75rem;
   --panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));
   --panel-color: var(--color-panel-text, #000);

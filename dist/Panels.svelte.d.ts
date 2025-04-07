@@ -14,6 +14,7 @@ interface $$__sveltets_2_IsomorphicComponent<Props extends Record<string, any> =
     z_$$bindings?: Bindings;
 }
 declare const Panels: $$__sveltets_2_IsomorphicComponent<{
+    panelRoot: any;
     layout: Style;
     panels: PanelDefinition[];
     customPanel?: ComponentType | null;

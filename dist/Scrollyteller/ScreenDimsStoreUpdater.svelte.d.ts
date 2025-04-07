@@ -13,6 +13,7 @@ interface $$__sveltets_2_IsomorphicComponent<Props extends Record<string, any> =
 }
 declare const ScreenDimsStoreUpdater: $$__sveltets_2_IsomorphicComponent<{
     align?: string;
+    mobileVariant?: string;
 }, {
     [evt: string]: CustomEvent<any>;
 }, {}, {}, string>;

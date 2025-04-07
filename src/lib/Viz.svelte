@@ -33,6 +33,23 @@
 
 <style lang="scss">
 	@import './breakpoints.scss';
+
+  :global(.scrollyteller--mobile-row-variant) {
+    --marginOuter: 0;
+    --vizMarginOuter: 0;
+
+		@media (max-width: $breakpointLargeTablet) {
+      .viz--resized {
+        z-index: 10;
+        top: 0;
+        background: white;
+        margin: 0;
+
+        height: 40dvh;
+      }
+    }
+  }
+
 	.viz {
 		transform: translate3d(0, 0, 0);
 		height: 100dvh;

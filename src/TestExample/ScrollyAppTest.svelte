@@ -14,6 +14,7 @@
 	let stProgress;
 
 	const onMarker = (detail) => {
+    console.log(detail);
 		number = detail.number;
 	};
 

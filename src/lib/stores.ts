@@ -42,6 +42,10 @@ export function setGlobalAlign() {
 	return writable('centre');
 }
 
+export function setMobileVariant() {
+	return writable('blocks');
+}
+
 const LARGE_TABLET_BREAKPOINT = 992;
 /** Split screen mode happens when left/right aligned + not mobile */
 export function setIsSplitScreen([screenDims, globalAlign]) {
@@ -50,8 +54,19 @@ export function setIsSplitScreen([screenDims, globalAlign]) {
 		([$screenDims, $globalAlign]) =>
 			['left', 'right'].includes($globalAlign) && $screenDims[0] >= LARGE_TABLET_BREAKPOINT
 	);
+}
 
-	/** The max width when the scrollyteller centres itself in the page */
+export function setIsMobileRowMode([screenDims, mobileVariant]) {
+  return derived(
+    [screenDims, mobileVariant],
+    ([$screenDims, $mobileVariant]) => {
+      console.log($screenDims, $mobileVariant);
+      console.log($mobileVariant === 'rows' && $screenDims[0] < LARGE_TABLET_BREAKPOINT);
+      return $mobileVariant === 'rows' && $screenDims[0] < LARGE_TABLET_BREAKPOINT;
+    }
+  );
+
+  /** The max width when the scrollyteller centres itself in the page */
 }
 export function setMaxScrollytellerWidth([isSplitScreen]) {
 	return derived([isSplitScreen], ([$isSplitScreen]) => ($isSplitScreen ? 2040 : 1e6));

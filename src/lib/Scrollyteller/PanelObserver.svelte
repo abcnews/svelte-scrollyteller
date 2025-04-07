@@ -22,6 +22,7 @@
 	import { getContext, onMount } from 'svelte';
 	const vizDims = getContext('vizDims');
 	const isSplitScreen = getContext('isSplitScreen');
+	const isMobileRowMode = getContext('isMobileRowMode');
 	const screenDims = getContext('screenDims');
 	const steps = getContext('steps');
 	const currentPanel = getContext('currentPanel');
@@ -39,29 +40,37 @@
 	$: vizMarkerThresholdMarginDecimal = (100 - vizMarkerThreshold * 2) / 100;
 
 	/** Intersection observer root margin */
-	$: rootMargin = $isSplitScreen
-		? // For split screens, trigger the intersection observer when the block is
-			// over {vizMarkerThreshold}% of the interactive.
-			Math.round(
-				($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * vizMarkerThresholdMarginDecimal) /
-					2
-			)
-		: // Otherwise 10% of the screen height.
-			Math.round($screenDims[1] / 8);
+  let rootMargin;
+  $: {
+    if ($isMobileRowMode) {
+      // For row layout on small portrait screens, block out space taken up by the viz at the top
+      const threshold = ($vizDims.dims[1] / $screenDims[1]) * 100;
+      // console.log($vizDims, $screenDims, threshold);
+      rootMargin = `-${threshold}% 0px 0px 0px`;
+    } else if ($isSplitScreen) {
+      // For split screens, trigger the intersection observer when the block is
+      // over {vizMarkerThreshold}% of the interactive.
+      const threshold = Math.round(
+        ($screenDims[1] - ($vizDims.dims[1] || $screenDims[1]) * vizMarkerThresholdMarginDecimal) / 2
+      );
+      rootMargin = `-${threshold}px 0px -${threshold}px 0px`;
+     } else {
+       // Otherwise 10% of the screen height (on top and bottom).
+      const threshold = Math.round($screenDims[1] / 8);
+      rootMargin = `-${threshold}px 0px -${threshold}px 0px`;
+    }
+  }
 
 	/**
 	 * When observerOptions isn't set, default to either 0.5 for centred blocks
 	 * or a 20% margin on the interactive.
 	 */
-	let _observerOptions: IntersectionObserverInit = observerOptions;
+	let _observerOptions: IntersectionObserverInit | undefined;
 	$: {
-		if (observerOptions) {
-			_observerOptions = observerOptions;
-		} else {
-			_observerOptions = {
-				rootMargin: `-${rootMargin}px 0px -${rootMargin}px 0px`
-			};
-		}
+    _observerOptions = {
+      ...(observerOptions || {}),
+      rootMargin,
+    };
 	}
 
 	// Set up observer for panel position ======================================

@@ -16,7 +16,9 @@
 		setRatio,
 		setScreenDims,
 		setGlobalAlign,
+    setMobileVariant,
 		setIsSplitScreen,
+    setIsMobileRowMode,
 		setMaxScrollytellerWidth,
 		setMaxGraphicWidth,
 		setCurrentPanel
@@ -32,9 +34,14 @@
 	const ratioStore = setContext('ratio', setRatio());
 	const screenDimsStore = setContext('screenDims', setScreenDims());
 	const globalAlignStore = setContext('globalAlign', setGlobalAlign());
+	const mobileVariantStore = setContext('mobileVariant', setMobileVariant());
 	const isSplitScreenStore = setContext(
 		'isSplitScreen',
 		setIsSplitScreen([screenDimsStore, globalAlignStore])
+	);
+	const isMobileRowMode = setContext(
+		'isMobileRowMode',
+		setIsMobileRowMode([screenDimsStore, mobileVariantStore])
 	);
 	const maxScrollytellerWidthStore = setContext(
 		'maxScrollytellerWidth',
@@ -58,6 +65,7 @@
 	export let onMarker = () => {};
 	export let onLoad = () => {};
 	export let observerOptions: IntersectionObserverInit = undefined;
+
 	/**
 	 * When `true` we remove the slot from the DOM when not in the viewport, and
 	 * debounce loading markers while the browser is scrolling quickly.
@@ -75,9 +83,15 @@
 	export let layout: Style = {};
 	$: _layout = {
 		align: layout.align || 'centre',
+    mobileVariant: layout.mobileVariant || 'blocks', // or rows
 		resizeInteractive: layout.resizeInteractive ?? true,
 		transparentFloat: layout.transparentFloat ?? ['left', 'right'].includes(layout.align)
 	};
+
+  $: _observerOptions = {
+    rootMargin: _layout.mobileVariant === 'rows' ? "-50% 0% 0% 0%" : undefined,
+    ...(observerOptions || {})
+  };
 
 	export let ratio: number = 1;
 	$: $ratioStore = ratio;
@@ -105,6 +119,7 @@
 	let isInViewport = false;
 	let scrollSpeed = 0;
 	let deferUntilScrollSettlesActions = [];
+  let panelRoot;
 
 	const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) =>
 		deferUntilScrollSettles(() => {
@@ -154,8 +169,8 @@
 	<OnProgressHandler {scrollytellerRef} {onProgress} />
 {/if}
 
-<ScreenDimsStoreUpdater align={_layout.align} />
-<PanelObserver bind:marker {observerOptions} {isDebug} {vizMarkerThreshold} />
+<ScreenDimsStoreUpdater align={_layout.align} mobileVariant={_layout.mobileVariant} />
+<PanelObserver bind:marker observerOptions={_observerOptions} {isDebug} {vizMarkerThreshold} />
 
 <svelte:head>
 	{#if isOdyssey}
@@ -178,6 +193,7 @@
 		class:scrollyteller--resized={_layout.resizeInteractive}
 		class:scrollyteller--debug={isDebug}
 		class:scrollyteller--columns={['left', 'right'].includes(_layout.align)}
+		class:scrollyteller--mobile-row-variant={['rows'].includes(_layout.mobileVariant)}
 		style:--maxScrollytellerWidthPx={$maxScrollytellerWidthStore + 'px'}
 		style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidthStore}px)`}
 		bind:this={scrollytellerRef}
@@ -185,7 +201,7 @@
 		{#if _layout.resizeInteractive}
 			<Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
 		{/if}
-		<Panels layout={_layout} {panels} {customPanel} />
+		<Panels layout={_layout} {panels} {customPanel} bind:panelRoot />
 	</div>
 </div>
 
@@ -203,6 +219,14 @@
 
 		--vizMaxWidth: 1;
 		--vizMarginOuter: 1.5rem;
+
+    /* Force full width when using the mobile row variant */
+		@media (max-width: $breakpointLargeTablet) {
+      &.scrollyteller--mobile-row-variant {
+        --marginOuter: 0;
+        --vizMarginOuter: 0;
+      }
+    }
 
 		@media (min-width: $breakpointTablet) {
 			--marginOuter: 2rem;

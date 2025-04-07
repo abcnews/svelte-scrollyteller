@@ -6,12 +6,13 @@
 
 	let background = 'night';
 	let align = 'centre';
+  let mobileVariant = 'blocks';
 	let transparentFloat = undefined;
 	let resizeInteractive = undefined;
 	let vizMarkerThreshold = 20;
 	let ratio = 1;
 
-	$: layout = { align, transparentFloat, resizeInteractive };
+	$: layout = { align, transparentFloat, resizeInteractive, mobileVariant };
 	onMount(() => {
 		status = 'ready';
 	});
@@ -53,6 +54,15 @@
 			<option value={undefined}>undefined</option>
 			<option value={true}>true</option>
 			<option value={false}>false</option>
+		</select>
+	</label>
+
+	<label>
+		mobileVariant:
+		<select bind:value={mobileVariant}>
+			<option value={undefined}>undefined</option>
+			<option value={"blocks"}>Blocks</option>
+			<option value={"rows"}>Rows</option>
 		</select>
 	</label>
 
