@@ -62,12 +62,6 @@
 <style lang="scss">
 	@import './breakpoints.scss';
 
-  /* :global(.scrollyteller--mobile-row-variant) { */
-  /*   .content { */
-  /*     position: fixed; */
-  /*   } */
-  /* } */
-
 	.content {
 		margin: -100dvh auto 0;
 		// add bottom padding otherwise the `.last` panel margins collapse to 0

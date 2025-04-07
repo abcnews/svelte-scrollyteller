@@ -38,6 +38,7 @@
 <style lang="scss">
 	@import './breakpoints.scss';
 
+  /* Mobile row variant doesn't need scrims etc */
   :global(.scrollyteller--mobile-row-variant) {
 		@media (max-width: $breakpointLargeTablet) {
       .st-panel::before {

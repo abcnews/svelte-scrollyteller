@@ -57,13 +57,13 @@ export function setIsSplitScreen([screenDims, globalAlign]) {
 }
 
 export function setIsMobileRowMode([screenDims, mobileVariant]) {
-  return derived(
-    [screenDims, mobileVariant],
-    ([$screenDims, $mobileVariant]) =>
-      $mobileVariant === 'rows' && $screenDims[0] < LARGE_TABLET_BREAKPOINT
-  );
+	return derived(
+		[screenDims, mobileVariant],
+		([$screenDims, $mobileVariant]) =>
+			$mobileVariant === 'rows' && $screenDims[0] < LARGE_TABLET_BREAKPOINT
+	);
 
-  /** The max width when the scrollyteller centres itself in the page */
+	/** The max width when the scrollyteller centres itself in the page */
 }
 export function setMaxScrollytellerWidth([isSplitScreen]) {
 	return derived([isSplitScreen], ([$isSplitScreen]) => ($isSplitScreen ? 2040 : 1e6));
