@@ -36,10 +36,14 @@ $: if (graphicRootEl) {
   :global(.scrollyteller--mobile-row-variant) .viz--resized {
     z-index: 10;
     top: 0;
-    background: white;
     margin: 0;
-    /* height: 40dvh; */
-    /* height: inherit; */
+    background: white;
+    width: 100% !important;
+    height: unset !important;
+    aspect-ratio: 1;
+    container-type: normal;
+    padding-bottom: 40px;
+    background: linear-gradient(to bottom, white 90%, transparent 100%);
   }
 }
 
