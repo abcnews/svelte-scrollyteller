@@ -38,11 +38,17 @@
 <style lang="scss">
 	@import './breakpoints.scss';
 
-  /* Mobile row variant doesn't need scrims etc */
   :global(.scrollyteller--mobile-row-variant) {
 		@media (max-width: $breakpointLargeTablet) {
+
+      /* Mobile row variant doesn't need scrims etc */
       .st-panel::before {
         opacity: 0 !important;
+      }
+
+      /* Mobile row variant needs less spacing between panels */
+      .st-panel-root {
+        margin: 40vh auto;
       }
     }
   }

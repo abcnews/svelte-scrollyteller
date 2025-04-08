@@ -29,10 +29,16 @@ onMount(() => {
 	<div class="st-panel" use:children={nodes}></div>
 </div>
 
-<style>/* Mobile row variant doesn't need scrims etc */
-@media (max-width: 62rem) {
+<style>@media (max-width: 62rem) {
+  :global(.scrollyteller--mobile-row-variant) {
+    /* Mobile row variant doesn't need scrims etc */
+    /* Mobile row variant needs less spacing between panels */
+  }
   :global(.scrollyteller--mobile-row-variant) .st-panel::before {
     opacity: 0 !important;
+  }
+  :global(.scrollyteller--mobile-row-variant) .st-panel-root {
+    margin: 40vh auto;
   }
 }
 
