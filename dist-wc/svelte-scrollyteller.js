@@ -3678,7 +3678,6 @@ function PanelObserver($$anchor, $$props) {
   legacy_pre_effect(
     () => ($isMobileRowMode(), $vizDims(), $screenDims(), $isSplitScreen(), get$1(vizMarkerThresholdMarginDecimal)),
     () => {
-      console.log($isMobileRowMode());
       if ($isMobileRowMode()) {
         const threshold = $vizDims().dims[1] / $screenDims()[1] * 100;
         set(rootMargin, `-${threshold}% 0px 0px 0px`);

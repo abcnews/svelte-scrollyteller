@@ -42,7 +42,6 @@
 	/** Intersection observer root margin */
   let rootMargin;
   $: {
-    console.log($isMobileRowMode);
     if ($isMobileRowMode) {
       // For row layout on small portrait screens, block out space taken up by the viz at the top
       const threshold = ($vizDims.dims[1] / $screenDims[1]) * 100;
