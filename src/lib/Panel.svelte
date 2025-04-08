@@ -128,6 +128,9 @@
 		color: var(--panel-color);
 		border-radius: var(--panel-radius);
 		padding: var(--panel-padding);
+    max-width: 640px;
+    margin: auto;
+
 		&::before {
 			content: '';
 

@@ -22,7 +22,7 @@ $: {
         // For row layout on small portrait screens, block out space taken up by the viz at the top
         const threshold = ($vizDims.dims[1] / $screenDims[1]) * 100;
         // console.log($vizDims, $screenDims, threshold);
-        rootMargin = `-${threshold}% 0px 0px 0px`;
+        rootMargin = `-${threshold}% 0px -30% 0px`;
     }
     else if ($isSplitScreen) {
         // For split screens, trigger the intersection observer when the block is

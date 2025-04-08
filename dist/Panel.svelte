@@ -105,6 +105,8 @@ onMount(() => {
   color: var(--panel-color);
   border-radius: var(--panel-radius);
   padding: var(--panel-padding);
+  max-width: 640px;
+  margin: auto;
 }
 .st-panel::before {
   content: "";
