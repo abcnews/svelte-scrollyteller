@@ -5,7 +5,7 @@ import { getScrollingPos, getScrollSpeed } from './Scrollyteller/Scrollyteller.u
 import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
-import { setSteps, setMargin, setVizDims, setGraphicRootDims, setRatio, setScreenDims, setGlobalAlign, setMobileVariant, setIsSplitScreen, setIsMobileRowMode, setMaxScrollytellerWidth, setMaxGraphicWidth, setCurrentPanel } from './stores';
+import { setSteps, setMargin, setVizDims, setGraphicRootDims, setRatio, setScreenDims, setGlobalAlign, setIsSplitScreen, setMaxScrollytellerWidth, setMaxGraphicWidth, setCurrentPanel } from './stores';
 import Panels from './Panels.svelte';
 import Viz from './Viz.svelte';
 const dispatch = createEventDispatcher();
@@ -16,9 +16,7 @@ const graphicRootDimsStore = setContext('graphicRootDims', setGraphicRootDims())
 const ratioStore = setContext('ratio', setRatio());
 const screenDimsStore = setContext('screenDims', setScreenDims());
 const globalAlignStore = setContext('globalAlign', setGlobalAlign());
-const mobileVariantStore = setContext('mobileVariant', setMobileVariant());
 const isSplitScreenStore = setContext('isSplitScreen', setIsSplitScreen([screenDimsStore, globalAlignStore]));
-const isMobileRowMode = setContext('isMobileRowMode', setIsMobileRowMode([screenDimsStore, mobileVariantStore]));
 const maxScrollytellerWidthStore = setContext('maxScrollytellerWidth', setMaxScrollytellerWidth([isSplitScreenStore]));
 const maxGraphicWidthStore = setContext('maxGraphicWidth', setMaxGraphicWidth([
     isSplitScreenStore,
@@ -50,13 +48,8 @@ export let discardSlot = false;
 export let layout = {};
 $: _layout = {
     align: layout.align || 'centre',
-    mobileVariant: layout.mobileVariant || 'blocks', // or rows
     resizeInteractive: layout.resizeInteractive ?? true,
     transparentFloat: layout.transparentFloat ?? ['left', 'right'].includes(layout.align)
-};
-$: _observerOptions = {
-    rootMargin: _layout.mobileVariant === 'rows' ? "-50% 0% 0% 0%" : undefined,
-    ...(observerOptions || {})
 };
 export let ratio = 1;
 $: $ratioStore = ratio;
@@ -79,7 +72,6 @@ let scrollingPos;
 let isInViewport = false;
 let scrollSpeed = 0;
 let deferUntilScrollSettlesActions = [];
-let panelRoot;
 const scrollytellerObserver = new IntersectionObserver(([scrollytellerEntry]) => deferUntilScrollSettles(() => {
     isInViewport = scrollytellerEntry.isIntersecting;
 }));
@@ -122,8 +114,8 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 	<OnProgressHandler {scrollytellerRef} {onProgress} />
 {/if}
 
-<ScreenDimsStoreUpdater align={_layout.align} mobileVariant={_layout.mobileVariant} />
-<PanelObserver bind:marker observerOptions={_observerOptions} {isDebug} {vizMarkerThreshold} />
+<ScreenDimsStoreUpdater align={_layout.align} />
+<PanelObserver bind:marker {observerOptions} {isDebug} {vizMarkerThreshold} />
 
 <svelte:head>
 	{#if isOdyssey}
@@ -146,7 +138,6 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 		class:scrollyteller--resized={_layout.resizeInteractive}
 		class:scrollyteller--debug={isDebug}
 		class:scrollyteller--columns={['left', 'right'].includes(_layout.align)}
-		class:scrollyteller--mobile-row-variant={['rows'].includes(_layout.mobileVariant)}
 		style:--maxScrollytellerWidthPx={$maxScrollytellerWidthStore + 'px'}
 		style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidthStore}px)`}
 		bind:this={scrollytellerRef}
@@ -154,7 +145,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 		{#if _layout.resizeInteractive}
 			<Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
 		{/if}
-		<Panels layout={_layout} {panels} {customPanel} bind:panelRoot />
+		<Panels layout={_layout} {panels} {customPanel} />
 	</div>
 </div>
 
@@ -170,13 +161,6 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
   max-width: calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);
   --vizMaxWidth: 1;
   --vizMarginOuter: 1.5rem;
-  /* Force full width when using the mobile row variant */
-}
-@media (max-width: 62rem) {
-  .scrollyteller.scrollyteller--mobile-row-variant {
-    --marginOuter: 0;
-    --vizMarginOuter: 0;
-  }
 }
 @media (min-width: 46.5rem) {
   .scrollyteller {

@@ -28,26 +28,7 @@ $: if (graphicRootEl) {
 	{/if}
 </div>
 
-<style>:global(.scrollyteller--mobile-row-variant) {
-  --marginOuter: 0;
-  --vizMarginOuter: 0;
-}
-@media (max-width: 62rem) {
-  :global(.scrollyteller--mobile-row-variant) .viz--resized {
-    z-index: 10;
-    top: 0;
-    margin: 0;
-    background: white;
-    width: 100% !important;
-    max-height: calc(45vh + 50px);
-    aspect-ratio: 1;
-    container-type: normal;
-    padding-bottom: 40px;
-    background: linear-gradient(to bottom, white 90%, transparent 100%);
-  }
-}
-
-.viz {
+<style>.viz {
   transform: translate3d(0, 0, 0);
   height: 100dvh;
   position: sticky;

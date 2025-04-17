@@ -21,13 +21,6 @@ export type Style = {
      * Resize the interactive to fit the left/right dimensions
      */
     resizeInteractive?: boolean;
-    /**
-     * How to arrange the elements on mobile. (< LargeTablet)
-     *
-     * - `rows` - stack the viz and text on top of each other
-     * - `blocks` - panels use scrims and slide over the top of the viz (odyssey block style)
-     */
-    mobileVariant?: string;
 };
 export interface PanelRef extends Element {
     scrollyData?: any;

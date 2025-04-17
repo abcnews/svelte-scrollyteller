@@ -29,20 +29,7 @@ onMount(() => {
 	<div class="st-panel" use:children={nodes}></div>
 </div>
 
-<style>@media (max-width: 62rem) {
-  :global(.scrollyteller--mobile-row-variant) {
-    /* Mobile row variant doesn't need scrims etc */
-    /* Mobile row variant needs less spacing between panels */
-  }
-  :global(.scrollyteller--mobile-row-variant) .st-panel::before {
-    opacity: 0 !important;
-  }
-  :global(.scrollyteller--mobile-row-variant) .st-panel-root {
-    margin: 40vh auto;
-  }
-}
-
-.st-panel-root {
+<style>.st-panel-root {
   --panel-radius: 0.75rem;
   --panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));
   --panel-color: var(--color-panel-text, #000);
@@ -105,8 +92,6 @@ onMount(() => {
   color: var(--panel-color);
   border-radius: var(--panel-radius);
   padding: var(--panel-padding);
-  max-width: 640px;
-  margin: auto;
 }
 .st-panel::before {
   content: "";

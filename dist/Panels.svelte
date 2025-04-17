@@ -1,5 +1,4 @@
 <script lang="ts">import Panel from './Panel.svelte';
-export let panelRoot;
 export let layout;
 export let panels;
 export let customPanel = null;
@@ -28,29 +27,24 @@ $: {
 </script>
 
 {#each panelGroups as group}
-  <div
-    class="panel-wrapper"
-    bind:this={panelRoot}
-  >
-    <div
-      class="content"
-      class:content--centre={group.align === 'centre'}
-      class:content--right={group.align === 'right'}
-      class:content--left={group.align === 'left'}
-    >
-      {#each group.panels as panel}
-        {#if customPanel}
-          <svelte:component this={customPanel} {...panel} {steps} />
-        {:else}
-          <Panel
-            {...panel}
-            align={panel.align || layout.align}
-            transparentFloat={layout.transparentFloat}
-            {steps}
-          />
-        {/if}
-      {/each}
-    </div>
+	<div
+		class="content"
+		class:content--centre={group.align === 'centre'}
+		class:content--right={group.align === 'right'}
+		class:content--left={group.align === 'left'}
+	>
+		{#each group.panels as panel}
+			{#if customPanel}
+				<svelte:component this={customPanel} {...panel} {steps} />
+			{:else}
+				<Panel
+					{...panel}
+					align={panel.align || layout.align}
+					transparentFloat={layout.transparentFloat}
+					{steps}
+				/>
+			{/if}
+		{/each}
 	</div>
 {/each}
 

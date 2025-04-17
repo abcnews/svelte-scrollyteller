@@ -13,10 +13,8 @@ export declare function setGraphicRootDims(): import("svelte/store").Writable<{
 export declare function setRatio(): import("svelte/store").Writable<number>;
 export declare function setScreenDims(): import("svelte/store").Writable<number[]>;
 export declare function setGlobalAlign(): import("svelte/store").Writable<string>;
-export declare function setMobileVariant(): import("svelte/store").Writable<string>;
 /** Split screen mode happens when left/right aligned + not mobile */
 export declare function setIsSplitScreen([screenDims, globalAlign]: [any, any]): import("svelte/store").Readable<boolean>;
-export declare function setIsMobileRowMode([screenDims, mobileVariant]: [any, any]): import("svelte/store").Readable<boolean>;
 export declare function setMaxScrollytellerWidth([isSplitScreen]: [any]): import("svelte/store").Readable<2040 | 1000000>;
 export declare function setMaxGraphicWidth([isSplitScreen, graphicRootDims, screenDims, ratio, maxScrollytellerWidth]: [any, any, any, any, any]): import("svelte/store").Readable<number>;
 export declare function setCurrentPanel(): import("svelte/store").Writable<number>;
