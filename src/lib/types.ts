@@ -1,9 +1,3 @@
-export enum ScrollPositions {
-	FULL = 'FULL',
-	ABOVE = 'ABOVE',
-	BELOW = 'BELOW'
-}
-
 export type Style = {
 	/**
 	 * What styles to apply to panels.

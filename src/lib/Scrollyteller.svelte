@@ -1,10 +1,11 @@
+<svelte:options runes={false} />
+
 <script lang="ts">
 	import type { ComponentType } from 'svelte';
 	import { onMount, setContext } from 'svelte';
 	import type { PanelDefinition, Style } from './types.js';
-	import { ScrollPositions } from './types.js';
 	import { createEventDispatcher } from 'svelte';
-	import { getScrollingPos, getScrollSpeed } from './Scrollyteller/Scrollyteller.util';
+	import { getScrollSpeed } from './Scrollyteller/Scrollyteller.util';
 	import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 	import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 	import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
@@ -55,7 +56,7 @@
 	export let customPanel: ComponentType | null = null;
 	export let panels: PanelDefinition[];
 	export let onProgress = () => {};
-	export let onMarker = () => {};
+	export let onMarker = (marker) => {};
 	export let onLoad = () => {};
 	export let observerOptions: IntersectionObserverInit = undefined;
 	/**
@@ -101,7 +102,6 @@
 
 	let scrollytellerRef: HTMLElement | undefined;
 	let marker: any;
-	let scrollingPos: ScrollPositions;
 	let isInViewport = false;
 	let scrollSpeed = 0;
 	let deferUntilScrollSettlesActions = [];
@@ -130,10 +130,6 @@
 	};
 
 	onMount(() => {
-		scrollingPos = getScrollingPos(scrollytellerRef);
-		if (scrollingPos === ScrollPositions.ABOVE) marker = panels[0].data;
-		if (scrollingPos === ScrollPositions.BELOW) marker = panels[panels.length - 1].data;
-
 		if (discardSlot) {
 			scrollytellerObserver.observe(scrollytellerRef);
 		}
@@ -169,7 +165,7 @@
 	{/if}
 </svelte:head>
 
-<div class="scrollyteller-wrapper">
+<div class="scrollyteller-wrapper" style:opacity={$vizDimsStore.status === 'ready' ? 1 : 0}>
 	{#if !_layout.resizeInteractive}
 		<Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
 	{/if}
@@ -193,6 +189,7 @@
 	@import './breakpoints.scss';
 	.scrollyteller-wrapper {
 		position: relative;
+		transition: opacity 0.25s;
 	}
 	.scrollyteller {
 		position: relative;
