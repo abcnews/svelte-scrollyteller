@@ -2,10 +2,10 @@
 
 ## Development
 
-Working on scelkte-scrollyteller can be done one of two ways:
+Working on svelte-scrollyteller can be done one of two ways:
 
-1. In this repo, using the `npm start` command, which will spin up a local server and give you a tool with various scrollyteller parameters.
-2. By `npm link`ing into your project. This is less straightforward, and is covered below:
+1. In this repo, using the `npm start` command to spin up a local server and give you a tool with various scrollyteller parameters you can tweak
+2. Or by `npm link`ing into your project. This is less straightforward, and is covered below:
 
 ### `npm link` into your Aunty project
 
