@@ -1,5 +1,3 @@
-<svelte:options runes={false} />
-
 <script lang="ts">
 	import type { ComponentType } from 'svelte';
 	import { onMount, setContext } from 'svelte';
