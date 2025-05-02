@@ -1,14 +1,3 @@
-import { ScrollPositions } from '../types.js';
-export const getScrollingPos = (scrollytellerRef) => {
-    const boundingRect = scrollytellerRef.getBoundingClientRect();
-    if (boundingRect.bottom - window.innerHeight < 0) {
-        return ScrollPositions.BELOW;
-    }
-    if (boundingRect.top > 0) {
-        return ScrollPositions.ABOVE;
-    }
-    return ScrollPositions.FULL;
-};
 /**
  * An onScroll handler with throttling and scroll speed limiting.
  *
