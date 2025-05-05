@@ -1,5 +1,3 @@
-import { ScrollPositions } from '../types.js';
-export declare const getScrollingPos: (scrollytellerRef: any) => ScrollPositions;
 /**
  * An onScroll handler with throttling and scroll speed limiting.
  *

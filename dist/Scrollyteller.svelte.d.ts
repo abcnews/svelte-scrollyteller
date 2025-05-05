@@ -22,7 +22,7 @@ declare const Scrollyteller: $$__sveltets_2_IsomorphicComponent<$$__sveltets_2_P
     customPanel?: ComponentType | null;
     panels: PanelDefinition[];
     onProgress?: () => void;
-    onMarker?: () => void;
+    onMarker?: (marker: any) => void;
     onLoad?: () => void;
     observerOptions?: IntersectionObserverInit;
     /**

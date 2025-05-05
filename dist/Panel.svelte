@@ -52,11 +52,6 @@ onMount(() => {
     --panel-padding: 2rem;
   }
 }
-:global([data-scheme="dark"]) .st-panel-root, :global(.is-dark-mode) .st-panel-root {
-  --panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));
-  --panel-color: var(--color-panel-text, #ebebeb);
-  --panel-border: var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15));
-}
 :global(.scrollyteller--debug) .st-panel-root {
   outline: 5px solid limegreen;
 }

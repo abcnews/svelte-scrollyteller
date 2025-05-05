@@ -1,7 +1,6 @@
 <script lang="ts">import { onMount, setContext } from 'svelte';
-import { ScrollPositions } from './types.js';
 import { createEventDispatcher } from 'svelte';
-import { getScrollingPos, getScrollSpeed } from './Scrollyteller/Scrollyteller.util';
+import { getScrollSpeed } from './Scrollyteller/Scrollyteller.util';
 import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
@@ -29,7 +28,7 @@ const currentPanelStore = setContext('currentPanel', setCurrentPanel());
 export let customPanel = null;
 export let panels;
 export let onProgress = () => { };
-export let onMarker = () => { };
+export let onMarker = (marker) => { };
 export let onLoad = () => { };
 export let observerOptions = undefined;
 /**
@@ -68,7 +67,6 @@ $: maxScrollSpeed = discardSlot ? 0.5 : Infinity;
 const isOdyssey = window.__IS_ODYSSEY_FORMAT__;
 let scrollytellerRef;
 let marker;
-let scrollingPos;
 let isInViewport = false;
 let scrollSpeed = 0;
 let deferUntilScrollSettlesActions = [];
@@ -92,11 +90,6 @@ const runDeferredActions = () => {
     }
 };
 onMount(() => {
-    scrollingPos = getScrollingPos(scrollytellerRef);
-    if (scrollingPos === ScrollPositions.ABOVE)
-        marker = panels[0].data;
-    if (scrollingPos === ScrollPositions.BELOW)
-        marker = panels[panels.length - 1].data;
     if (discardSlot) {
         scrollytellerObserver.observe(scrollytellerRef);
     }
@@ -129,7 +122,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 	{/if}
 </svelte:head>
 
-<div class="scrollyteller-wrapper">
+<div class="scrollyteller-wrapper" style:opacity={$vizDimsStore.status === 'ready' ? 1 : 0}>
 	{#if !_layout.resizeInteractive}
 		<Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
 	{/if}
@@ -151,6 +144,7 @@ $: isDebug = typeof location !== 'undefined' && location.hash === '#debug=true';
 
 <style>.scrollyteller-wrapper {
   position: relative;
+  transition: opacity 0.25s;
 }
 
 .scrollyteller {

@@ -3566,22 +3566,6 @@ function create_custom_element(Component, props_definition, slots, exports, use_
   Class;
   return Class;
 }
-var ScrollPositions = /* @__PURE__ */ ((ScrollPositions2) => {
-  ScrollPositions2["FULL"] = "FULL";
-  ScrollPositions2["ABOVE"] = "ABOVE";
-  ScrollPositions2["BELOW"] = "BELOW";
-  return ScrollPositions2;
-})(ScrollPositions || {});
-const getScrollingPos = (scrollytellerRef) => {
-  const boundingRect = scrollytellerRef.getBoundingClientRect();
-  if (boundingRect.bottom - window.innerHeight < 0) {
-    return ScrollPositions.BELOW;
-  }
-  if (boundingRect.top > 0) {
-    return ScrollPositions.ABOVE;
-  }
-  return ScrollPositions.FULL;
-};
 const getScrollSpeed = (callback) => {
   const getScrollTop = () => document.documentElement.scrollTop;
   let lastOffset = getScrollTop();
@@ -3895,10 +3879,10 @@ const children = (el, children2) => {
     }
   };
 };
-var root$2 = /* @__PURE__ */ template(`<div><div class="st-panel svelte-pv2kpf"></div></div>`);
+var root$2 = /* @__PURE__ */ template(`<div><div class="st-panel svelte-q8xdky"></div></div>`);
 const $$css$3 = {
-  hash: "svelte-pv2kpf",
-  code: '.st-panel-root.svelte-pv2kpf {--panel-radius: 0.75rem;--panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color: var(--color-panel-text, #000);--panel-opacity: var(--color-panel-opacity, 1);--panel-filter: var(--color-panel-filter, blur(2.5px));--panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding: 1rem;\n  /* How opaque do we make inactive panels on 2 column mode */--panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);\n  /** How much margin should we have between panels on 2 column mode */--panel-column-margin: var(--color-panel-margin, 40vh);box-sizing:border-box;margin:80vh auto;position:relative;z-index:1;pointer-events:none;}\n@media (min-width: 46.5rem) {.st-panel-root.svelte-pv2kpf {--panel-padding: 2rem;}\n}[data-scheme="dark"] .st-panel-root.svelte-pv2kpf, .is-dark-mode .st-panel-root.svelte-pv2kpf {--panel-background: var(--color-panel-background, rgba(15, 15, 15, 0.95));--panel-color: var(--color-panel-text, #ebebeb);--panel-border: var(--color-panel-border, 1px solid rgba(255, 255, 255, 0.15));}.scrollyteller--debug .st-panel-root.svelte-pv2kpf {outline:5px solid limegreen;}.st-panel-root.first.svelte-pv2kpf {margin-top:100dvh;}.st-panel-root.last.svelte-pv2kpf {margin-bottom:50vh;}\n@media (min-width: 62rem) {.st-panel-root--left.svelte-pv2kpf, .st-panel-root--right.svelte-pv2kpf {margin-top:var(--panel-column-margin);margin-bottom:var(--panel-column-margin);opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active.svelte-pv2kpf, .st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active.svelte-pv2kpf {opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-pv2kpf, .st-panel-root--right.st-panel-root--transparent-blocks.svelte-pv2kpf {--panel-filter: none;--panel-background: none;--panel-border: none;--panel-padding: 0;opacity:var(--panel-opacity-inactive);}.st-panel-root--left.first.svelte-pv2kpf, .st-panel-root--right.first.svelte-pv2kpf {margin-top:50dvh;}\n}.st-panel.svelte-pv2kpf {-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding);}.st-panel.svelte-pv2kpf::before {content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%;}.st-panel.svelte-pv2kpf::after {content:"";display:table;clear:both;}.st-panel.svelte-pv2kpf > * {pointer-events:all;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;}.st-panel.svelte-pv2kpf > *:last-child {margin-bottom:0;}.st-panel.svelte-pv2kpf > :is(div, p) {font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;}.st-panel.svelte-pv2kpf > img {max-width:66%;display:block;margin:auto;height:auto;}.st-panel.svelte-pv2kpf > :is(h1, h2, h3, h4) {font-family:var(--od-font-stack-serif);}'
+  hash: "svelte-q8xdky",
+  code: '.st-panel-root.svelte-q8xdky {--panel-radius: 0.75rem;--panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));--panel-color: var(--color-panel-text, #000);--panel-opacity: var(--color-panel-opacity, 1);--panel-filter: var(--color-panel-filter, blur(2.5px));--panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));--panel-padding: 1rem;\n  /* How opaque do we make inactive panels on 2 column mode */--panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);\n  /** How much margin should we have between panels on 2 column mode */--panel-column-margin: var(--color-panel-margin, 40vh);box-sizing:border-box;margin:80vh auto;position:relative;z-index:1;pointer-events:none;}\n@media (min-width: 46.5rem) {.st-panel-root.svelte-q8xdky {--panel-padding: 2rem;}\n}.scrollyteller--debug .st-panel-root.svelte-q8xdky {outline:5px solid limegreen;}.st-panel-root.first.svelte-q8xdky {margin-top:100dvh;}.st-panel-root.last.svelte-q8xdky {margin-bottom:50vh;}\n@media (min-width: 62rem) {.st-panel-root--left.svelte-q8xdky, .st-panel-root--right.svelte-q8xdky {margin-top:var(--panel-column-margin);margin-bottom:var(--panel-column-margin);opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.st-panel-root--active.svelte-q8xdky, .st-panel-root--right.st-panel-root--transparent-blocks.st-panel-root--active.svelte-q8xdky {opacity:1;}.st-panel-root--left.st-panel-root--transparent-blocks.svelte-q8xdky, .st-panel-root--right.st-panel-root--transparent-blocks.svelte-q8xdky {--panel-filter: none;--panel-background: none;--panel-border: none;--panel-padding: 0;opacity:var(--panel-opacity-inactive);}.st-panel-root--left.first.svelte-q8xdky, .st-panel-root--right.first.svelte-q8xdky {margin-top:50dvh;}\n}.st-panel.svelte-q8xdky {-webkit-backdrop-filter:var(--panel-filter);backdrop-filter:var(--panel-filter);color:var(--panel-color);border-radius:var(--panel-radius);padding:var(--panel-padding);}.st-panel.svelte-q8xdky::before {content:"";background-color:var(--panel-background);opacity:var(--panel-opacity);border-radius:var(--panel-radius);border:var(--panel-border);position:absolute;z-index:-1;top:0;left:0;width:100%;height:100%;}.st-panel.svelte-q8xdky::after {content:"";display:table;clear:both;}.st-panel.svelte-q8xdky > * {pointer-events:all;color:var(--panel-color);margin-top:0;margin-left:auto !important;margin-right:auto !important;}.st-panel.svelte-q8xdky > *:last-child {margin-bottom:0;}.st-panel.svelte-q8xdky > :is(div, p) {font-family:ABCSans, sans-serif;font-size:inherit;line-height:1.666666667;}.st-panel.svelte-q8xdky > img {max-width:66%;display:block;margin:auto;height:auto;}.st-panel.svelte-q8xdky > :is(h1, h2, h3, h4) {font-family:var(--od-font-stack-serif);}'
 };
 function Panel($$anchor, $$props) {
   push($$props, false);
@@ -3929,7 +3913,7 @@ function Panel($$anchor, $$props) {
   template_effect(() => {
     set_attribute(div, "data-align", align());
     set_attribute(div, "data-index", i());
-    classes = set_class(div, 1, `st-panel-root ${panelClass() || ""}`, "svelte-pv2kpf", classes, {
+    classes = set_class(div, 1, `st-panel-root ${panelClass() || ""}`, "svelte-q8xdky", classes, {
       "st-panel-root--left": align() === "left",
       "st-panel-root--right": align() === "right",
       "st-panel-root--centre": align() === "centre",
@@ -4292,15 +4276,16 @@ var root_2 = /* @__PURE__ */ template(`<style>/* styles required to make positio
 			body {
 				overflow: visible;
 			}</style>`);
-var root = /* @__PURE__ */ template(`<!> <!> <!> <div class="scrollyteller-wrapper svelte-3koitg"><!> <div><!> <!></div></div>`, 1);
+var root = /* @__PURE__ */ template(`<!> <!> <!> <div class="scrollyteller-wrapper svelte-havrsd"><!> <div><!> <!></div></div>`, 1);
 const $$css = {
-  hash: "svelte-3koitg",
-  code: '.scrollyteller-wrapper.svelte-3koitg {position:relative;}.scrollyteller.svelte-3koitg {position:relative;--maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);--marginOuter: 1rem;margin:0 auto;max-width:calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);--vizMaxWidth: 1;--vizMarginOuter: 1.5rem;}\n@media (min-width: 46.5rem) {.scrollyteller.svelte-3koitg {--marginOuter: 2rem;--vizMarginOuter: 3rem;}\n}\n@media (min-width: 62rem) {.scrollyteller.svelte-3koitg {--marginOuter: 2rem;--vizMarginOuter: 3rem;--vizMaxWidth: 0.55;}.scrollyteller--columns.svelte-3koitg {width:fit-content;}\n}\n@media (min-width: 75rem) {.scrollyteller.svelte-3koitg {--marginOuter: 3rem;--vizMarginOuter: 4rem;--vizMaxWidth: 0.7;}\n}\n@media (min-width: 90rem) {.scrollyteller.svelte-3koitg {--marginOuter: 4rem;--vizMarginOuter: 6rem;}\n}.scrollyteller--debug.svelte-3koitg:after {content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110;}\n@media (min-width: 46.5rem) {.scrollyteller--debug.svelte-3koitg:after {content:"Tablet";}\n}\n@media (min-width: 62rem) {.scrollyteller--debug.svelte-3koitg:after {content:"LargeTablet";}\n}\n@media (min-width: 75rem) {.scrollyteller--debug.svelte-3koitg:after {content:"Desktop";}\n}\n@media (min-width: 90rem) {.scrollyteller--debug.svelte-3koitg:after {content:"LargeDesktop";}\n}'
+  hash: "svelte-havrsd",
+  code: '.scrollyteller-wrapper.svelte-havrsd {position:relative;transition:opacity 0.25s;}.scrollyteller.svelte-havrsd {position:relative;--maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);--marginOuter: 1rem;margin:0 auto;max-width:calc(var(--maxScrollytellerWidth) - var(--marginOuter) * 2);--vizMaxWidth: 1;--vizMarginOuter: 1.5rem;}\n@media (min-width: 46.5rem) {.scrollyteller.svelte-havrsd {--marginOuter: 2rem;--vizMarginOuter: 3rem;}\n}\n@media (min-width: 62rem) {.scrollyteller.svelte-havrsd {--marginOuter: 2rem;--vizMarginOuter: 3rem;--vizMaxWidth: 0.55;}.scrollyteller--columns.svelte-havrsd {width:fit-content;}\n}\n@media (min-width: 75rem) {.scrollyteller.svelte-havrsd {--marginOuter: 3rem;--vizMarginOuter: 4rem;--vizMaxWidth: 0.7;}\n}\n@media (min-width: 90rem) {.scrollyteller.svelte-havrsd {--marginOuter: 4rem;--vizMarginOuter: 6rem;}\n}.scrollyteller--debug.svelte-havrsd:after {content:"Mobile";position:fixed;right:0.5rem;top:0.5rem;padding:0.5rem 1rem;background:white;color:black;border:5px solid limegreen;border-radius:1rem;z-index:110;}\n@media (min-width: 46.5rem) {.scrollyteller--debug.svelte-havrsd:after {content:"Tablet";}\n}\n@media (min-width: 62rem) {.scrollyteller--debug.svelte-havrsd:after {content:"LargeTablet";}\n}\n@media (min-width: 75rem) {.scrollyteller--debug.svelte-havrsd:after {content:"Desktop";}\n}\n@media (min-width: 90rem) {.scrollyteller--debug.svelte-havrsd:after {content:"LargeDesktop";}\n}'
 };
 function Scrollyteller($$anchor, $$props) {
   push($$props, false);
   append_styles($$anchor, $$css);
   const [$$stores, $$cleanup] = setup_stores();
+  const $vizDimsStore = () => store_get(vizDimsStore, "$vizDimsStore", $$stores);
   const $maxScrollytellerWidthStore = () => store_get(maxScrollytellerWidthStore, "$maxScrollytellerWidthStore", $$stores);
   const $maxGraphicWidthStore = () => store_get(maxGraphicWidthStore, "$maxGraphicWidthStore", $$stores);
   const _layout = mutable_state();
@@ -4309,7 +4294,7 @@ function Scrollyteller($$anchor, $$props) {
   createEventDispatcher();
   setContext("steps", setSteps());
   setContext("margin", setMargin());
-  setContext("vizDims", setVizDims());
+  const vizDimsStore = setContext("vizDims", setVizDims());
   const graphicRootDimsStore = setContext("graphicRootDims", setGraphicRootDims());
   const ratioStore = setContext("ratio", setRatio());
   const screenDimsStore = setContext("screenDims", setScreenDims());
@@ -4328,7 +4313,7 @@ function Scrollyteller($$anchor, $$props) {
   let panels = prop($$props, "panels", 12);
   let onProgress = prop($$props, "onProgress", 12, () => {
   });
-  let onMarker = prop($$props, "onMarker", 12, () => {
+  let onMarker = prop($$props, "onMarker", 12, (marker2) => {
   });
   let onLoad = prop($$props, "onLoad", 12, () => {
   });
@@ -4340,7 +4325,6 @@ function Scrollyteller($$anchor, $$props) {
   const isOdyssey = window.__IS_ODYSSEY_FORMAT__;
   let scrollytellerRef = mutable_state();
   let marker = mutable_state();
-  let scrollingPos;
   let isInViewport = mutable_state(false);
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions = [];
@@ -4363,9 +4347,6 @@ function Scrollyteller($$anchor, $$props) {
     }
   };
   onMount(() => {
-    scrollingPos = getScrollingPos(get$1(scrollytellerRef));
-    if (scrollingPos === ScrollPositions.ABOVE) set(marker, panels()[0].data);
-    if (scrollingPos === ScrollPositions.BELOW) set(marker, panels()[panels().length - 1].data);
     if (discardSlot()) {
       scrollytellerObserver.observe(get$1(scrollytellerRef));
     }
@@ -4541,7 +4522,8 @@ function Scrollyteller($$anchor, $$props) {
   reset(div);
   template_effect(
     ($0) => {
-      classes = set_class(div_1, 1, "scrollyteller svelte-3koitg", null, classes, {
+      set_style(div, "opacity", $vizDimsStore().status === "ready" ? 1 : 0);
+      classes = set_class(div_1, 1, "scrollyteller svelte-havrsd", null, classes, {
         "scrollyteller--resized": get$1(_layout).resizeInteractive,
         "scrollyteller--debug": get$1(isDebug),
         "scrollyteller--columns": $0
