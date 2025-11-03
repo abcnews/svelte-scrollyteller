@@ -48,9 +48,7 @@
 		--panel-padding: 1rem;
 		/* How opaque do we make inactive panels on 2 column mode */
 		--panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);
-
-		/** How much margin should we have between panels on 2 column mode */
-		--panel-column-margin: var(--color-panel-margin, 40vh);
+		--panel-column-margin: calc(var(--scrollytellerVh) * 0.4);
 
 		box-sizing: border-box;
 		margin: 80vh auto;

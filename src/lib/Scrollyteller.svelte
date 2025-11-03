@@ -7,6 +7,7 @@
 	import OnProgressHandler from './Scrollyteller/OnProgressHandler.svelte';
 	import PanelObserver from './Scrollyteller/PanelObserver.svelte';
 	import ScreenDimsStoreUpdater from './Scrollyteller/ScreenDimsStoreUpdater.svelte';
+	import { stableViewportHeightPx } from './Scrollyteller/iosBuggedVhClamp.ts';
 	import {
 		setSteps,
 		setMargin,
@@ -163,7 +164,11 @@
 	{/if}
 </svelte:head>
 
-<div class="scrollyteller-wrapper" style:opacity={$vizDimsStore.status === 'ready' ? 1 : 0}>
+<div
+	class="scrollyteller-wrapper"
+	style:opacity={$vizDimsStore.status === 'ready' ? 1 : 0}
+	style:--scrollytellerVh={$stableViewportHeightPx + 'px'}
+>
 	{#if !_layout.resizeInteractive}
 		<Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
 	{/if}
