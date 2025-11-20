@@ -53,7 +53,14 @@
 
 	export let customPanel: ComponentType | null = null;
 	export let panels: PanelDefinition[];
-	export let onProgress = () => {};
+	export let onProgress = (
+		type: string,
+		payload: {
+			boundingRect: DOMRect;
+			rootPct: number;
+			scrollPct: number;
+		}
+	) => {};
 	export let onMarker = (marker) => {};
 	export let onLoad = () => {};
 	export let observerOptions: IntersectionObserverInit = undefined;
