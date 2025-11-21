@@ -3,24 +3,32 @@
   import Panel from "./Panel.svelte";
   import type { PanelDefinition, PanelRef, Style } from "./types.js";
 
-  export let panelRoot;
+  interface Props {
+    panelRoot: any;
+    layout: Style;
+    panels: PanelDefinition[];
+    customPanel?: ComponentType | null;
+    steps?: PanelRef[];
+  }
 
-  export let layout: Style;
-  export let panels: PanelDefinition[];
-  export let customPanel: ComponentType | null = null;
-  export let steps: PanelRef[] = [];
+  let {
+    panelRoot = $bindable(),
+    layout,
+    panels,
+    customPanel = null,
+    steps = [],
+  }: Props = $props();
 
   /**
    * Panels grouped by `align` property. We render a container per alignment
    * so we can have multiple left/right/centred panels in one scrollyteller.
    */
-  let panelGroups = [];
-  $: {
-    panelGroups = [];
+  let panelGroups = $derived.by(() => {
+    const newPanelGroups = [];
     let group;
     panels.forEach(({ align = layout.align, panelClass = "", ...panel }, i) => {
       if (align !== group?.align) {
-        group && panelGroups.push(group);
+        group && newPanelGroups.push(group);
         group = { align, panels: [] };
       }
 
@@ -28,8 +36,9 @@
       if (i === panels.length - 1) panelClass += " last";
       group.panels.push({ ...panel, panelClass, i });
     });
-    panelGroups.push(group);
-  }
+    newPanelGroups.push(group);
+    return newPanelGroups;
+  });
 </script>
 
 {#each panelGroups as group}
@@ -42,7 +51,8 @@
     >
       {#each group.panels as panel}
         {#if customPanel}
-          <svelte:component this={customPanel} {...panel} {steps} />
+          {@const SvelteComponent = customPanel}
+          <SvelteComponent {...panel} {steps} />
         {:else}
           <Panel
             {...panel}

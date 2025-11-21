@@ -1,5 +1,5 @@
 <script>
-  export let percentage;
+  let { percentage } = $props();
 </script>
 
 <div class="top-left">

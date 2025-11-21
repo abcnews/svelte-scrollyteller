@@ -2,17 +2,22 @@
   import { onMount } from "svelte";
   import ScrollyAppTest from "./ScrollyAppTest.svelte";
   import TestArticleData from "./TestArticleData.svelte";
-  let status = "loading";
+  let status = $state("loading");
 
-  let background = "night";
-  let align = "centre";
-  let mobileVariant = "blocks";
-  let transparentFloat = undefined;
-  let resizeInteractive = undefined;
-  let vizMarkerThreshold = 20;
-  let ratio = 1;
+  let background = $state("night");
+  let align = $state("centre");
+  let mobileVariant = $state("blocks");
+  let transparentFloat = $state(undefined);
+  let resizeInteractive = $state(undefined);
+  let vizMarkerThreshold = $state(20);
+  let ratio = $state(1);
 
-  $: layout = { align, transparentFloat, resizeInteractive, mobileVariant };
+  let layout = $derived({
+    align,
+    transparentFloat,
+    resizeInteractive,
+    mobileVariant,
+  });
   onMount(() => {
     status = "ready";
   });

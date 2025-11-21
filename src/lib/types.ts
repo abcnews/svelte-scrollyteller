@@ -1,3 +1,5 @@
+import type { Writable } from "svelte/store";
+
 export type Style = {
   /**
    * What styles to apply to panels.
@@ -7,7 +9,6 @@ export type Style = {
    * - `none` - don't apply styles other than font-size. You are responsible for all styling.
    */
   align?: string;
-
   /**
    * Disable block background when panels go left/right. Default true when
    * global is left/right.
@@ -18,14 +19,6 @@ export type Style = {
    * Resize the interactive to fit the left/right dimensions
    */
   resizeInteractive?: boolean;
-
-  /**
-   * How to arrange the elements on mobile. (< LargeTablet)
-   *
-   * - `rows` - stack the viz and text on top of each other
-   * - `blocks` - panels use scrims and slide over the top of the viz (odyssey block style)
-   */
-  mobileVariant?: string;
 };
 export interface PanelRef extends Element {
   scrollyData?: any;
@@ -49,3 +42,9 @@ export type ScrollytellerDefinition = {
   mountNode: Element;
   panels: PanelDefinition[];
 };
+
+/** Svelte Store dimensions */
+export type WritableDims = Writable<{
+  status: string;
+  dims: number[];
+}>;

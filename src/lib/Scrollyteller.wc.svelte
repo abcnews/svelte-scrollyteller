@@ -15,17 +15,12 @@
    * codebases that can't be updated.
    */
   import Scrollyteller from "./Scrollyteller.svelte";
-  export let panels = [];
-  export let layout = {};
+  let { panels = [], layout = {}, ...rest } = $props();
+
+  export { panels, layout };
 </script>
 
 {#if panels.length}
-  <Scrollyteller
-    {panels}
-    {layout}
-    {...$$restProps}
-    on:progress
-    on:marker
-    on:load
+  <Scrollyteller {panels} {layout} {...rest} on:progress on:marker on:load
   ></Scrollyteller>
 {/if}

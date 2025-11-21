@@ -2,7 +2,12 @@
   import Scrollyteller, { loadScrollyteller } from "$lib/index.js";
   import PercentageIndicators from "./PercentageIndicators.svelte";
   import Worm from "./Worm/Worm.svelte";
-  export let name = "test";
+  interface Props {
+    name?: string;
+    [key: string]: any;
+  }
+
+  let { name = "test", ...rest }: Props = $props();
 
   const scrollyData = loadScrollyteller(
     name, // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
@@ -10,11 +15,11 @@
     "mark" // Name of marker in CoreMedia eg. for "point" use #point default: #mark
   );
 
-  let number = 0;
-  let stProgress;
+  let number = $state(0);
+  let stProgress = $state();
 
   const onMarker = (detail) => {
-    console.log(detail);
+    console.log({ detail });
     number = detail.number;
   };
 
@@ -23,12 +28,7 @@
   };
 </script>
 
-<Scrollyteller
-  panels={scrollyData.panels}
-  {onMarker}
-  {onProgress}
-  {...$$restProps}
->
+<Scrollyteller panels={scrollyData.panels} {onMarker} {onProgress} {...rest}>
   <div class="example-graphic">
     <Worm />
     <span class="number">{number}</span>
