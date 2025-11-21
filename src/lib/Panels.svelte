@@ -3,6 +3,8 @@
 	import Panel from './Panel.svelte';
 	import type { PanelDefinition, PanelRef, Style } from './types.js';
 
+  export let panelRoot;
+
 	export let layout: Style;
 	export let panels: PanelDefinition[];
 	export let customPanel: ComponentType | null = null;
@@ -31,29 +33,35 @@
 </script>
 
 {#each panelGroups as group}
-	<div
-		class="content"
-		class:content--centre={group.align === 'centre'}
-		class:content--right={group.align === 'right'}
-		class:content--left={group.align === 'left'}
-	>
-		{#each group.panels as panel}
-			{#if customPanel}
-				<svelte:component this={customPanel} {...panel} {steps} />
-			{:else}
-				<Panel
-					{...panel}
-					align={panel.align || layout.align}
-					transparentFloat={layout.transparentFloat}
-					{steps}
-				/>
-			{/if}
-		{/each}
+  <div
+    class="panel-wrapper"
+    bind:this={panelRoot}
+  >
+    <div
+      class="content"
+      class:content--centre={group.align === 'centre'}
+      class:content--right={group.align === 'right'}
+      class:content--left={group.align === 'left'}
+    >
+      {#each group.panels as panel}
+        {#if customPanel}
+          <svelte:component this={customPanel} {...panel} {steps} />
+        {:else}
+          <Panel
+            {...panel}
+            align={panel.align || layout.align}
+            transparentFloat={layout.transparentFloat}
+            {steps}
+          />
+        {/if}
+      {/each}
+    </div>
 	</div>
 {/each}
 
 <style lang="scss">
 	@import './breakpoints.scss';
+
 	.content {
 		margin: -100dvh auto 0;
 		// add bottom padding otherwise the `.last` panel margins collapse to 0

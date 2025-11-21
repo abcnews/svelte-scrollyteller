@@ -11,6 +11,7 @@
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
 		"release": "np",
+    "build": "vite build",
 		"version": "npm run package"
 	},
 	"np": {
