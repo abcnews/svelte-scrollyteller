@@ -62,9 +62,16 @@
   interface Props {
     customPanel?: ComponentType | null;
     panels: PanelDefinition[];
-    onProgress?: any;
-    onMarker?: any;
-    onLoad?: any;
+    onProgress?: (
+      type: string,
+      payload: {
+        boundingRect: DOMRect;
+        rootPct: number;
+        scrollPct: number;
+      }
+    ) => void;
+    onMarker?: (marker: any) => void;
+    onLoad?: () => void;
     observerOptions?: IntersectionObserverInit;
     /**
      * When `true` we remove the slot from the DOM when not in the viewport, and
@@ -99,7 +106,7 @@
         scrollPct: number;
       }
     ) => {},
-    onMarker = (marker) => {},
+    onMarker = (marker: any) => {},
     onLoad = () => {},
     observerOptions = undefined,
     discardSlot = false,
