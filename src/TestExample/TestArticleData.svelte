@@ -8,7 +8,7 @@
   data-component="Anchor"
 ></div>
 
-<div data-mount="true" id="markNUMBER1"></div>
+<div data-mount="true" id="markCUSTOMDATA1"></div>
 <h2>Heading 2</h2>
 <p>
   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum
@@ -17,7 +17,7 @@
   erat id, convallis auctor neque. Curabitur in luctus erat.
 </p>
 
-<div data-mount="true" id="markNUMBER2"></div>
+<div data-mount="true" id="markCUSTOMDATA2"></div>
 <h2>Heading 3</h2>
 <p>
   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum
@@ -43,7 +43,7 @@
   erat id, convallis auctor neque. Curabitur in luctus erat.
 </p>
 
-<div data-mount="true" id="markNUMBER3"></div>
+<div data-mount="true" id="markCUSTOMDATA3"></div>
 <p>
   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum
   diam a erat bibendum sagittis. Mauris vitae vestibulum nisi. Duis tincidunt
@@ -51,7 +51,7 @@
   erat id, convallis auctor neque. Curabitur in luctus erat.
 </p>
 
-<div data-mount="true" id="markNUMBER4"></div>
+<div data-mount="true" id="markCUSTOMDATA4"></div>
 <p>
   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum
   diam a erat bibendum sagittis. Mauris vitae vestibulum nisi. Duis tincidunt
@@ -65,7 +65,7 @@
   erat id, convallis auctor neque. Curabitur in luctus erat.
 </p>
 
-<div data-mount="true" id="markNUMBER5"></div>
+<div data-mount="true" id="markCUSTOMDATA5"></div>
 <p>
   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fermentum
   diam a erat bibendum sagittis. Mauris vitae vestibulum nisi. Duis tincidunt

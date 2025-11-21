@@ -27,8 +27,8 @@ export type Style = {
    */
   mobileVariant?: "blocks" | "rows";
 };
-export interface PanelRef extends Element {
-  scrollyData?: any;
+export interface PanelRef<Data = any> extends Element {
+  scrollyData?: Data;
 }
 
 export interface IntersectionEntries extends IntersectionObserverEntry {
@@ -36,18 +36,18 @@ export interface IntersectionEntries extends IntersectionObserverEntry {
 }
 
 /** Config options to control an individual panel */
-export type PanelDefinition = {
+export type PanelDefinition<Data = any> = {
   align?: string; // whether to align the panel to the left or right
   transparentFloat?: boolean; // whether to remove background when left/right
   panelClass?: string; // a custom className to add to the panel
-  data: any; // arbitrary blob or data that gets passed back to your component when this panel is onscreen
+  data: Data; // arbitrary blob or data that gets passed back to your component when this panel is onscreen
   nodes: Element[]; // DOM nodes to insert into the panel. Usually <p> elements, but could be anything renderable
-  steps?: PanelRef[]; // A big array for all the panels to push their own refs into. Can be used later by end users.
+  steps?: PanelRef<Data>[]; // A big array for all the panels to push their own refs into. Can be used later by end users.
 };
 
-export type ScrollytellerDefinition = {
+export type ScrollytellerDefinition<Data = any> = {
   mountNode: Element;
-  panels: PanelDefinition[];
+  panels: PanelDefinition<Data>[];
 };
 
 /** Svelte Store dimensions */

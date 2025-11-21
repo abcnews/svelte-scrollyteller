@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" generics="Data = any">
   import type { ComponentType } from "svelte";
   import { onMount, setContext } from "svelte";
   import type { PanelDefinition, Style } from "./types.js";
@@ -61,7 +61,7 @@
 
   interface Props {
     customPanel?: ComponentType | null;
-    panels: PanelDefinition[];
+    panels: PanelDefinition<Data>[];
     onProgress?: (
       type: string,
       payload: {
@@ -70,7 +70,7 @@
         scrollPct: number;
       }
     ) => void;
-    onMarker?: (marker: any) => void;
+    onMarker?: (marker: Data) => void;
     onLoad?: () => void;
     observerOptions?: IntersectionObserverInit;
     /**
@@ -106,7 +106,7 @@
         scrollPct: number;
       }
     ) => {},
-    onMarker = (marker: any) => {},
+    onMarker = (marker: Data) => {},
     onLoad = () => {},
     observerOptions = undefined,
     discardSlot = false,
@@ -120,7 +120,7 @@
 
   let scrollytellerRef: HTMLElement | undefined = $state();
   /** The contents of the current marker as passed in from the library consumer */
-  let marker = $state<any>();
+  let marker = $state<Data>();
   let isInViewport = $state(false);
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions = [];
@@ -186,7 +186,8 @@
    */
   let maxScrollSpeed = $derived(discardSlot ? 0.5 : Infinity);
   $effect(() => {
-    marker && deferUntilScrollSettles(() => onMarker(marker));
+    marker &&
+      deferUntilScrollSettles(() => onMarker($state.snapshot(marker) as Data));
   });
   // Debug mode should highlight blocks, graphic & show which breakpoint we're at
   let isDebug = $derived(

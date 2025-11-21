@@ -48,29 +48,25 @@ The `panels` prop is in the format of:
 
 When a new box comes into view the `onMarker` callback will fire with the `data` of the incoming panel.
 
-```html
+```svelte
 <script lang="ts">
 	import Scrollyteller from '@abcnews/svelte-scrollyteller';
 	import MyGraphic from 'MyGraphic.svelte';
 
-	export let panels;
+  let {panels} = $props();
+  let marker = $state(0);
+  let progress = $state();
 
-	let marker = 0;
-	let progress;
-
-	const markerChangeHandler = ({ detail }) => {
-		marker = detail;
-	};
-
-	const progressChangeHandler = ({ detail }) => {
-		progress = detail;
-	};
 </script>
 
 <Scrollyteller
 	{panels}
-	onMarker={markerChangeHandler}
-	onProgress={progressChangeHandler}
+	onMarker={({ detail }) => {
+		marker = detail;
+	}}
+	onProgress={({ detail }) => {
+		progress = detail;
+	}}
   layout={{
     align: 'left',
     // resizeInteractive: true
@@ -160,11 +156,17 @@ This is another paragraph
 
 JS Code:
 
-```js
+```ts
 import { loadScrollyteller } from "@abcnews/svelte-scrollyteller";
 import App from "App.svelte";
 
-const scrollyData = loadScrollyteller(
+/** Optionally, specify generics to type your markers */
+type MyPanelData = {
+  electorate: string;
+  viz: "map" | "hex" | "chart";
+};
+
+const scrollyData = loadScrollyteller<MyPanelData>(
   "", // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
   "u-full", // Class to apply to mount point u-full makes it full width in Odyssey
   "mark", // Name of marker in CoreMedia eg. for "point" use #point default: #mark

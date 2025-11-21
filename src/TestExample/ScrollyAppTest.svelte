@@ -9,26 +9,41 @@
 
   let { name = "test", ...rest }: Props = $props();
 
-  const scrollyData = loadScrollyteller(
+  type MarkData = { customdata: number };
+
+  const scrollyData = loadScrollyteller<MarkData>(
     name, // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
     "u-full", // Class to apply to mount point u-full makes it full width in Odyssey
     "mark" // Name of marker in CoreMedia eg. for "point" use #point default: #mark
   );
 
   let number = $state(0);
-  let stProgress = $state();
+  let stProgress = $state<{
+    boundingRect: DOMRect;
+    rootPct: number;
+    scrollPct: number;
+  } | null>(null);
 
-  const onMarker = (detail) => {
-    console.log({ detail });
-    number = detail.number;
-  };
-
-  const onProgress = (detail) => {
-    stProgress = detail;
+  const onProgress = (
+    type: string,
+    payload: {
+      boundingRect: DOMRect;
+      rootPct: number;
+      scrollPct: number;
+    }
+  ) => {
+    stProgress = payload;
   };
 </script>
 
-<Scrollyteller panels={scrollyData.panels} {onMarker} {onProgress} {...rest}>
+<Scrollyteller
+  panels={scrollyData.panels}
+  onMarker={(detail) => {
+    number = detail.customdata;
+  }}
+  {onProgress}
+  {...rest}
+>
   <div class="example-graphic">
     <Worm />
     <span class="number">{number}</span>
