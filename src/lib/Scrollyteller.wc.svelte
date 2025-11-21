@@ -1,24 +1,31 @@
 <svelte:options
-	customElement={{
-		tag: 'abcnews-scrollyteller',
-		shadow: 'none'
-	}}
-	accessors={true}
+  customElement={{
+    tag: "abcnews-scrollyteller",
+    shadow: "none",
+  }}
+  accessors={true}
 />
 
 <script>
-	/**
-	 * @file
-	 * A Web Component export of the Svelte Scrollyteller.
-	 *
-	 * You should only use this in non-Svelte projects, such as older React
-	 * codebases that can't be updated.
-	 */
-	import Scrollyteller from './Scrollyteller.svelte';
-	export let panels = [];
-	export let layout = {};
+  /**
+   * @file
+   * A Web Component export of the Svelte Scrollyteller.
+   *
+   * You should only use this in non-Svelte projects, such as older React
+   * codebases that can't be updated.
+   */
+  import Scrollyteller from "./Scrollyteller.svelte";
+  export let panels = [];
+  export let layout = {};
 </script>
 
 {#if panels.length}
-	<Scrollyteller {panels} {layout} {...$$restProps} on:progress on:marker on:load></Scrollyteller>
+  <Scrollyteller
+    {panels}
+    {layout}
+    {...$$restProps}
+    on:progress
+    on:marker
+    on:load
+  ></Scrollyteller>
 {/if}

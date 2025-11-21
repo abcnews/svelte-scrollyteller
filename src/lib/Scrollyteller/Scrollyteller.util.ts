@@ -9,34 +9,34 @@
  * @param options.interval - interval to debounce scroll check.
  */
 export const getScrollSpeed = (callback: (speed: number) => void) => {
-	const getScrollTop = () => document.documentElement.scrollTop;
-	let lastOffset = getScrollTop();
-	let lastDate = Date.now();
+  const getScrollTop = () => document.documentElement.scrollTop;
+  let lastOffset = getScrollTop();
+  let lastDate = Date.now();
 
-	const onScroll = () => {
-		const delayInMs = Date.now() - lastDate;
-		const offset = getScrollTop() - lastOffset;
-		const speedInpxPerMs = offset / delayInMs;
-		const scrollSpeed = Math.abs(speedInpxPerMs);
+  const onScroll = () => {
+    const delayInMs = Date.now() - lastDate;
+    const offset = getScrollTop() - lastOffset;
+    const speedInpxPerMs = offset / delayInMs;
+    const scrollSpeed = Math.abs(speedInpxPerMs);
 
-		lastDate = Date.now();
-		lastOffset = getScrollTop();
+    lastDate = Date.now();
+    lastOffset = getScrollTop();
 
-		callback(scrollSpeed);
-	};
-	window.addEventListener('scroll', onScroll, { passive: true });
+    callback(scrollSpeed);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
 
-	const onEndScroll = () => callback(0);
-	window.addEventListener('scrollend', onEndScroll, { passive: true });
+  const onEndScroll = () => callback(0);
+  window.addEventListener("scrollend", onEndScroll, { passive: true });
 
-	return () => {
-		window.removeEventListener('scroll', onScroll);
-		window.removeEventListener('scrollend', onEndScroll);
-	};
+  return () => {
+    window.removeEventListener("scroll", onScroll);
+    window.removeEventListener("scrollend", onEndScroll);
+  };
 };
 
 /** Keep trying until the condition is met */
 export const retryUntil = (condition) =>
-	new Promise((resolve) =>
-		condition() ? resolve(0) : setInterval(() => condition() && resolve(0), 10)
-	);
+  new Promise((resolve) =>
+    condition() ? resolve(0) : setInterval(() => condition() && resolve(0), 10),
+  );

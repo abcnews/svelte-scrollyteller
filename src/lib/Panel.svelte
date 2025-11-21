@@ -1,46 +1,45 @@
 <script lang="ts">
-	import { getContext, onMount } from 'svelte';
-	import { children } from './actions.js';
-	import type { PanelDefinition, PanelRef } from './types.js';
+  import { getContext, onMount } from "svelte";
+  import { children } from "./actions.js";
+  import type { PanelDefinition, PanelRef } from "./types.js";
 
-	const currentPanel = getContext('currentPanel');
-	const steps = getContext('steps');
+  const currentPanel = getContext("currentPanel");
+  const steps = getContext("steps");
 
-	export let align: string;
-	export let transparentFloat: boolean;
-	export let panelClass: string;
-	export let data: any;
-	export let nodes: Element[];
-	export let i = -1;
+  export let align: string;
+  export let transparentFloat: boolean;
+  export let panelClass: string;
+  export let data: any;
+  export let nodes: Element[];
+  export let i = -1;
 
-	let panelRef: PanelRef;
+  let panelRef: PanelRef;
 
-	onMount(() => {
-		panelRef.scrollyData = data;
-		$steps = [...$steps, panelRef];
-	});
+  onMount(() => {
+    panelRef.scrollyData = data;
+    $steps = [...$steps, panelRef];
+  });
 </script>
 
 <div
-	data-align={align}
-	data-index={i}
-	class={`st-panel-root ${panelClass || ''}`}
-	class:st-panel-root--left={align === 'left'}
-	class:st-panel-root--right={align === 'right'}
-	class:st-panel-root--centre={align === 'centre'}
-	class:st-panel-root--transparent-blocks={transparentFloat}
-	class:st-panel-root--active={i === $currentPanel}
-	bind:this={panelRef}
+  data-align={align}
+  data-index={i}
+  class={`st-panel-root ${panelClass || ""}`}
+  class:st-panel-root--left={align === "left"}
+  class:st-panel-root--right={align === "right"}
+  class:st-panel-root--centre={align === "centre"}
+  class:st-panel-root--transparent-blocks={transparentFloat}
+  class:st-panel-root--active={i === $currentPanel}
+  bind:this={panelRef}
 >
-	<div class="st-panel" use:children={nodes}></div>
+  <div class="st-panel" use:children={nodes}></div>
 </div>
 
 <style lang="scss">
-	@import './breakpoints.scss';
+  @import "./breakpoints.scss";
 
   :global(.scrollyteller--mobile-row-variant) {
-		@media (max-width: $breakpointLargeTablet) {
-
+    @media (max-width: $breakpointLargeTablet) {
       /* Mobile row variant doesn't need scrims etc */
       .st-panel::before {
         opacity: 0 !important;
@@ -53,127 +52,130 @@
     }
   }
 
-	.st-panel-root {
-		--panel-radius: 0.75rem;
-		--panel-background: var(--color-panel-background, rgba(255, 255, 255, 0.95));
-		--panel-color: var(--color-panel-text, #000);
-		--panel-opacity: var(--color-panel-opacity, 1);
-		--panel-filter: var(--color-panel-filter, blur(2.5px));
-		--panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));
-		--panel-padding: 1rem;
-		/* How opaque do we make inactive panels on 2 column mode */
-		--panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);
+  .st-panel-root {
+    --panel-radius: 0.75rem;
+    --panel-background: var(
+      --color-panel-background,
+      rgba(255, 255, 255, 0.95)
+    );
+    --panel-color: var(--color-panel-text, #000);
+    --panel-opacity: var(--color-panel-opacity, 1);
+    --panel-filter: var(--color-panel-filter, blur(2.5px));
+    --panel-border: var(--color-panel-border, 1px solid rgba(0, 0, 0, 0.15));
+    --panel-padding: 1rem;
+    /* How opaque do we make inactive panels on 2 column mode */
+    --panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);
 
-		/** How much margin should we have between panels on 2 column mode */
-		--panel-column-margin: var(--color-panel-margin, 40vh);
+    /** How much margin should we have between panels on 2 column mode */
+    --panel-column-margin: var(--color-panel-margin, 40vh);
 
-		box-sizing: border-box;
-		margin: 80vh auto;
-		position: relative;
-		z-index: 1;
-		pointer-events: none;
+    box-sizing: border-box;
+    margin: 80vh auto;
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
 
-		@media (min-width: $breakpointTablet) {
-			--panel-padding: 2rem;
-		}
+    @media (min-width: $breakpointTablet) {
+      --panel-padding: 2rem;
+    }
 
-		:global(.scrollyteller--debug) & {
-			outline: 5px solid limegreen;
-		}
+    :global(.scrollyteller--debug) & {
+      outline: 5px solid limegreen;
+    }
 
-		&.first {
-			margin-top: 100dvh;
-		}
+    &.first {
+      margin-top: 100dvh;
+    }
 
-		&.last {
-			margin-bottom: 50vh;
-		}
+    &.last {
+      margin-bottom: 50vh;
+    }
 
-		&--left,
-		&--right {
-			@media (min-width: $breakpointLargeTablet) {
-				margin-top: var(--panel-column-margin);
-				margin-bottom: var(--panel-column-margin);
-				opacity: 1;
+    &--left,
+    &--right {
+      @media (min-width: $breakpointLargeTablet) {
+        margin-top: var(--panel-column-margin);
+        margin-bottom: var(--panel-column-margin);
+        opacity: 1;
 
-				&.st-panel-root--transparent-blocks.st-panel-root--active {
-					opacity: 1;
-				}
-				&.st-panel-root--transparent-blocks {
-					--panel-filter: none;
-					--panel-background: none;
-					--panel-border: none;
-					--panel-padding: 0;
-					opacity: var(--panel-opacity-inactive);
-				}
-				&.first {
-					margin-top: 50dvh;
-				}
-			}
-			@media (min-width: $breakpointDesktop) {
-			}
-			@media (min-width: $breakpointLargeDesktop) {
-			}
-		}
-	}
-	.st-panel {
-		-webkit-backdrop-filter: var(--panel-filter);
-		backdrop-filter: var(--panel-filter);
-		color: var(--panel-color);
-		border-radius: var(--panel-radius);
-		padding: var(--panel-padding);
+        &.st-panel-root--transparent-blocks.st-panel-root--active {
+          opacity: 1;
+        }
+        &.st-panel-root--transparent-blocks {
+          --panel-filter: none;
+          --panel-background: none;
+          --panel-border: none;
+          --panel-padding: 0;
+          opacity: var(--panel-opacity-inactive);
+        }
+        &.first {
+          margin-top: 50dvh;
+        }
+      }
+      @media (min-width: $breakpointDesktop) {
+      }
+      @media (min-width: $breakpointLargeDesktop) {
+      }
+    }
+  }
+  .st-panel {
+    -webkit-backdrop-filter: var(--panel-filter);
+    backdrop-filter: var(--panel-filter);
+    color: var(--panel-color);
+    border-radius: var(--panel-radius);
+    padding: var(--panel-padding);
     max-width: 640px;
     margin: auto;
 
-		&::before {
-			content: '';
+    &::before {
+      content: "";
 
-			background-color: var(--panel-background);
-			opacity: var(--panel-opacity);
-			border-radius: var(--panel-radius);
-			border: var(--panel-border);
+      background-color: var(--panel-background);
+      opacity: var(--panel-opacity);
+      border-radius: var(--panel-radius);
+      border: var(--panel-border);
 
-			position: absolute;
-			z-index: -1;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-		}
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-		&::after {
-			content: '';
-			display: table;
-			clear: both;
-		}
-		:global(> *) {
-			pointer-events: all;
-			color: var(--panel-color);
+    &::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    :global(> *) {
+      pointer-events: all;
+      color: var(--panel-color);
 
-			margin-top: 0;
-			margin-left: auto !important;
-			margin-right: auto !important;
+      margin-top: 0;
+      margin-left: auto !important;
+      margin-right: auto !important;
 
-			&:last-child {
-				margin-bottom: 0;
-			}
-		}
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
 
-		:global(> :is(div, p)) {
-			font-family: ABCSans, sans-serif;
-			font-size: inherit;
-			line-height: 1.666666667;
-		}
+    :global(> :is(div, p)) {
+      font-family: ABCSans, sans-serif;
+      font-size: inherit;
+      line-height: 1.666666667;
+    }
 
-		& > :global(img) {
-			max-width: 66%;
-			display: block;
-			margin: auto;
-			height: auto;
-		}
+    & > :global(img) {
+      max-width: 66%;
+      display: block;
+      margin: auto;
+      height: auto;
+    }
 
-		:global(> :is(h1, h2, h3, h4)) {
-			font-family: var(--od-font-stack-serif);
-		}
-	}
+    :global(> :is(h1, h2, h3, h4)) {
+      font-family: var(--od-font-stack-serif);
+    }
+  }
 </style>
