@@ -51,13 +51,12 @@
   );
 
   /** Intersection observer root margin */
-  let rootMargin = $state<string>();
-  $effect(() => {
+  let rootMargin = $derived.by(() => {
     if ($isMobileRowMode) {
       // For row layout on small portrait screens, block out space taken up by the viz at the top
       const threshold = ($vizDims.dims[1] / $screenDims[1]) * 100;
       // console.log($vizDims, $screenDims, threshold);
-      rootMargin = `-${threshold}% 0px -30% 0px`;
+      return `-${threshold}% 0px -30% 0px`;
     } else if ($isSplitScreen) {
       // For split screens, trigger the intersection observer when the block is
       // over {vizMarkerThreshold}% of the interactive.
@@ -67,11 +66,11 @@
             vizMarkerThresholdMarginDecimal) /
           2
       );
-      rootMargin = `-${threshold}px 0px -${threshold}px 0px`;
+      return `-${threshold}px 0px -${threshold}px 0px`;
     } else {
       // Otherwise 10% of the screen height (on top and bottom).
       const threshold = Math.round($screenDims[1] / 8);
-      rootMargin = `-${threshold}px 0px -${threshold}px 0px`;
+      return `-${threshold}px 0px -${threshold}px 0px`;
     }
   });
 
@@ -92,7 +91,6 @@
    * which we otherwise can't do if there are 2 panels overlapping at once.
    */
   let intersectingPanels = $state([]);
-
   $effect(() => {
     if ($vizDims.status !== "ready" || !$steps.length) {
       return;
