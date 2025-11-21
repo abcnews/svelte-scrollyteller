@@ -46,7 +46,7 @@ The `panels` prop is in the format of:
       }
     ]
 
-When a new box comes into view the `on:marker` event will fire with the `data` of the incoming panel.
+When a new box comes into view the `onMarker` callback will fire with the `data` of the incoming panel.
 
 ```html
 <script lang="ts">
@@ -160,18 +160,18 @@ This is another paragraph
 JS Code:
 
 ```js
-import { loadScrollyteller } from '@abcnews/svelte-scrollyteller';
-import App from 'App.svelte';
+import { loadScrollyteller } from "@abcnews/svelte-scrollyteller";
+import App from "App.svelte";
 
 const scrollyData = loadScrollyteller(
-	'', // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
-	'u-full', // Class to apply to mount point u-full makes it full width in Odyssey
-	'mark' // Name of marker in CoreMedia eg. for "point" use #point default: #mark
+  "", // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
+  "u-full", // Class to apply to mount point u-full makes it full width in Odyssey
+  "mark", // Name of marker in CoreMedia eg. for "point" use #point default: #mark
 );
 
 new App({
-	target: scrollyData.mountNode,
-	props: { panels: scrollyData.panels }
+  target: scrollyData.mountNode,
+  props: { panels: scrollyData.panels },
 });
 ```
 
