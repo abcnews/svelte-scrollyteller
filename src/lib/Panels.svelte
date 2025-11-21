@@ -4,7 +4,7 @@
   import type { PanelDefinition, PanelRef, Style } from "./types.js";
 
   interface Props {
-    panelRoot: any;
+    panelRoot: HTMLElement;
     layout: Style;
     panels: PanelDefinition[];
     customPanel?: ComponentType | null;

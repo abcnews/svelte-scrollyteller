@@ -21,6 +21,5 @@
 </script>
 
 {#if panels.length}
-  <Scrollyteller {panels} {layout} {...rest} on:progress on:marker on:load
-  ></Scrollyteller>
+  <Scrollyteller {panels} {layout} {...rest}></Scrollyteller>
 {/if}

@@ -13,7 +13,7 @@
     panelClass: string;
     data: any;
     nodes: Element[];
-    i?: any;
+    i?: number;
   }
 
   let {

@@ -1,11 +1,12 @@
 <script lang="ts">
   import GraphicObserver from "./Scrollyteller/GraphicObserver.svelte";
+  import type { Style } from "./types";
 
   interface Props {
-    layout: any;
+    layout: Style;
     discardSlot?: boolean;
     isInViewport?: boolean;
-    onLoad?: any;
+    onLoad?: (HTMLElement) => void;
     children?: import("svelte").Snippet;
   }
 

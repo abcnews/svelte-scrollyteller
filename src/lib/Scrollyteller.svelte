@@ -71,7 +71,7 @@
       }
     ) => void;
     onMarker?: (marker: Data) => void;
-    onLoad?: () => void;
+    onLoad?: (HTMLElement) => void;
     observerOptions?: IntersectionObserverInit;
     /**
      * When `true` we remove the slot from the DOM when not in the viewport, and
