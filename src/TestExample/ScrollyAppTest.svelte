@@ -72,22 +72,22 @@
 <p>After</p>
 
 <style lang="scss">
-  @import "../lib/breakpoints.scss";
+  @use "../lib/breakpoints.scss" as breakpoints;
   .example-graphic {
     height: 100%;
     width: 100%;
     display: flex;
     position: relative;
-    @media (min-width: $breakpointTablet) {
+    @media (min-width: breakpoints.$breakpointTablet) {
       background: pink;
     }
-    @media (min-width: $breakpointLargeTablet) {
+    @media (min-width: breakpoints.$breakpointLargeTablet) {
       background: orange;
     }
-    @media (min-width: $breakpointDesktop) {
+    @media (min-width: breakpoints.$breakpointDesktop) {
       background: red;
     }
-    @media (min-width: $breakpointLargeDesktop) {
+    @media (min-width: breakpoints.$breakpointLargeDesktop) {
       background: purple;
     }
   }

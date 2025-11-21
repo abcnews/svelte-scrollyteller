@@ -226,7 +226,7 @@
 </div>
 
 <style lang="scss">
-  @import "./breakpoints.scss";
+  @use "./breakpoints.scss" as breakpoints;
   .scrollyteller-wrapper {
     position: relative;
     transition: opacity 0.25s;
@@ -244,18 +244,18 @@
     --vizMarginOuter: 1.5rem;
 
     /* Force full width when using the mobile row variant */
-    @media (max-width: $breakpointLargeTablet) {
+    @media (max-width: breakpoints.$breakpointLargeTablet) {
       &.scrollyteller--mobile-row-variant {
         --marginOuter: 0;
         --vizMarginOuter: 0;
       }
     }
 
-    @media (min-width: $breakpointTablet) {
+    @media (min-width: breakpoints.$breakpointTablet) {
       --marginOuter: 2rem;
       --vizMarginOuter: 3rem;
     }
-    @media (min-width: $breakpointLargeTablet) {
+    @media (min-width: breakpoints.$breakpointLargeTablet) {
       --marginOuter: 2rem;
       --vizMarginOuter: 3rem;
       --vizMaxWidth: 0.55;
@@ -266,12 +266,12 @@
         width: fit-content;
       }
     }
-    @media (min-width: $breakpointDesktop) {
+    @media (min-width: breakpoints.$breakpointDesktop) {
       --marginOuter: 3rem;
       --vizMarginOuter: 4rem;
       --vizMaxWidth: 0.7;
     }
-    @media (min-width: $breakpointLargeDesktop) {
+    @media (min-width: breakpoints.$breakpointLargeDesktop) {
       --marginOuter: 4rem;
       --vizMarginOuter: 6rem;
     }
@@ -287,16 +287,16 @@
       border: 5px solid limegreen;
       border-radius: 1rem;
       z-index: 110;
-      @media (min-width: $breakpointTablet) {
+      @media (min-width: breakpoints.$breakpointTablet) {
         content: "Tablet";
       }
-      @media (min-width: $breakpointLargeTablet) {
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
         content: "LargeTablet";
       }
-      @media (min-width: $breakpointDesktop) {
+      @media (min-width: breakpoints.$breakpointDesktop) {
         content: "Desktop";
       }
-      @media (min-width: $breakpointLargeDesktop) {
+      @media (min-width: breakpoints.$breakpointLargeDesktop) {
         content: "LargeDesktop";
       }
     }
