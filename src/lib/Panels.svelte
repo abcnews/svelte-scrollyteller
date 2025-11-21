@@ -57,7 +57,7 @@
 {/each}
 
 <style lang="scss">
-  @import "./breakpoints.scss";
+  @use "./breakpoints.scss" as breakpoints;
 
   .content {
     margin: -100dvh auto 0;
@@ -71,14 +71,14 @@
   }
   .content {
     &--centre {
-      @media (min-width: $breakpointLargeTablet) {
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
         max-width: 48.75rem;
       }
 
-      @media (min-width: $breakpointDesktop) {
+      @media (min-width: breakpoints.$breakpointDesktop) {
       }
 
-      @media (min-width: $breakpointLargeDesktop) {
+      @media (min-width: breakpoints.$breakpointLargeDesktop) {
         max-width: 56.25rem;
       }
     }
@@ -87,17 +87,17 @@
     &--right {
       max-width: 127.5rem;
       margin-left: 0;
-      @media (min-width: $breakpointLargeTablet) {
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
         max-width: 40rem;
         margin-right: calc(
           var(--rightColumnWidth, 100px) + calc(var(--marginOuter) * 1)
         );
         font-size: 1.125rem;
       }
-      @media (min-width: $breakpointDesktop) {
+      @media (min-width: breakpoints.$breakpointDesktop) {
         font-size: 1.125rem;
       }
-      @media (min-width: $breakpointLargeDesktop) {
+      @media (min-width: breakpoints.$breakpointLargeDesktop) {
         max-width: 45rem;
         font-size: 1.25rem;
       }

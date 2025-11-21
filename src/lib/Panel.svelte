@@ -36,10 +36,10 @@
 </div>
 
 <style lang="scss">
-  @import "./breakpoints.scss";
+  @use "./breakpoints.scss" as breakpoints;
 
   :global(.scrollyteller--mobile-row-variant) {
-    @media (max-width: $breakpointLargeTablet) {
+    @media (max-width: breakpoints.$breakpointLargeTablet) {
       /* Mobile row variant doesn't need scrims etc */
       .st-panel::before {
         opacity: 0 !important;
@@ -75,7 +75,7 @@
     z-index: 1;
     pointer-events: none;
 
-    @media (min-width: $breakpointTablet) {
+    @media (min-width: breakpoints.$breakpointTablet) {
       --panel-padding: 2rem;
     }
 
@@ -93,7 +93,7 @@
 
     &--left,
     &--right {
-      @media (min-width: $breakpointLargeTablet) {
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
         margin-top: var(--panel-column-margin);
         margin-bottom: var(--panel-column-margin);
         opacity: 1;
@@ -112,9 +112,9 @@
           margin-top: 50dvh;
         }
       }
-      @media (min-width: $breakpointDesktop) {
+      @media (min-width: breakpoints.$breakpointDesktop) {
       }
-      @media (min-width: $breakpointLargeDesktop) {
+      @media (min-width: breakpoints.$breakpointLargeDesktop) {
       }
     }
   }

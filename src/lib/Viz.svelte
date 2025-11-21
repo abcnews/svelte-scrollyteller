@@ -32,13 +32,13 @@
 </div>
 
 <style lang="scss">
-  @import "./breakpoints.scss";
+  @use "./breakpoints.scss" as breakpoints;
 
   :global(.scrollyteller--mobile-row-variant) {
     --marginOuter: 0;
     --vizMarginOuter: 0;
 
-    @media (max-width: $breakpointLargeTablet) {
+    @media (max-width: breakpoints.$breakpointLargeTablet) {
       .viz--resized {
         z-index: 10;
         top: 0;
@@ -74,7 +74,7 @@
     margin: 0 auto;
     width: calc(100% - calc(var(--marginOuter) * 2));
     max-width: calc(100vw - var(--vizMarginOuter) * 2);
-    @media (min-width: $breakpointTablet) {
+    @media (min-width: breakpoints.$breakpointTablet) {
       --margin: 4rem;
       top: 8dvh;
       height: 62dvh;
@@ -83,40 +83,40 @@
     &.viz--left,
     &.viz--right {
       width: var(--rightColumnWidth);
-      @media (min-width: $breakpointLargeTablet) {
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
         align-items: center;
         height: 84dvh;
         top: 8dvh;
       }
-      @media (min-width: $breakpointDesktop) {
+      @media (min-width: breakpoints.$breakpointDesktop) {
         height: 76dvh;
         top: 12dvh;
       }
-      @media (min-width: $breakpointLargeDesktop) {
+      @media (min-width: breakpoints.$breakpointLargeDesktop) {
         top: 10dvh;
         height: 80dvh;
       }
     }
     &.viz--left {
-      @media (min-width: $breakpointLargeTablet) {
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
         margin: 0 auto 0 0;
       }
     }
     &.viz--right {
-      @media (min-width: $breakpointLargeTablet) {
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
         margin: 0 0 0 auto;
       }
     }
     &.viz--centre {
-      @media (min-width: $breakpointLargeTablet) {
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
         top: 8dvh;
         height: 62dvh;
       }
-      @media (min-width: $breakpointDesktop) {
+      @media (min-width: breakpoints.$breakpointDesktop) {
         top: 12dvh;
         height: 58dvh;
       }
-      @media (min-width: $breakpointLargeDesktop) {
+      @media (min-width: breakpoints.$breakpointLargeDesktop) {
         top: 12dvh;
         height: 58dvh;
       }
