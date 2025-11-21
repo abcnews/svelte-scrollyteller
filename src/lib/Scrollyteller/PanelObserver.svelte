@@ -19,8 +19,7 @@
    * scrolling back up the page doesn't work as expected.
    */
   import type { WritableDims, IntersectionEntries, PanelRef } from "$lib/types";
-  import { getContext, onMount } from "svelte";
-  import { run } from "svelte/legacy";
+  import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
   const vizDims = getContext<WritableDims>("vizDims");
   const isSplitScreen = getContext<Writable<boolean>>("isSplitScreen");
