@@ -112,11 +112,12 @@
   const isOdyssey = !!window.__IS_ODYSSEY_FORMAT__;
 
   let scrollytellerRef: HTMLElement | undefined = $state();
-  let marker: any = $state();
+  /** The contents of the current marker as passed in from the library consumer */
+  let marker = $state<any>();
   let isInViewport = $state(false);
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions = [];
-  let panelRoot = $state();
+  let panelRoot = $state<HTMLElement>();
 
   const scrollytellerObserver = new IntersectionObserver(
     ([scrollytellerEntry]) =>

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import GraphicObserver from "./Scrollyteller/GraphicObserver.svelte";
 
   interface Props {
@@ -20,7 +19,7 @@
 
   // emit an event with the viz root, because the web component doesn't
   // support slots & must insert content  manually.
-  let graphicRootEl = $state();
+  let graphicRootEl = $state<HTMLElement>();
   $effect(() => {
     if (graphicRootEl) {
       onLoad(graphicRootEl);

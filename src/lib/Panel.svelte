@@ -25,7 +25,7 @@
     i = -1,
   }: Props = $props();
 
-  let panelRef: PanelRef = $state();
+  let panelRef = $state<PanelRef>();
 
   onMount(() => {
     panelRef.scrollyData = data;

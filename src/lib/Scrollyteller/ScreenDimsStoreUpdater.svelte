@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { WritableDims } from "$lib/types";
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
 
