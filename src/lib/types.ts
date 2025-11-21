@@ -19,6 +19,13 @@ export type Style = {
    * Resize the interactive to fit the left/right dimensions
    */
   resizeInteractive?: boolean;
+
+  /**
+   * Toggle mobile betwen:
+   * * `blocks`: traditional block layout scrolling over the viz
+   * * `rows`: split screen layout with viz on top and text below
+   */
+  mobileVariant?: "blocks" | "rows";
 };
 export interface PanelRef extends Element {
   scrollyData?: any;

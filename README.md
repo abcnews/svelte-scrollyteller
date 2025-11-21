@@ -111,11 +111,12 @@ For a more complete example using Typescript see the [examples](examples).
 
 The `layout={}` prop controls how the scrollyteller is laid out, and has the following options:
 
-| Property          | Type    | Description                                                                                                                                  |
-| ----------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| align             | string  | Alignment for blocks. One of left/right/centre/none. "none" applies no breakpoint styling so you can do your own custom styles.              |
-| resizeInteractive | boolean | Defaults to `true` if not set. This handles the scrollyteller graphic position according to the current breakpoint.                          |
-| transparentFloat  | boolean | Defaults to `true` if `align` is left or right. Removes the block background for left/right aligned pieces, for a better reading experience. |
+| Property          | Type    | Description                                                                                                                                                          |
+| ----------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| align             | string  | Alignment for blocks. One of left/right/centre/none. "none" applies no breakpoint styling so you can do your own custom styles.                                      |
+| resizeInteractive | boolean | Defaults to `true` if not set. This handles the scrollyteller graphic position according to the current breakpoint.                                                  |
+| transparentFloat  | boolean | Defaults to `true` if `align` is left or right. Removes the block background for left/right aligned pieces, for a better reading experience.                         |
+| mobileVariant     | string  | Toggle mobile betwen:<br/><ul><li>blocks: traditional block layout scrolling over the viz</li><li>rows: split screen layout with viz on top and text below</li></ul> |
 
 The resizeInteractive prop lets you opt into predefined graphic sizes and placements. When enabled, the graphic will appear toward the top on mobile, and in the centre when left/right aligned. On mobile this allows the most space for blocks to scroll without hitting the graphic, and looks aesthetically pleasing on desktop/larger portrait tablets like the iPad Pro.
 
