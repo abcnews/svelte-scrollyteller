@@ -129,15 +129,3 @@
     };
   });
 </script>
-
-<style lang="scss">
-  .panelobserver-debug {
-    position: sticky;
-    left: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 255, 47, 0.4);
-    border-style: solid none solid;
-    z-index: 0;
-  }
-</style>
