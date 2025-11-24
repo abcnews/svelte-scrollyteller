@@ -1,19 +1,31 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import GraphicObserver from "./Scrollyteller/GraphicObserver.svelte";
+  import type { Style } from "./types";
 
-  export let layout;
-  export let discardSlot = false;
-  export let isInViewport = false;
-  export let onLoad = () => {};
-  const dispatch = createEventDispatcher();
+  interface Props {
+    layout: Style;
+    discardSlot?: boolean;
+    isInViewport?: boolean;
+    onLoad?: (HTMLElement) => void;
+    children?: import("svelte").Snippet;
+  }
+
+  let {
+    layout,
+    discardSlot = false,
+    isInViewport = false,
+    onLoad = () => {},
+    children,
+  }: Props = $props();
 
   // emit an event with the viz root, because the web component doesn't
   // support slots & must insert content  manually.
-  let graphicRootEl;
-  $: if (graphicRootEl) {
-    onLoad(graphicRootEl);
-  }
+  let graphicRootEl = $state<HTMLElement>();
+  $effect(() => {
+    if (graphicRootEl) {
+      onLoad(graphicRootEl);
+    }
+  });
 </script>
 
 <GraphicObserver {graphicRootEl} />
@@ -27,7 +39,7 @@
   bind:this={graphicRootEl}
 >
   {#if isInViewport || discardSlot === false}
-    <slot />
+    {@render children?.()}
   {/if}
 </div>
 

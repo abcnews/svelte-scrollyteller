@@ -1,3 +1,5 @@
+import type { Writable } from "svelte/store";
+
 export type Style = {
   /**
    * What styles to apply to panels.
@@ -7,7 +9,6 @@ export type Style = {
    * - `none` - don't apply styles other than font-size. You are responsible for all styling.
    */
   align?: string;
-
   /**
    * Disable block background when panels go left/right. Default true when
    * global is left/right.
@@ -20,15 +21,14 @@ export type Style = {
   resizeInteractive?: boolean;
 
   /**
-   * How to arrange the elements on mobile. (< LargeTablet)
-   *
-   * - `rows` - stack the viz and text on top of each other
-   * - `blocks` - panels use scrims and slide over the top of the viz (odyssey block style)
+   * Toggle mobile betwen:
+   * * `blocks`: traditional block layout scrolling over the viz
+   * * `rows`: split screen layout with viz on top and text below
    */
-  mobileVariant?: string;
+  mobileVariant?: "blocks" | "rows";
 };
-export interface PanelRef extends Element {
-  scrollyData?: any;
+export interface PanelRef<Data = any> extends Element {
+  scrollyData?: Data;
 }
 
 export interface IntersectionEntries extends IntersectionObserverEntry {
@@ -36,16 +36,22 @@ export interface IntersectionEntries extends IntersectionObserverEntry {
 }
 
 /** Config options to control an individual panel */
-export type PanelDefinition = {
+export type PanelDefinition<Data = any> = {
   align?: string; // whether to align the panel to the left or right
   transparentFloat?: boolean; // whether to remove background when left/right
   panelClass?: string; // a custom className to add to the panel
-  data: any; // arbitrary blob or data that gets passed back to your component when this panel is onscreen
+  data: Data; // arbitrary blob or data that gets passed back to your component when this panel is onscreen
   nodes: Element[]; // DOM nodes to insert into the panel. Usually <p> elements, but could be anything renderable
-  steps?: PanelRef[]; // A big array for all the panels to push their own refs into. Can be used later by end users.
+  steps?: PanelRef<Data>[]; // A big array for all the panels to push their own refs into. Can be used later by end users.
 };
 
-export type ScrollytellerDefinition = {
+export type ScrollytellerDefinition<Data = any> = {
   mountNode: Element;
-  panels: PanelDefinition[];
+  panels: PanelDefinition<Data>[];
 };
+
+/** Svelte Store dimensions */
+export type WritableDims = Writable<{
+  status: string;
+  dims: number[];
+}>;

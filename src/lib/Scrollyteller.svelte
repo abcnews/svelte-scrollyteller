@@ -1,8 +1,7 @@
-<script lang="ts">
+<script lang="ts" generics="Data = any">
   import type { ComponentType } from "svelte";
   import { onMount, setContext } from "svelte";
   import type { PanelDefinition, Style } from "./types.js";
-  import { createEventDispatcher } from "svelte";
   import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util";
   import OnProgressHandler from "./Scrollyteller/OnProgressHandler.svelte";
   import PanelObserver from "./Scrollyteller/PanelObserver.svelte";
@@ -24,10 +23,9 @@
   } from "./stores";
   import Panels from "./Panels.svelte";
   import Viz from "./Viz.svelte";
-  const dispatch = createEventDispatcher();
 
-  const stepsStore = setContext("steps", setSteps());
-  const marginStore = setContext("margin", setMargin());
+  setContext("steps", setSteps());
+  setContext("margin", setMargin());
   const vizDimsStore = setContext("vizDims", setVizDims());
   const graphicRootDimsStore = setContext(
     "graphicRootDims",
@@ -41,7 +39,7 @@
     "isSplitScreen",
     setIsSplitScreen([screenDimsStore, globalAlignStore])
   );
-  const isMobileRowMode = setContext(
+  setContext(
     "isMobileRowMode",
     setIsMobileRowMode([screenDimsStore, mobileVariantStore])
   );
@@ -59,76 +57,74 @@
       maxScrollytellerWidthStore,
     ])
   );
-  const currentPanelStore = setContext("currentPanel", setCurrentPanel());
+  setContext("currentPanel", setCurrentPanel());
 
-  export let customPanel: ComponentType | null = null;
-  export let panels: PanelDefinition[];
-  export let onProgress = (
-    type: string,
-    payload: {
-      boundingRect: DOMRect;
-      rootPct: number;
-      scrollPct: number;
-    }
-  ) => {};
-  export let onMarker = (marker) => {};
-  export let onLoad = () => {};
-  export let observerOptions: IntersectionObserverInit = undefined;
-
-  /**
-   * When `true` we remove the slot from the DOM when not in the viewport, and
-   * debounce loading markers while the browser is scrolling quickly.
-   *
-   * This is useful to free up layers/memory/CPU in complex interactives,
-   * especially to prevent out of memory crashe issues with iPhone Safari.
-   *
-   * The trade-off is you may need to use `<link rel="preload"` for resources
-   * that don't appear in the page by default.
-   *
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload mdn preload docs}
-   */
-  export let discardSlot = false;
-
-  export let layout: Style = {};
-  $: _layout = {
-    align: layout.align || "centre",
-    mobileVariant: layout.mobileVariant || "blocks", // or rows
-    resizeInteractive: layout.resizeInteractive ?? true,
-    transparentFloat:
-      layout.transparentFloat ?? ["left", "right"].includes(layout.align),
-  };
-
-  $: _observerOptions = {
-    rootMargin: _layout.mobileVariant === "rows" ? "-50% 0% 0% 0%" : undefined,
-    ...(observerOptions || {}),
-  };
-
-  export let ratio: number = 1;
-  $: $ratioStore = ratio;
-
-  /**
-   * Percent past the bottom of the viz the graphic has to be before it triggers. Default 20 (20%)
-   */
-  export let vizMarkerThreshold = 20;
-
-  $: if (vizMarkerThreshold >= 50) {
-    throw new Error("vizMarkerThreshold must be <50% screen height");
+  interface Props {
+    customPanel?: ComponentType | null;
+    panels: PanelDefinition<Data>[];
+    onProgress?: (
+      type: string,
+      payload: {
+        boundingRect: DOMRect;
+        rootPct: number;
+        scrollPct: number;
+      }
+    ) => void;
+    onMarker?: (marker: Data) => void;
+    onLoad?: (HTMLElement) => void;
+    observerOptions?: IntersectionObserverInit;
+    /**
+     * When `true` we remove the slot from the DOM when not in the viewport, and
+     * debounce loading markers while the browser is scrolling quickly.
+     *
+     * This is useful to free up layers/memory/CPU in complex interactives,
+     * especially to prevent out of memory crashe issues with iPhone Safari.
+     *
+     * The trade-off is you may need to use `<link rel="preload"` for resources
+     * that don't appear in the page by default.
+     *
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload mdn preload docs}
+     */
+    discardSlot?: boolean;
+    layout?: Style;
+    ratio?: number;
+    /**
+     * Percent past the bottom of the viz the graphic has to be before it triggers. Default 20 (20%)
+     */
+    vizMarkerThreshold?: number;
+    children?: import("svelte").Snippet;
   }
 
-  /**
-   * When the user is scrolling at a speed greater than this, don't mount
-   * new components or update markers.
-   */
-  $: maxScrollSpeed = discardSlot ? 0.5 : Infinity;
+  let {
+    customPanel = null,
+    panels,
+    onProgress = (
+      type: string,
+      payload: {
+        boundingRect: DOMRect;
+        rootPct: number;
+        scrollPct: number;
+      }
+    ) => {},
+    onMarker = (marker: Data) => {},
+    onLoad = () => {},
+    observerOptions = undefined,
+    discardSlot = false,
+    layout = {},
+    ratio = 1,
+    vizMarkerThreshold = 20,
+    children,
+  }: Props = $props();
 
-  const isOdyssey: boolean = window.__IS_ODYSSEY_FORMAT__;
+  const isOdyssey = !!window.__IS_ODYSSEY_FORMAT__;
 
-  let scrollytellerRef: HTMLElement | undefined;
-  let marker: any;
-  let isInViewport = false;
+  let scrollytellerRef: HTMLElement | undefined = $state();
+  /** The contents of the current marker as passed in from the library consumer */
+  let marker = $state<Data>();
+  let isInViewport = $state(false);
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions = [];
-  let panelRoot;
+  let panelRoot = $state<HTMLElement>();
 
   const scrollytellerObserver = new IntersectionObserver(
     ([scrollytellerEntry]) =>
@@ -165,11 +161,38 @@
     });
   });
 
-  $: marker && deferUntilScrollSettles(() => onMarker(marker));
-
+  let _layout = $derived({
+    align: layout.align || "centre",
+    mobileVariant: layout.mobileVariant || "blocks", // or rows
+    resizeInteractive: layout.resizeInteractive ?? true,
+    transparentFloat:
+      layout.transparentFloat ?? ["left", "right"].includes(layout.align),
+  });
+  let _observerOptions = $derived({
+    rootMargin: _layout.mobileVariant === "rows" ? "-50% 0% 0% 0%" : undefined,
+    ...(observerOptions || {}),
+  });
+  $effect(() => {
+    $ratioStore = ratio;
+  });
+  $effect(() => {
+    if (vizMarkerThreshold >= 50) {
+      throw new Error("vizMarkerThreshold must be <50% screen height");
+    }
+  });
+  /**
+   * When the user is scrolling at a speed greater than this, don't mount
+   * new components or update markers.
+   */
+  let maxScrollSpeed = $derived(discardSlot ? 0.5 : Infinity);
+  $effect(() => {
+    marker &&
+      deferUntilScrollSettles(() => onMarker($state.snapshot(marker) as Data));
+  });
   // Debug mode should highlight blocks, graphic & show which breakpoint we're at
-  $: isDebug =
-    typeof location !== "undefined" && location.hash === "#debug=true";
+  let isDebug = $derived(
+    typeof location !== "undefined" && location.hash === "#debug=true"
+  );
 </script>
 
 {#if onProgress}
@@ -183,7 +206,6 @@
 <PanelObserver
   bind:marker
   observerOptions={_observerOptions}
-  {isDebug}
   {vizMarkerThreshold}
 />
 
@@ -204,7 +226,9 @@
   style:opacity={$vizDimsStore.status === "ready" ? 1 : 0}
 >
   {#if !_layout.resizeInteractive}
-    <Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
+    <Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}
+      >{@render children?.()}</Viz
+    >
   {/if}
   <div
     class="scrollyteller"
@@ -219,7 +243,9 @@
     bind:this={scrollytellerRef}
   >
     {#if _layout.resizeInteractive}
-      <Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}><slot /></Viz>
+      <Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}
+        >{@render children?.()}</Viz
+      >
     {/if}
     <Panels layout={_layout} {panels} {customPanel} bind:panelRoot />
   </div>

@@ -1,18 +1,29 @@
 <script lang="ts">
   import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
 
-  const globalAlign = getContext("globalAlign");
-  const screenDims = getContext("screenDims");
-  const globalMobileVariant = getContext("mobileVariant");
+  const globalAlign = getContext<Writable<string>>("globalAlign");
+  const screenDims = getContext<Writable<number[]>>("screenDims");
+  const globalMobileVariant = getContext<Writable<string>>("mobileVariant");
 
-  export let align = "centre";
-  export let mobileVariant = "blocks";
-  let innerWidth = 0;
-  let innerHeight = 0;
+  interface Props {
+    align?: string;
+    mobileVariant?: string;
+  }
 
-  $: $screenDims = [innerWidth, innerHeight];
-  $: $globalAlign = align;
-  $: $globalMobileVariant = mobileVariant;
+  let { align = "centre", mobileVariant = "blocks" }: Props = $props();
+  let innerWidth = $state(0);
+  let innerHeight = $state(0);
+
+  $effect(() => {
+    $screenDims = [innerWidth, innerHeight];
+  });
+  $effect(() => {
+    $globalAlign = align;
+  });
+  $effect(() => {
+    $globalMobileVariant = mobileVariant;
+  });
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />

@@ -34,11 +34,11 @@ function excludePanelMeta(config: PanelMeta) {
  * @param className The className to apply to the mount node
  * @param markerName The hash name for markers
  */
-export const loadScrollyteller = (
+export const loadScrollyteller = <Data = any>(
   name?: string,
   className?: string,
   markerName = "mark",
-): ScrollytellerDefinition => {
+): ScrollytellerDefinition<Data> => {
   window.__scrollytellers = window.__scrollytellers || {};
 
   const openingMountValuePrefix = `${SELECTOR_COMMON}${name ? `NAME${name}` : ""}`;
@@ -86,12 +86,12 @@ export const loadScrollyteller = (
  * @param initialMarker
  * @param name
  */
-const loadPanels = (
+const loadPanels = <Data = any>(
   nodes: Element[],
   initialConfig,
   name: string,
-): PanelDefinition[] => {
-  const panels: PanelDefinition[] = [];
+): PanelDefinition<Data>[] => {
+  const panels: PanelDefinition<Data>[] = [];
   let nextConfigAndMeta: PanelMeta = initialConfig;
   let nextNodes: Element[] = [];
 
@@ -101,7 +101,7 @@ const loadPanels = (
 
     panels.push({
       align: nextConfigAndMeta.align,
-      data: excludePanelMeta(nextConfigAndMeta),
+      data: excludePanelMeta(nextConfigAndMeta) as Data,
       nodes: nextNodes,
     });
     nextNodes = [];

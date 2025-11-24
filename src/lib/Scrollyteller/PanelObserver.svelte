@@ -18,35 +18,44 @@
    * we must track intersecting panels in `intersectingPanels`, otherwise
    * scrolling back up the page doesn't work as expected.
    */
-  import type { IntersectionEntries } from "$lib/types";
-  import { getContext, onMount } from "svelte";
-  const vizDims = getContext("vizDims");
-  const isSplitScreen = getContext("isSplitScreen");
-  const isMobileRowMode = getContext("isMobileRowMode");
-  const screenDims = getContext("screenDims");
-  const steps = getContext("steps");
-  const currentPanel = getContext("currentPanel");
+  import type { WritableDims, IntersectionEntries, PanelRef } from "$lib/types";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
+  const vizDims = getContext<WritableDims>("vizDims");
+  const isSplitScreen = getContext<Writable<boolean>>("isSplitScreen");
+  const isMobileRowMode = getContext<Writable<boolean>>("isMobileRowMode");
+  const screenDims = getContext<WritableDims>("screenDims");
+  const steps = getContext<Writable<PanelRef[]>>("steps");
+  const currentPanel = getContext<Writable<number>>("currentPanel");
 
-  export let marker;
-  export let observerOptions;
-  export let isDebug;
-  export let vizMarkerThreshold = 20;
+  interface Props {
+    marker: any;
+    observerOptions: any;
+    vizMarkerThreshold?: number;
+  }
+
+  let {
+    marker = $bindable(),
+    observerOptions,
+    vizMarkerThreshold = 20,
+  }: Props = $props();
 
   /**
    * The root margin amount, includes space either side.
    *
    * E.g. 20% margin = 0.6 multiplier (60% in the block, 2*20% outside = 100%)
    */
-  $: vizMarkerThresholdMarginDecimal = (100 - vizMarkerThreshold * 2) / 100;
+  let vizMarkerThresholdMarginDecimal = $derived(
+    (100 - vizMarkerThreshold * 2) / 100
+  );
 
   /** Intersection observer root margin */
-  let rootMargin;
-  $: {
+  let rootMargin = $derived.by(() => {
     if ($isMobileRowMode) {
       // For row layout on small portrait screens, block out space taken up by the viz at the top
       const threshold = ($vizDims.dims[1] / $screenDims[1]) * 100;
       // console.log($vizDims, $screenDims, threshold);
-      rootMargin = `-${threshold}% 0px -30% 0px`;
+      return `-${threshold}% 0px -30% 0px`;
     } else if ($isSplitScreen) {
       // For split screens, trigger the intersection observer when the block is
       // over {vizMarkerThreshold}% of the interactive.
@@ -56,83 +65,70 @@
             vizMarkerThresholdMarginDecimal) /
           2
       );
-      rootMargin = `-${threshold}px 0px -${threshold}px 0px`;
+      return `-${threshold}px 0px -${threshold}px 0px`;
     } else {
       // Otherwise 10% of the screen height (on top and bottom).
       const threshold = Math.round($screenDims[1] / 8);
-      rootMargin = `-${threshold}px 0px -${threshold}px 0px`;
+      return `-${threshold}px 0px -${threshold}px 0px`;
     }
-  }
+  });
 
   /**
    * When observerOptions isn't set, default to either 0.5 for centred blocks
    * or a 20% margin on the interactive.
    */
-  let _observerOptions: IntersectionObserverInit | undefined;
-  $: {
-    _observerOptions = {
+  let _observerOptions: IntersectionObserverInit | undefined = $derived.by(
+    () => ({
       ...(observerOptions || {}),
       rootMargin,
-    };
-  }
+    })
+  );
 
   // Set up observer for panel position ======================================
-
-  let panelObserver;
   /**
    * Track intersecting panels. We can change the viz back to the last panel
    * which we otherwise can't do if there are 2 panels overlapping at once.
    */
-  let intersectingPanels = [];
-
-  $: {
-    if ($vizDims.status === "ready") {
-      intersectingPanels = [];
-      panelObserver?.disconnect();
-      panelObserver = new IntersectionObserver(
-        (entries: IntersectionEntries[]) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              intersectingPanels.push(entry);
-            } else {
-              const itemToRemove = intersectingPanels.findIndex(
-                (panel) => panel.target === entry.target
-              );
-              if (itemToRemove === -1) return;
-              intersectingPanels.splice(itemToRemove, 1);
-            }
-
-            // The current panel is the most recently intersected panel.
-            // If the most recent panel scrolls out, this falls back to
-            // any earlier panels that are still intersecting.
-            const newPanel = intersectingPanels[intersectingPanels.length - 1];
-            if (newPanel) {
-              marker = newPanel.target.scrollyData;
-              $currentPanel = $steps.findIndex(
-                (step) => step === newPanel.target
-              );
-            }
-          });
-        },
-        _observerOptions
-      );
-      $steps.forEach((step) => {
-        panelObserver.observe(step);
-      });
-    } else {
-      panelObserver?.disconnect();
+  let intersectingPanels = $state([]);
+  $effect(() => {
+    if ($vizDims.status !== "ready" || !$steps.length) {
+      return;
     }
-  }
-  onMount(() => panelObserver?.disconnect());
-</script>
+    intersectingPanels = [];
 
-{#if isDebug && rootMargin && !observerOptions}
-  <div
-    class="panelobserver-debug"
-    style:top={rootMargin + "px"}
-    style:height={innerHeight - rootMargin * 2 + "px"}
-  ></div>
-{/if}
+    const panelObserver = new IntersectionObserver(
+      (entries: IntersectionEntries[]) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            intersectingPanels = [...intersectingPanels, entry];
+          } else {
+            intersectingPanels = intersectingPanels.filter(
+              (panel) => panel.target !== entry.target
+            );
+          }
+
+          // The current panel is the most recently intersected panel.
+          // If the most recent panel scrolls out, this falls back to
+          // any earlier panels that are still intersecting.
+          const newPanel = intersectingPanels[intersectingPanels.length - 1];
+          if (newPanel) {
+            marker = newPanel.target.scrollyData;
+            $currentPanel = $steps.findIndex(
+              (step) => step === newPanel.target
+            );
+          }
+        });
+      },
+      _observerOptions
+    );
+    $steps.forEach((step) => {
+      panelObserver.observe(step);
+    });
+    return () => {
+      panelObserver?.disconnect();
+    };
+  });
+</script>
 
 <style lang="scss">
   .panelobserver-debug {

@@ -1,19 +1,31 @@
 <script lang="ts">
   import { getContext, onMount } from "svelte";
   import { children } from "./actions.js";
-  import type { PanelDefinition, PanelRef } from "./types.js";
+  import type { PanelRef } from "./types.js";
+  import type { Writable } from "svelte/store";
 
-  const currentPanel = getContext("currentPanel");
-  const steps = getContext("steps");
+  const currentPanel = getContext<Writable<number>>("currentPanel");
+  const steps = getContext<Writable<PanelRef[]>>("steps");
 
-  export let align: string;
-  export let transparentFloat: boolean;
-  export let panelClass: string;
-  export let data: any;
-  export let nodes: Element[];
-  export let i = -1;
+  interface Props {
+    align: string;
+    transparentFloat: boolean;
+    panelClass: string;
+    data: any;
+    nodes: Element[];
+    i?: number;
+  }
 
-  let panelRef: PanelRef;
+  let {
+    align,
+    transparentFloat,
+    panelClass,
+    data,
+    nodes,
+    i = -1,
+  }: Props = $props();
+
+  let panelRef = $state<PanelRef>();
 
   onMount(() => {
     panelRef.scrollyData = data;

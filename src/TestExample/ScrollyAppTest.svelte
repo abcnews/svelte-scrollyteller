@@ -2,32 +2,47 @@
   import Scrollyteller, { loadScrollyteller } from "$lib/index.js";
   import PercentageIndicators from "./PercentageIndicators.svelte";
   import Worm from "./Worm/Worm.svelte";
-  export let name = "test";
+  interface Props {
+    name?: string;
+    [key: string]: any;
+  }
 
-  const scrollyData = loadScrollyteller(
+  let { name = "test", ...rest }: Props = $props();
+
+  type MarkData = { customdata: number };
+
+  const scrollyData = loadScrollyteller<MarkData>(
     name, // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
     "u-full", // Class to apply to mount point u-full makes it full width in Odyssey
     "mark" // Name of marker in CoreMedia eg. for "point" use #point default: #mark
   );
 
-  let number = 0;
-  let stProgress;
+  let number = $state(0);
+  let stProgress = $state<{
+    boundingRect: DOMRect;
+    rootPct: number;
+    scrollPct: number;
+  } | null>(null);
 
-  const onMarker = (detail) => {
-    console.log(detail);
-    number = detail.number;
-  };
-
-  const onProgress = (detail) => {
-    stProgress = detail;
+  const onProgress = (
+    type: string,
+    payload: {
+      boundingRect: DOMRect;
+      rootPct: number;
+      scrollPct: number;
+    }
+  ) => {
+    stProgress = payload;
   };
 </script>
 
 <Scrollyteller
   panels={scrollyData.panels}
-  {onMarker}
+  onMarker={(detail) => {
+    number = detail.customdata;
+  }}
   {onProgress}
-  {...$$restProps}
+  {...rest}
 >
   <div class="example-graphic">
     <Worm />

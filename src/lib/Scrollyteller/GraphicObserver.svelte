@@ -7,10 +7,9 @@
    */
   import { getContext, onMount } from "svelte";
   import { retryUntil } from "./Scrollyteller.util";
-  export let graphicRootEl;
+  let { graphicRootEl } = $props();
   const vizDims = getContext("vizDims");
   const graphicRootDims = getContext("graphicRootDims");
-  const maxGraphicWidth = getContext("maxGraphicWidth");
 
   onMount(() => {
     let observer;

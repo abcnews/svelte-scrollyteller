@@ -70,12 +70,11 @@ export function setMaxScrollytellerWidth([isSplitScreen]) {
   return derived([isSplitScreen], ([$isSplitScreen]) =>
     $isSplitScreen ? 2040 : 1e6,
   );
-
-  /**
-   * Given the ratio of the graphic, work out whether it fits in the column and if
-   * not, return how wide the column should be so there's no whitespace;
-   */
 }
+/**
+ * Given the ratio of the graphic, work out whether it fits in the column and if
+ * not, return how wide the column should be so there's no whitespace;
+ */
 export function setMaxGraphicWidth([
   isSplitScreen,
   graphicRootDims,
