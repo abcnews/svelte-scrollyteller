@@ -13,4 +13,4 @@ Working on svelte-scrollyteller can be done one of two ways:
 2. from your Aunty repo run `npm link @abcnews/svelte-scrollyteller`
 3. Configure Aunty to transpile the linked repo by adding the _fully resolved path_ to your working directory. E.g. `"includedDependencies": ["/Users/ashk/Web/svelte-scrollyteller"]
 
-The last step is important because Webpack resolves symlinks itself, so adding the `@abcnews/svelte-scrollyteller` package name to `includedDependencies` won't work with linked packages.
+The last step is important because Webpack resolves symlinks itself, so adding the `@abcnews/svelte-scrollyteller` package name to `includedDependencies` won't work with linked packages. Getting step 3 wrong will give you the error: "You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file."
