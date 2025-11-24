@@ -1,23 +1,23 @@
-import { defineConfig } from 'vite';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
-import path from 'path';
+import { defineConfig } from "vite";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import path from "path";
 
 export default defineConfig({
-	plugins: [
-		svelte({
-			compilerOptions: {
-				customElement: true
-			}
-		})
-	],
-	build: {
-		outDir: path.resolve(__dirname, './dist-wc'),
-		emptyOutDir: true,
-		minify: false,
-		lib: {
-			entry: path.resolve(__dirname, './src/lib/index.wc.ts'),
-			name: 'Scrollyteller',
-			formats: ['es']
-		}
-	}
+  plugins: [
+    svelte({
+      compilerOptions: {
+        customElement: true,
+      },
+    }),
+  ],
+  build: {
+    outDir: path.resolve(__dirname, "./dist-wc"),
+    emptyOutDir: true,
+    minify: false,
+    lib: {
+      entry: path.resolve(__dirname, "./src/lib/index.wc.ts"),
+      name: "Scrollyteller",
+      formats: ["es"],
+    },
+  },
 });

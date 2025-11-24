@@ -8,11 +8,12 @@
     "package-webcomponent": "npx vite build --config vite.webcomponents.config.js",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. .",
-    "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
+    "lint": "prettier --ignore-path .gitignore --check .",
+    "format": "prettier --ignore-path .gitignore --write .",
     "release": "np",
     "build": "vite build",
-    "version": "npm run package"
+    "version": "npm run package",
+    "test": "npm run lint"
   },
   "np": {
     "yarn": false
