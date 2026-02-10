@@ -61,11 +61,11 @@ When a new box comes into view the `onMarker` callback will fire with the `data`
 
 <Scrollyteller
 	{panels}
-	onMarker={({ detail }) => {
-		marker = detail;
+	onMarker={(data) => {
+		marker = data;
 	}}
-	onProgress={({ detail }) => {
-		progress = detail;
+	onProgress={(type, payload) => {
+		progress = payload;
 	}}
   layout={{
     align: 'left',
@@ -73,13 +73,13 @@ When a new box comes into view the `onMarker` callback will fire with the `data`
     // transparentFloat: true
   }}
 >
-	<MyGraphic marker="{marker}" />
+	<MyGraphic {marker} />
 </Scrollyteller>
 
 <style lang="scss">
 // Optionally create a ratio box for your graphic. It will self-centre itself
 // into the appropriate space when resizeInteractive=true
-.myGraphic{
+.myGraphic {
   aspect-ratio: 16/9;
   height: 100%;
   width: unset;
@@ -88,18 +88,42 @@ When a new box comes into view the `onMarker` callback will fire with the `data`
     height: auto;
   }
 }
- </style>
+</style>
 ```
 
 For a more complete example using Typescript see the [examples](examples).
+
+### TypeScript Types
+
+You can import the following types to help with your implementation:
+
+```ts
+import type {
+  PanelDefinition,
+  ScrollytellerDefinition,
+} from "@abcnews/svelte-scrollyteller";
+
+/**
+ * Your custom marker data type
+ */
+type MyPanelData = {
+  datawrapperUrl: string;
+};
+
+/**
+ * A typed list of panels
+ */
+const panels: PanelDefinition<MyPanelData>[] = [...];
+```
 
 ## Props
 
 | Property        | Type                     | Description                                                                                                                            | Default            |
 | --------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| panels          | Refer to **Usage**       | **required** Array of nodes and data which dictate the markers                                                                         |
-| onMarker        | callback function        | **required** Called when a marker intersects and returns that markers `data`                                                           |                    |
-| onProgress      | callback function        | Fires on scroll and returns the scrollyteller progress                                                                                 |                    |
+| panels          | `PanelDefinition[]`      | **required** Array of nodes and data which dictate the markers                                                                         |
+| onMarker        | `(data: Data) => void`   | **required** Called when a marker intersects and returns that markers `data`                                                           |                    |
+| onProgress      | `(type, payload) => void`| Fires on scroll and returns the scrollyteller progress. payload is `{ boundingRect, rootPct, scrollPct }`                              |                    |
+| onLoad          | `(el: HTMLElement) => void`| Called when the interactive graphic mount node is ready.                                                                             |                    |
 | customPanel     | Svelte Component         | Component to replace the default panel component                                                                                       | Panel.svelte       |
 | observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | `{threshold: 0.5}` |
 
@@ -157,22 +181,30 @@ This is another paragraph
 JS Code:
 
 ```ts
+import { mount } from "svelte";
 import { loadScrollyteller } from "@abcnews/svelte-scrollyteller";
 import App from "App.svelte";
 
-/** Optionally, specify generics to type your markers */
-type MyPanelData = {
+/**
+ * Optionally, specify generics to type your markers.
+ *
+ * @example
+ * // In App.svelte:
+ * import type { PanelDefinition } from "@abcnews/svelte-scrollyteller";
+ * let { panels }: { panels: PanelDefinition<MyPanelData>[] } = $props();
+ */
+export type MyPanelData = {
   electorate: string;
   viz: "map" | "hex" | "chart";
 };
 
 const scrollyData = loadScrollyteller<MyPanelData>(
   "", // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
-  "u-full", // Class to apply to mount point u-full makes it full width in Odyssey
+  "u-full", // Class to apply to mount node u-full makes it full width in Odyssey
   "mark", // Name of marker in CoreMedia eg. for "point" use #point default: #mark
 );
 
-new App({
+mount(App, {
   target: scrollyData.mountNode,
   props: { panels: scrollyData.panels },
 });
