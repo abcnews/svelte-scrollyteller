@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import type { Writable } from "svelte/store";
 
   const globalAlign = getContext<Writable<string>>("globalAlign");
@@ -12,18 +12,28 @@
   }
 
   let { align = "centre", mobileVariant = "blocks" }: Props = $props();
-  let innerWidth = $state(0);
-  let innerHeight = $state(0);
 
-  $effect(() => {
-    $screenDims = [innerWidth, innerHeight];
-  });
   $effect(() => {
     $globalAlign = align;
   });
   $effect(() => {
     $globalMobileVariant = mobileVariant;
   });
-</script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
+  onMount(() => {
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        // Using requestAnimationFrame to ensure the store update happens
+        // in the next frame, avoiding layout thrashing.
+        requestAnimationFrame(() => {
+          $screenDims = [width, height];
+        });
+      }
+    });
+
+    observer.observe(document.documentElement);
+
+    return () => observer.disconnect();
+  });
+</script>
