@@ -1,0 +1,95 @@
+<script lang="ts">import Panel from "./Panel.svelte";
+let { panelRoot = $bindable(), layout, panels, customPanel = null, steps = [], } = $props();
+/**
+ * Panels grouped by `align` property. We render a container per alignment
+ * so we can have multiple left/right/centred panels in one scrollyteller.
+ */
+let panelGroups = $derived.by(() => {
+    const newPanelGroups = [];
+    let group;
+    panels.forEach(({ align = layout.align, panelClass = "", ...panel }, i) => {
+        if (align !== group?.align) {
+            group && newPanelGroups.push(group);
+            group = { align, panels: [] };
+        }
+        if (i === 0)
+            panelClass += " first";
+        if (i === panels.length - 1)
+            panelClass += " last";
+        group.panels.push({ ...panel, panelClass, i });
+    });
+    newPanelGroups.push(group);
+    return newPanelGroups;
+});
+</script>
+
+{#each panelGroups as group}
+  <div class="panel-wrapper" bind:this={panelRoot}>
+    <div
+      class="content"
+      class:content--centre={group.align === "centre"}
+      class:content--right={group.align === "right"}
+      class:content--left={group.align === "left"}
+    >
+      {#each group.panels as panel}
+        {#if customPanel}
+          {@const SvelteComponent = customPanel}
+          <SvelteComponent {...panel} {steps} />
+        {:else}
+          <Panel
+            {...panel}
+            align={panel.align || layout.align}
+            transparentFloat={layout.transparentFloat}
+            {steps}
+          />
+        {/if}
+      {/each}
+    </div>
+  </div>
+{/each}
+
+<style>.content {
+  margin: -100dvh auto 0;
+  padding-bottom: 1px;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+  font-size: 1.125rem;
+}
+
+@media (min-width: 62rem) {
+  .content--centre {
+    max-width: 48.75rem;
+  }
+}
+@media (min-width: 90rem) {
+  .content--centre {
+    max-width: 56.25rem;
+  }
+}
+.content--left, .content--right {
+  max-width: 127.5rem;
+  margin-left: 0;
+}
+@media (min-width: 62rem) {
+  .content--left, .content--right {
+    max-width: 40rem;
+    margin-right: calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);
+    font-size: 1.125rem;
+  }
+}
+@media (min-width: 75rem) {
+  .content--left, .content--right {
+    font-size: 1.125rem;
+  }
+}
+@media (min-width: 90rem) {
+  .content--left, .content--right {
+    max-width: 45rem;
+    font-size: 1.25rem;
+  }
+}
+.content--right {
+  margin-right: 0;
+  margin-left: calc(var(--rightColumnWidth, 100px) + var(--marginOuter) * 1);
+}</style>
