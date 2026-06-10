@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext, onMount } from "svelte";
-  import { children } from "./actions.js";
-  import type { PanelRef } from "./types.js";
+  import { children } from "./actions";
+  import type { PanelRef } from "./types";
   import type { Writable } from "svelte/store";
 
   const currentPanel = getContext<Writable<number>>("currentPanel");

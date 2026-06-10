@@ -1,7 +1,7 @@
 <script lang="ts" generics="Data = any">
   import type { ComponentType } from "svelte";
   import { onMount, setContext } from "svelte";
-  import type { PanelDefinition, Style } from "./types.js";
+  import type { PanelDefinition, Style } from "./types";
   import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util";
   import OnProgressHandler from "./Scrollyteller/OnProgressHandler.svelte";
   import PanelObserver from "./Scrollyteller/PanelObserver.svelte";
@@ -29,7 +29,7 @@
   const vizDimsStore = setContext("vizDims", setVizDims());
   const graphicRootDimsStore = setContext(
     "graphicRootDims",
-    setGraphicRootDims()
+    setGraphicRootDims(),
   );
   const ratioStore = setContext("ratio", setRatio());
   const screenDimsStore = setContext("screenDims", setScreenDims());
@@ -37,15 +37,15 @@
   const mobileVariantStore = setContext("mobileVariant", setMobileVariant());
   const isSplitScreenStore = setContext(
     "isSplitScreen",
-    setIsSplitScreen([screenDimsStore, globalAlignStore])
+    setIsSplitScreen([screenDimsStore, globalAlignStore]),
   );
   setContext(
     "isMobileRowMode",
-    setIsMobileRowMode([screenDimsStore, mobileVariantStore])
+    setIsMobileRowMode([screenDimsStore, mobileVariantStore]),
   );
   const maxScrollytellerWidthStore = setContext(
     "maxScrollytellerWidth",
-    setMaxScrollytellerWidth([isSplitScreenStore])
+    setMaxScrollytellerWidth([isSplitScreenStore]),
   );
   const maxGraphicWidthStore = setContext(
     "maxGraphicWidth",
@@ -55,7 +55,7 @@
       screenDimsStore,
       ratioStore,
       maxScrollytellerWidthStore,
-    ])
+    ]),
   );
   setContext("currentPanel", setCurrentPanel());
 
@@ -68,7 +68,7 @@
         boundingRect: DOMRect;
         rootPct: number;
         scrollPct: number;
-      }
+      },
     ) => void;
     onMarker?: (marker: Data) => void;
     onLoad?: (HTMLElement) => void;
@@ -104,7 +104,7 @@
         boundingRect: DOMRect;
         rootPct: number;
         scrollPct: number;
-      }
+      },
     ) => {},
     onMarker = (marker: Data) => {},
     onLoad = () => {},
@@ -130,7 +130,7 @@
     ([scrollytellerEntry]) =>
       deferUntilScrollSettles(() => {
         isInViewport = scrollytellerEntry.isIntersecting;
-      })
+      }),
   );
 
   const deferUntilScrollSettles = (fn) => {
@@ -191,7 +191,7 @@
   });
   // Debug mode should highlight blocks, graphic & show which breakpoint we're at
   let isDebug = $derived(
-    typeof location !== "undefined" && location.hash === "#debug=true"
+    typeof location !== "undefined" && location.hash === "#debug=true",
   );
 </script>
 
@@ -236,7 +236,7 @@
     class:scrollyteller--debug={isDebug}
     class:scrollyteller--columns={["left", "right"].includes(_layout.align)}
     class:scrollyteller--mobile-row-variant={["rows"].includes(
-      _layout.mobileVariant
+      _layout.mobileVariant,
     )}
     style:--maxScrollytellerWidthPx={$maxScrollytellerWidthStore + "px"}
     style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidthStore}px)`}

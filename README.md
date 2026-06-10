@@ -118,14 +118,14 @@ const panels: PanelDefinition<MyPanelData>[] = [...];
 
 ## Props
 
-| Property        | Type                     | Description                                                                                                                            | Default            |
-| --------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| panels          | `PanelDefinition[]`      | **required** Array of nodes and data which dictate the markers                                                                         |
-| onMarker        | `(data: Data) => void`   | **required** Called when a marker intersects and returns that markers `data`                                                           |                    |
-| onProgress      | `(type, payload) => void`| Fires on scroll and returns the scrollyteller progress. payload is `{ boundingRect, rootPct, scrollPct }`                              |                    |
-| onLoad          | `(el: HTMLElement) => void`| Called when the interactive graphic mount node is ready.                                                                             |                    |
-| customPanel     | Svelte Component         | Component to replace the default panel component                                                                                       | Panel.svelte       |
-| observerOptions | IntersectionObserverInit | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | `{threshold: 0.5}` |
+| Property        | Type                        | Description                                                                                                                            | Default            |
+| --------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| panels          | `PanelDefinition[]`         | **required** Array of nodes and data which dictate the markers                                                                         |
+| onMarker        | `(data: Data) => void`      | **required** Called when a marker intersects and returns that markers `data`                                                           |                    |
+| onProgress      | `(type, payload) => void`   | Fires on scroll and returns the scrollyteller progress. payload is `{ boundingRect, rootPct, scrollPct }`                              |                    |
+| onLoad          | `(el: HTMLElement) => void` | Called when the interactive graphic mount node is ready.                                                                               |                    |
+| customPanel     | Svelte Component            | Component to replace the default panel component                                                                                       | Panel.svelte       |
+| observerOptions | IntersectionObserverInit    | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | `{threshold: 0.5}` |
 
 ## Using layouts/styling your own
 
@@ -182,6 +182,7 @@ JS Code:
 
 ```ts
 import { mount } from "svelte";
+import { selectMounts } from "@abcnews/mount-utils";
 import { loadScrollyteller } from "@abcnews/svelte-scrollyteller";
 import App from "App.svelte";
 
@@ -198,15 +199,21 @@ export type MyPanelData = {
   viz: "map" | "hex" | "chart";
 };
 
-const scrollyData = loadScrollyteller<MyPanelData>(
-  "", // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
-  "u-full", // Class to apply to mount node u-full makes it full width in Odyssey
-  "mark", // Name of marker in CoreMedia eg. for "point" use #point default: #mark
-);
+// Find all scrollyteller mount nodes
+const scrollyMounts = selectMounts("scrollytellerNAMEmyscrolly");
 
-mount(App, {
-  target: scrollyData.mountNode,
-  props: { panels: scrollyData.panels },
+scrollyMounts.forEach((mountNode) => {
+  // Initialise the scrollyteller using the target node directly
+  const scrollyData = loadScrollyteller<MyPanelData>(
+    mountNode,
+    "u-full", // Class to apply to mount node u-full makes it full width in Odyssey
+    "mark", // Name of marker in CoreMedia eg. for "point" use #point default: #mark
+  );
+
+  mount(App, {
+    target: scrollyData.mountNode,
+    props: { panels: scrollyData.panels },
+  });
 });
 ```
 
