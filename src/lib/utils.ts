@@ -35,7 +35,7 @@ function excludePanelMeta(config: PanelMeta) {
  * @param markerName The prefix or name used to identify #mark elements in the DOM.
  */
 export const loadScrollyteller = <Data = any>(
-  nameOrNode?: string | Element | null,
+  nameOrNode?: string | Element | undefined,
   className?: string,
   markerName = "mark",
 ): ScrollytellerDefinition<Data> => {
