@@ -32,7 +32,7 @@ function excludePanelMeta(config: PanelMeta) {
  * Finds and grabs any nodes between #scrollyteller and #endscrollyteller.
  * @param nameOrNode The unique identifier for the scrollyteller (string) or the target DOM element (Element).
  * @param className The CSS class name to apply to the scrollyteller container element.
- * @param markerName The prefix or name used to identify marking/anchor elements in the DOM.
+ * @param markerName The prefix or name used to identify #mark elements in the DOM.
  */
 export const loadScrollyteller = <Data = any>(
   nameOrNode?: string | Element | null,
