@@ -39,7 +39,6 @@ export const loadScrollyteller = <Data = any>(
   className?: string,
   markerName = "mark",
 ): ScrollytellerDefinition<Data> => {
-  console.log("hi worlb");
   const hasTargetNode = nameOrNode && typeof nameOrNode !== "string";
   const targetNode = hasTargetNode ? (nameOrNode as Element) : null;
   const nameFromArgs = hasTargetNode ? "" : (nameOrNode as string);
