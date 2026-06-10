@@ -39,9 +39,8 @@ export const loadScrollyteller = <Data = any>(
   className?: string,
   markerName = "mark",
 ): ScrollytellerDefinition<Data> => {
-  const hasTargetNode = nameOrNode && typeof nameOrNode !== "string";
-  const targetNode = hasTargetNode ? (nameOrNode as Element) : null;
-  const nameFromArgs = hasTargetNode ? "" : (nameOrNode as string);
+  const targetNode = typeof nameOrNode !== "string" ? nameOrNode : null;
+  const nameFromArgs = typeof nameOrNode === "string" ? nameOrNode : "";
 
   // name is optional when using targetNode, but we still need a cache key
   const name =
