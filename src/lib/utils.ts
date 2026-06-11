@@ -1,6 +1,6 @@
 import acto from "@abcnews/alternating-case-to-object";
 import { selectMounts, isMount, getMountValue } from "@abcnews/mount-utils";
-import type { PanelDefinition, ScrollytellerDefinition } from "./types.js";
+import type { PanelDefinition, ScrollytellerDefinition } from "./types";
 
 const piecemeal = Symbol("piecemeal");
 const SELECTOR_COMMON = "scrollyteller";
@@ -29,24 +29,29 @@ function excludePanelMeta(config: PanelMeta) {
 }
 
 /**
- * Finds and grabs any nodes between #scrollyteller and #endscrollyteller
- * @param name The hash name for a scrollyteller (optional if there is only one on the page)
- * @param className The className to apply to the mount node
- * @param markerName The hash name for markers
+ * Finds and grabs any nodes between #scrollyteller and #endscrollyteller.
+ * @param nameOrNode The unique identifier for the scrollyteller (string) or the target DOM element (Element).
+ * @param className The CSS class name to apply to the scrollyteller container element.
+ * @param markerName The prefix or name used to identify #mark elements in the DOM.
  */
 export const loadScrollyteller = <Data = any>(
-  name?: string,
+  nameOrNode?: string | Element | undefined,
   className?: string,
   markerName = "mark",
 ): ScrollytellerDefinition<Data> => {
-  window.__scrollytellers = window.__scrollytellers || {};
+  const targetNode = typeof nameOrNode !== "string" ? nameOrNode : null;
+  const nameFromArgs = typeof nameOrNode === "string" ? nameOrNode : "";
 
+  // name is optional when using targetNode, but we still need a cache key
+  const name =
+    nameFromArgs || targetNode?.getAttribute("id") || "scrollyteller";
+
+  window.__scrollytellers = window.__scrollytellers || {};
   const openingMountValuePrefix = `${SELECTOR_COMMON}${name ? `NAME${name}` : ""}`;
 
-  name = name || "scrollyteller";
-
   if (!window.__scrollytellers[name]) {
-    const firstEl: Element | null = selectMounts(openingMountValuePrefix)[0];
+    const firstEl: Element | null =
+      targetNode || selectMounts(openingMountValuePrefix)[0];
 
     if (!firstEl) {
       throw new Error(`Couldn't find element for #${openingMountValuePrefix}`);

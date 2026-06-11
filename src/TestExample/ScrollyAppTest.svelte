@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Scrollyteller, { loadScrollyteller } from "$lib/index.js";
+  import Scrollyteller, { loadScrollyteller } from "$lib/index";
   import PercentageIndicators from "./PercentageIndicators.svelte";
   import Worm from "./Worm/Worm.svelte";
   interface Props {
@@ -14,7 +14,7 @@
   const scrollyData = loadScrollyteller<MarkData>(
     name, // If set to eg. "one" use #scrollytellerNAMEone in CoreMedia
     "u-full", // Class to apply to mount point u-full makes it full width in Odyssey
-    "mark" // Name of marker in CoreMedia eg. for "point" use #point default: #mark
+    "mark", // Name of marker in CoreMedia eg. for "point" use #point default: #mark
   );
 
   let number = $state(0);
@@ -30,7 +30,7 @@
       boundingRect: DOMRect;
       rootPct: number;
       scrollPct: number;
-    }
+    },
   ) => {
     stProgress = payload;
   };

@@ -1,4 +1,5 @@
 import Scrollyteller from "./Scrollyteller.svelte";
-export { loadScrollyteller } from "./utils.js";
+export { loadScrollyteller, getScrollytellerOpts } from "./utils";
+export type { ScrollytellerOptions } from "./utils";
 
 export default Scrollyteller;
