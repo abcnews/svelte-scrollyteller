@@ -1,6 +1,6 @@
 {
   "name": "@abcnews/svelte-scrollyteller",
-  "version": "3.1.0-1",
+  "version": "3.1.0",
   "scripts": {
     "start": "concurrently \"vite dev\" \"svelte-package --watch\" 'vite build --watch --config vite.webcomponents.config.js'",
     "dev": "npm start",
