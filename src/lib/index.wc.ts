@@ -6,5 +6,4 @@
 import Scrollyteller from "./Scrollyteller.wc.svelte";
 export { loadScrollyteller } from "./utils";
 
-
 export default Scrollyteller;
