@@ -1,8 +1,8 @@
 <script lang="ts" generics="Data = any">
   import type { ComponentType } from "svelte";
   import { onMount, setContext } from "svelte";
-  import type { PanelDefinition, Style } from "./types";
-  import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util";
+  import type { PanelDefinition, Style } from "./types.js";
+  import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util.js";
   import OnProgressHandler from "./Scrollyteller/OnProgressHandler.svelte";
   import PanelObserver from "./Scrollyteller/PanelObserver.svelte";
   import ScreenDimsStoreUpdater from "./Scrollyteller/ScreenDimsStoreUpdater.svelte";
@@ -20,7 +20,7 @@
     setMaxScrollytellerWidth,
     setMaxGraphicWidth,
     setCurrentPanel,
-  } from "./stores";
+  } from "./stores.js";
   import Panels from "./Panels.svelte";
   import Viz from "./Viz.svelte";
 

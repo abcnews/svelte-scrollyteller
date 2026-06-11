@@ -1,6 +1,6 @@
 <script lang="ts">
   import GraphicObserver from "./Scrollyteller/GraphicObserver.svelte";
-  import type { Style } from "./types";
+  import type { Style } from "./types.js";
 
   interface Props {
     layout: Style;

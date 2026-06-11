@@ -4,6 +4,6 @@
  * to plain Javascript so it can be consumed by non-Svelte projects.
  */
 import Scrollyteller from "./Scrollyteller.wc.svelte";
-export { loadScrollyteller } from "./utils";
+export { loadScrollyteller } from "./utils.js";
 
 export default Scrollyteller;

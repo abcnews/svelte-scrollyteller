@@ -18,7 +18,7 @@
    * we must track intersecting panels in `intersectingPanels`, otherwise
    * scrolling back up the page doesn't work as expected.
    */
-  import type { WritableDims, IntersectionEntries, PanelRef } from "$lib/types";
+  import type { WritableDims, IntersectionEntries, PanelRef } from "../types.js";
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
   const vizDims = getContext<WritableDims>("vizDims");

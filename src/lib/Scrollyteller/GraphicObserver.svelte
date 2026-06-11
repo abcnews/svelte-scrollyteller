@@ -6,7 +6,7 @@
    * This component is responsible for keeping the graphicDims store updated.
    */
   import { getContext, onMount } from "svelte";
-  import { retryUntil } from "./Scrollyteller.util";
+  import { retryUntil } from "./Scrollyteller.util.js";
   let { graphicRootEl } = $props();
   const vizDims = getContext("vizDims");
   const graphicRootDims = getContext("graphicRootDims");
