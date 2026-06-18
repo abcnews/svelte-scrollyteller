@@ -12,7 +12,9 @@
     "release": "np",
     "build": "vite build",
     "version": "npm run package",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "storybook": "storybook dev -p 6006 --ci",
+    "build-storybook": "storybook build"
   },
   "np": {
     "yarn": false
@@ -24,12 +26,16 @@
     "access": "public"
   },
   "devDependencies": {
+    "@storybook/addon-svelte-csf": "^5.1.2",
+    "@storybook/sveltekit": "^10.4.6",
     "@sveltejs/kit": "^2.65.2",
     "@sveltejs/package": "^2.5.6",
+    "@types/node": "^24",
     "concurrently": "^10.0.3",
     "np": "^11.2.1",
     "prettier": "^3.6.2",
     "sass": "^1.94.2",
+    "storybook": "^10.4.6",
     "svelte-check": "^4.3.4",
     "svelte-preprocess": "^6.0.3",
     "typescript": "^5.9.3"
