@@ -3,7 +3,7 @@
   "version": "3.1.0",
   "scripts": {
     "start": "concurrently \"vite dev\" \"svelte-package --watch\"",
-    "dev": "npm start",
+    "dev": "npm run storybook",
     "package": "svelte-package",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",

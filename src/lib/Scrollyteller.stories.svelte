@@ -89,7 +89,7 @@
 <script lang="ts">
   import Scrollyteller from "./Scrollyteller.svelte";
   import type { PanelDefinition } from "./types.js";
-  import Worm from "../TestExample/Worm/Worm.svelte";
+  import Worm from "./Worm/Worm.svelte";
 
   const createLoremParagraph = (index: number): Element[] => {
     if (typeof document === "undefined") return [];
