@@ -1,5 +1,5 @@
 <script lang="ts">
-  import GraphicObserver from "./Scrollyteller/GraphicObserver.svelte";
+  import { useGraphicObserver } from "./Scrollyteller/useGraphicObserver.svelte.js";
   import type { Style } from "./types.js";
 
   interface Props {
@@ -26,9 +26,8 @@
       onLoad(graphicRootEl);
     }
   });
+  useGraphicObserver({ get graphicRootEl() { return graphicRootEl; } });
 </script>
-
-<GraphicObserver {graphicRootEl} />
 
 <div
   class="viz"

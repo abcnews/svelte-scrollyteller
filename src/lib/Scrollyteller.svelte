@@ -3,9 +3,9 @@
   import { onMount, setContext } from "svelte";
   import type { PanelDefinition, Style } from "./types.js";
   import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util.js";
-  import OnProgressHandler from "./Scrollyteller/OnProgressHandler.svelte";
-  import PanelObserver from "./Scrollyteller/PanelObserver.svelte";
-  import ScreenDimsStoreUpdater from "./Scrollyteller/ScreenDimsStoreUpdater.svelte";
+  import { useOnProgressHandler } from "./Scrollyteller/useOnProgressHandler.svelte.js";
+  import { usePanelObserver } from "./Scrollyteller/usePanelObserver.svelte.js";
+  import { useScreenDimsUpdater } from "./Scrollyteller/useScreenDimsUpdater.svelte.js";
   import {
     setSteps,
     setMargin,
@@ -193,21 +193,23 @@
   let isDebug = $derived(
     typeof location !== "undefined" && location.hash === "#debug=true",
   );
+  useScreenDimsUpdater({
+    get align() { return _layout.align; },
+    get mobileVariant() { return _layout.mobileVariant; }
+  });
+
+  usePanelObserver({
+    get marker() { return marker; },
+    set marker(v) { marker = v; },
+    get observerOptions() { return _observerOptions; },
+    get vizMarkerThreshold() { return vizMarkerThreshold; }
+  });
+
+  useOnProgressHandler({
+    get scrollytellerRef() { return scrollytellerRef; },
+    get onProgress() { return onProgress; }
+  });
 </script>
-
-{#if onProgress}
-  <OnProgressHandler {scrollytellerRef} {onProgress} />
-{/if}
-
-<ScreenDimsStoreUpdater
-  align={_layout.align}
-  mobileVariant={_layout.mobileVariant}
-/>
-<PanelObserver
-  bind:marker
-  observerOptions={_observerOptions}
-  {vizMarkerThreshold}
-/>
 
 <svelte:head>
   {#if isOdyssey}
