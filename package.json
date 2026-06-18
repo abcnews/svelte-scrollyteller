@@ -18,16 +18,16 @@
     "yarn": false
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
-    "@sveltejs/kit": "^2.49.0",
+    "@sveltejs/kit": "^2.65.2",
     "@sveltejs/package": "^2.5.6",
-    "concurrently": "^9.2.1",
-    "np": "^10.2.0",
+    "concurrently": "^10.0.3",
+    "np": "^11.2.1",
     "prettier": "^3.6.2",
     "sass": "^1.94.2",
     "svelte-check": "^4.3.4",
