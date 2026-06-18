@@ -108,7 +108,7 @@
     name: string;
   }
 
-  // The 6 color states extracted from the SVG example
+  // 6 vaguely DLS colour states
   const markerStates = [
     { name: "Mid Blue", bg: "#3E85E1", text: "#000000" },
     { name: "Light Blue", bg: "#A0BEEB", text: "#000000" },
