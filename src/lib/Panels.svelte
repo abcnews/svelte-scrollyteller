@@ -9,6 +9,7 @@
     panels: PanelDefinition[];
     customPanel?: ComponentType | null;
     steps?: PanelRef[];
+    currentPanel?: number;
   }
 
   let {
@@ -17,6 +18,7 @@
     panels,
     customPanel = null,
     steps = [],
+    currentPanel = 0,
   }: Props = $props();
 
   /**
@@ -52,13 +54,14 @@
       {#each group.panels as panel}
         {#if customPanel}
           {@const SvelteComponent = customPanel}
-          <SvelteComponent {...panel} {steps} />
+          <SvelteComponent {...panel} {steps} {currentPanel} />
         {:else}
           <Panel
             {...panel}
             align={panel.align || layout.align}
             transparentFloat={layout.transparentFloat}
             {steps}
+            {currentPanel}
           />
         {/if}
       {/each}

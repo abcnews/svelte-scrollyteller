@@ -1,0 +1,1 @@
+export const LARGE_TABLET_BREAKPOINT = 992;

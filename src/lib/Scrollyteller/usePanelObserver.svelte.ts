@@ -1,27 +1,18 @@
-import type { WritableDims, IntersectionEntries, PanelRef } from "../types.js";
-import { getContext } from "svelte";
-import type { Writable, Readable } from "svelte/store";
+import type { Dims, IntersectionEntries, PanelRef } from "../types.js";
 
 interface PanelObserverProps {
   get marker(): any;
   set marker(v: any);
   get observerOptions(): IntersectionObserverInit | undefined;
   get vizMarkerThreshold(): number;
+  get vizDims(): Dims;
+  get isSplitScreen(): boolean;
+  get isMobileRowMode(): boolean;
+  get screenDims(): [number, number];
+  get steps(): PanelRef[];
+  set currentPanel(v: number);
 }
 
-function fromStore<T>(store: Readable<T>, initialValue: T) {
-  let value = $state<T>(initialValue);
-  $effect(() =>
-    store.subscribe((v) => {
-      value = v;
-    }),
-  );
-  return {
-    get value() {
-      return value;
-    },
-  };
-}
 /**
  * Handles intersection observers for panels/markers.
  *
@@ -41,18 +32,6 @@ function fromStore<T>(store: Readable<T>, initialValue: T) {
  * scrolling back up the page doesn't work as expected.
  */
 export function usePanelObserver(props: PanelObserverProps) {
-  const vizDimsStore = getContext<WritableDims>("vizDims");
-  const isSplitScreenStore = getContext<Writable<boolean>>("isSplitScreen");
-  const isMobileRowModeStore = getContext<Writable<boolean>>("isMobileRowMode");
-  const screenDimsStore = getContext<WritableDims>("screenDims");
-  const stepsStore = getContext<Writable<PanelRef[]>>("steps");
-  const currentPanelStore = getContext<Writable<number>>("currentPanel");
-
-  const vizDims = fromStore(vizDimsStore, { status: "loading", dims: [0, 0] });
-  const isSplitScreen = fromStore(isSplitScreenStore, false);
-  const isMobileRowMode = fromStore(isMobileRowModeStore, false);
-  const screenDims = fromStore(screenDimsStore, [0, 0]);
-  const steps = fromStore(stepsStore, []);
 
   /**
    * The root margin amount, includes space either side.
@@ -65,23 +44,23 @@ export function usePanelObserver(props: PanelObserverProps) {
 
   /** Intersection observer root margin */
   let rootMargin = $derived.by(() => {
-    if (isMobileRowMode.value) {
+    if (props.isMobileRowMode) {
       // For row layout on small portrait screens, block out space taken up by the viz at the top
-      const threshold = (vizDims.value.dims[1] / screenDims.value[1]) * 100;
+      const threshold = (props.vizDims.dims[1] / props.screenDims[1]) * 100;
       return `-${threshold}% 0px -30% 0px`;
-    } else if (isSplitScreen.value) {
+    } else if (props.isSplitScreen) {
       // For split screens, trigger the intersection observer when the block is
       // over {vizMarkerThreshold}% of the interactive.
       const threshold = Math.round(
-        (screenDims.value[1] -
-          (vizDims.value.dims[1] || screenDims.value[1]) *
+        (props.screenDims[1] -
+          (props.vizDims.dims[1] || props.screenDims[1]) *
             vizMarkerThresholdMarginDecimal) /
           2,
       );
       return `-${threshold}px 0px -${threshold}px 0px`;
     } else {
       // Otherwise 10% of the screen height (on top and bottom).
-      const threshold = Math.round(screenDims.value[1] / 8);
+      const threshold = Math.round(props.screenDims[1] / 8);
       return `-${threshold}px 0px -${threshold}px 0px`;
     }
   });
@@ -106,7 +85,7 @@ export function usePanelObserver(props: PanelObserverProps) {
   let intersectingPanels = $state<IntersectionEntries[]>([]);
 
   $effect(() => {
-    if (vizDims.value.status !== "ready" || !steps.value.length) {
+    if (props.vizDims.status !== "ready" || !props.steps.length) {
       return;
     }
     intersectingPanels = [];
@@ -128,15 +107,13 @@ export function usePanelObserver(props: PanelObserverProps) {
           const newPanel = intersectingPanels[intersectingPanels.length - 1];
           if (newPanel) {
             props.marker = newPanel.target.scrollyData;
-            currentPanelStore.set(
-              steps.value.findIndex((step) => step === newPanel.target),
-            );
+            props.currentPanel = props.steps.findIndex((step) => step === newPanel.target);
           }
         });
       },
       _observerOptions,
     );
-    steps.value.forEach((step) => {
+    props.steps.forEach((step) => {
       panelObserver.observe(step);
     });
     return () => {

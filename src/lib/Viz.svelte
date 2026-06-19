@@ -1,13 +1,14 @@
 <script lang="ts">
-  import { getContext } from "svelte";
   import { retryUntil } from "./Scrollyteller/Scrollyteller.util.js";
-  import type { Style, WritableDims } from "./types.js";
+  import type { Style, Dims } from "./types.js";
 
   interface Props {
     layout: Style;
     discardSlot?: boolean;
     isInViewport?: boolean;
     onLoad?: (el: HTMLElement | undefined) => void;
+    vizDims?: Dims;
+    graphicRootDims?: Dims;
     children?: import("svelte").Snippet;
   }
 
@@ -16,6 +17,8 @@
     discardSlot = false,
     isInViewport = false,
     onLoad = () => {},
+    vizDims = $bindable({ status: "loading", dims: [0, 0] }),
+    graphicRootDims = $bindable({ status: "loading", dims: [0, 0] }),
     children,
   }: Props = $props();
 
@@ -28,8 +31,7 @@
     }
   });
 
-  const vizDims = getContext<WritableDims>("vizDims");
-  const graphicRootDims = getContext<WritableDims>("graphicRootDims");
+
 
   $effect(() => {
     if (!graphicRootEl) return;
@@ -38,15 +40,15 @@
       requestAnimationFrame(() => {
         entries.forEach((entry) => {
           if (entry.target === graphicRootEl) {
-            graphicRootDims.set({
+            graphicRootDims = {
               status: "ready",
               dims: [entry.contentRect.width, entry.contentRect.height],
-            });
+            };
           } else {
-            vizDims.set({
+            vizDims = {
               status: "ready",
               dims: [entry.contentRect.width, entry.contentRect.height],
-            });
+            };
           }
         });
       });

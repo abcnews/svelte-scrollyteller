@@ -1,5 +1,3 @@
-import type { Writable } from "svelte/store";
-
 export type Style = {
   /**
    * What styles to apply to panels.
@@ -51,7 +49,7 @@ export type ScrollytellerDefinition<Data = any> = {
 };
 
 /** Svelte Store dimensions */
-export type WritableDims = Writable<{
+export type Dims = {
   status: string;
   dims: number[];
-}>;
+};
