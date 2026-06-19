@@ -77,7 +77,7 @@
      * debounce loading markers while the browser is scrolling quickly.
      *
      * This is useful to free up layers/memory/CPU in complex interactives,
-     * especially to prevent out of memory crashe issues with iPhone Safari.
+     * especially to prevent out of memory crash issues with iPhone Safari.
      *
      * The trade-off is you may need to use `<link rel="preload"` for resources
      * that don't appear in the page by default.

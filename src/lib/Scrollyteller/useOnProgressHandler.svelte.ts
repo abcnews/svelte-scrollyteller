@@ -3,14 +3,17 @@ interface OnProgressHandlerProps {
   get onProgress(): ((type: string, payload: any) => void) | undefined | null;
 }
 
+/**
+ * Emits onProgress events for consumption outside the scrollyteller.
+ */
 export function useOnProgressHandler(props: OnProgressHandlerProps) {
   $effect(() => {
     if (!props.onProgress) return;
-    
+
     const scrollHandler = () => {
       const ref = props.scrollytellerRef;
       if (!ref) return;
-      
+
       const rootRect = ref.getBoundingClientRect();
 
       props.onProgress?.("progress", {
@@ -23,9 +26,9 @@ export function useOnProgressHandler(props: OnProgressHandlerProps) {
       });
     };
 
-    window.addEventListener('scroll', scrollHandler, { passive: true });
+    window.addEventListener("scroll", scrollHandler, { passive: true });
     return () => {
-      window.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener("scroll", scrollHandler);
     };
   });
 }

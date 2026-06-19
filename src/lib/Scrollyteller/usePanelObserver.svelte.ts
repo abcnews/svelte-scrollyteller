@@ -11,16 +11,35 @@ interface PanelObserverProps {
 
 function fromStore<T>(store: Readable<T>, initialValue: T) {
   let value = $state<T>(initialValue);
-  $effect(() => store.subscribe((v) => {
-    value = v;
-  }));
+  $effect(() =>
+    store.subscribe((v) => {
+      value = v;
+    }),
+  );
   return {
     get value() {
       return value;
     },
   };
 }
-
+/**
+ * Handles intersection observers for panels/markers.
+ *
+ * The default observer options for centred panels is { threshold: 0.5 }
+ *
+ * The default observer options for left/right aligned panels works
+ * such that blocks only trigger when they've scrolled past at least 20% of
+ * the viz.
+ *
+ * As a result, we need to:
+ * 1. Wait for vizDims to become availble
+ * 2. calculate the rootMargin for the panel observer based on the box size.
+ * 3. finally, observe the panels.
+ *
+ * Because left/right aligned panels are closer together than centred panels
+ * we must track intersecting panels in `intersectingPanels`, otherwise
+ * scrolling back up the page doesn't work as expected.
+ */
 export function usePanelObserver(props: PanelObserverProps) {
   const vizDimsStore = getContext<WritableDims>("vizDims");
   const isSplitScreenStore = getContext<Writable<boolean>>("isSplitScreen");
@@ -36,7 +55,7 @@ export function usePanelObserver(props: PanelObserverProps) {
   const steps = fromStore(stepsStore, []);
 
   let vizMarkerThresholdMarginDecimal = $derived(
-    (100 - props.vizMarkerThreshold * 2) / 100
+    (100 - props.vizMarkerThreshold * 2) / 100,
   );
 
   let rootMargin = $derived.by(() => {
@@ -48,7 +67,7 @@ export function usePanelObserver(props: PanelObserverProps) {
         (screenDims.value[1] -
           (vizDims.value.dims[1] || screenDims.value[1]) *
             vizMarkerThresholdMarginDecimal) /
-          2
+          2,
       );
       return `-${threshold}px 0px -${threshold}px 0px`;
     } else {
@@ -61,7 +80,7 @@ export function usePanelObserver(props: PanelObserverProps) {
     () => ({
       ...(props.observerOptions || {}),
       rootMargin,
-    })
+    }),
   );
 
   let intersectingPanels = $state<IntersectionEntries[]>([]);
@@ -79,7 +98,7 @@ export function usePanelObserver(props: PanelObserverProps) {
             intersectingPanels = [...intersectingPanels, entry];
           } else {
             intersectingPanels = intersectingPanels.filter(
-              (panel) => panel.target !== entry.target
+              (panel) => panel.target !== entry.target,
             );
           }
 
@@ -87,12 +106,12 @@ export function usePanelObserver(props: PanelObserverProps) {
           if (newPanel) {
             props.marker = newPanel.target.scrollyData;
             currentPanelStore.set(
-              steps.value.findIndex((step) => step === newPanel.target)
+              steps.value.findIndex((step) => step === newPanel.target),
             );
           }
         });
       },
-      _observerOptions
+      _observerOptions,
     );
     steps.value.forEach((step) => {
       panelObserver.observe(step);
