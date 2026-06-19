@@ -80,7 +80,7 @@
 
   let scrollytellerRef: HTMLElement | undefined = $state();
   /** The contents of the current marker as passed in from the library consumer */
-  let marker = $state<Data>();
+  let marker = $derived(panels[currentPanel]?.data);
   let isInViewport = $state(false);
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions: (() => void)[] = [];
@@ -180,8 +180,6 @@
 
   // prettier-ignore
   usePanelObserver({
-    get marker() { return marker; },
-    set marker(v) { marker = v; },
     get observerOptions() { return observerOptions; },
     get vizMarkerThreshold() { return vizMarkerThreshold; },
     get vizDims() { return vizDims; },

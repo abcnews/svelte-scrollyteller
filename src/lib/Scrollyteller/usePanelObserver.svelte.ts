@@ -1,8 +1,6 @@
 import type { Dims, IntersectionEntries, PanelRef } from "../types.js";
 
 interface PanelObserverProps {
-  get marker(): any;
-  set marker(v: any);
   get observerOptions(): IntersectionObserverInit | undefined;
   get vizMarkerThreshold(): number;
   get vizDims(): Dims;
@@ -106,7 +104,6 @@ export function usePanelObserver(props: PanelObserverProps) {
           // any earlier panels that are still intersecting.
           const newPanel = intersectingPanels[intersectingPanels.length - 1];
           if (newPanel) {
-            props.marker = newPanel.target.scrollyData;
             props.currentPanel = props.steps.findIndex((step) => step === newPanel.target);
           }
         });

@@ -25,11 +25,7 @@
     panelRef = $bindable(),
   }: Props = $props();
 
-  $effect(() => {
-    if (panelRef) {
-      panelRef.scrollyData = data;
-    }
-  });
+
 </script>
 
 <div

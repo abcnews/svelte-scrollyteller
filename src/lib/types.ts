@@ -25,9 +25,7 @@ export type Style = {
    */
   mobileVariant?: "blocks" | "rows";
 };
-export interface PanelRef<Data = any> extends Element {
-  scrollyData?: Data;
-}
+export interface PanelRef<Data = any> extends Element {}
 
 export interface IntersectionEntries extends IntersectionObserverEntry {
   target: PanelRef;
