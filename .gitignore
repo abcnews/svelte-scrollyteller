@@ -6,3 +6,6 @@ node_modules
 .env.*
 !.env.example
 dist
+
+*storybook.log
+storybook-static

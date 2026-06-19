@@ -232,7 +232,7 @@ npm i
 npm run dev
 ```
 
-This will get a SvelteKit app to use for development and testing up and running.
+This will run a storybook for development and testing.
 
 ### Releasing new versions
 
