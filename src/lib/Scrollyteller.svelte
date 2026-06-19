@@ -5,7 +5,6 @@
   import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util.js";
   import { useOnProgressHandler } from "./Scrollyteller/useOnProgressHandler.svelte.js";
   import { usePanelObserver } from "./Scrollyteller/usePanelObserver.svelte.js";
-  import { useScreenDimsUpdater } from "./Scrollyteller/useScreenDimsUpdater.svelte.js";
   import {
     setSteps,
     setMargin,
@@ -71,7 +70,7 @@
       },
     ) => void;
     onMarker?: (marker: Data) => void;
-    onLoad?: (HTMLElement) => void;
+    onLoad?: (arg: HTMLElement) => void;
     observerOptions?: IntersectionObserverInit;
     /**
      * When `true` we remove the slot from the DOM when not in the viewport, and
@@ -123,8 +122,8 @@
   let marker = $state<Data>();
   let isInViewport = $state(false);
   let scrollSpeed = 0;
-  let deferUntilScrollSettlesActions = [];
-  let panelRoot = $state<HTMLElement>();
+  let deferUntilScrollSettlesActions: (() => void)[] = [];
+  let panelRoot = $state<HTMLElement | undefined>();
 
   const scrollytellerObserver = new IntersectionObserver(
     ([scrollytellerEntry]) =>
@@ -133,7 +132,7 @@
       }),
   );
 
-  const deferUntilScrollSettles = (fn) => {
+  const deferUntilScrollSettles = (fn: () => void) => {
     if (scrollSpeed < maxScrollSpeed) {
       fn();
     } else {
@@ -151,7 +150,9 @@
   };
 
   onMount(() => {
-    if (discardSlot) {
+    $screenDimsStore = [window.innerWidth, window.innerHeight];
+
+    if (discardSlot && scrollytellerRef) {
       scrollytellerObserver.observe(scrollytellerRef);
     }
 
@@ -189,21 +190,25 @@
   let isDebug = $derived(
     typeof location !== "undefined" && location.hash === "#debug=true",
   );
-  useScreenDimsUpdater({
-    get align() { return align; },
-    get mobileVariant() { return mobileVariant; }
+  $effect(() => {
+    $globalAlignStore = align;
+  });
+  $effect(() => {
+    $mobileVariantStore = mobileVariant;
   });
 
+  // prettier-ignore
   usePanelObserver({
-    get marker() { return marker; },
+    get marker() {  return marker; },
     set marker(v) { marker = v; },
     get observerOptions() { return observerOptions; },
-    get vizMarkerThreshold() { return vizMarkerThreshold; }
+    get vizMarkerThreshold() { return vizMarkerThreshold; },
   });
 
+  // prettier-ignore
   useOnProgressHandler({
     get scrollytellerRef() { return scrollytellerRef; },
-    get onProgress() { return onProgress; }
+    get onProgress() { return onProgress; },
   });
 </script>
 
@@ -219,13 +224,20 @@
   {/if}
 </svelte:head>
 
+<svelte:window
+  onresize={() => ($screenDimsStore = [window.innerWidth, window.innerHeight])}
+/>
+
 <div
   class="scrollyteller-wrapper"
   style:opacity={$vizDimsStore.status === "ready" ? 1 : 0}
 >
   {#if !resizeInteractive}
-    <Viz layout={{ align, mobileVariant, resizeInteractive, transparentFloat }} {isInViewport} {discardSlot} {onLoad}
-      >{@render children?.()}</Viz
+    <Viz
+      layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
+      {isInViewport}
+      {discardSlot}
+      {onLoad}>{@render children?.()}</Viz
     >
   {/if}
   <div
@@ -233,19 +245,25 @@
     class:scrollyteller--resized={resizeInteractive}
     class:scrollyteller--debug={isDebug}
     class:scrollyteller--columns={["left", "right"].includes(align)}
-    class:scrollyteller--mobile-row-variant={["rows"].includes(
-      mobileVariant,
-    )}
+    class:scrollyteller--mobile-row-variant={["rows"].includes(mobileVariant)}
     style:--maxScrollytellerWidthPx={$maxScrollytellerWidthStore + "px"}
     style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidthStore}px)`}
     bind:this={scrollytellerRef}
   >
     {#if resizeInteractive}
-      <Viz layout={{ align, mobileVariant, resizeInteractive, transparentFloat }} {isInViewport} {discardSlot} {onLoad}
-        >{@render children?.()}</Viz
+      <Viz
+        layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
+        {isInViewport}
+        {discardSlot}
+        {onLoad}>{@render children?.()}</Viz
       >
     {/if}
-    <Panels layout={{ align, mobileVariant, resizeInteractive, transparentFloat }} {panels} {customPanel} bind:panelRoot />
+    <Panels
+      layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
+      {panels}
+      {customPanel}
+      bind:panelRoot
+    />
   </div>
 </div>
 
