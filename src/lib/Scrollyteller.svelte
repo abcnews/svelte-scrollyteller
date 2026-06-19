@@ -161,13 +161,13 @@
     });
   });
 
-  let _layout = $derived({
-    align: layout.align || "centre",
-    mobileVariant: layout.mobileVariant || "blocks", // or rows
-    resizeInteractive: layout.resizeInteractive ?? true,
-    transparentFloat:
-      layout.transparentFloat ?? ["left", "right"].includes(layout.align),
-  });
+  let align = $derived(layout.align || "centre");
+  let mobileVariant = $derived(layout.mobileVariant || "blocks");
+  let resizeInteractive = $derived(layout.resizeInteractive ?? true);
+  let transparentFloat = $derived(
+    layout.transparentFloat ?? ["left", "right"].includes(align),
+  );
+
   $effect(() => {
     $ratioStore = ratio;
   });
@@ -190,8 +190,8 @@
     typeof location !== "undefined" && location.hash === "#debug=true",
   );
   useScreenDimsUpdater({
-    get align() { return _layout.align; },
-    get mobileVariant() { return _layout.mobileVariant; }
+    get align() { return align; },
+    get mobileVariant() { return mobileVariant; }
   });
 
   usePanelObserver({
@@ -223,29 +223,29 @@
   class="scrollyteller-wrapper"
   style:opacity={$vizDimsStore.status === "ready" ? 1 : 0}
 >
-  {#if !_layout.resizeInteractive}
-    <Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}
+  {#if !resizeInteractive}
+    <Viz layout={{ align, mobileVariant, resizeInteractive, transparentFloat }} {isInViewport} {discardSlot} {onLoad}
       >{@render children?.()}</Viz
     >
   {/if}
   <div
     class="scrollyteller"
-    class:scrollyteller--resized={_layout.resizeInteractive}
+    class:scrollyteller--resized={resizeInteractive}
     class:scrollyteller--debug={isDebug}
-    class:scrollyteller--columns={["left", "right"].includes(_layout.align)}
+    class:scrollyteller--columns={["left", "right"].includes(align)}
     class:scrollyteller--mobile-row-variant={["rows"].includes(
-      _layout.mobileVariant,
+      mobileVariant,
     )}
     style:--maxScrollytellerWidthPx={$maxScrollytellerWidthStore + "px"}
     style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidthStore}px)`}
     bind:this={scrollytellerRef}
   >
-    {#if _layout.resizeInteractive}
-      <Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}
+    {#if resizeInteractive}
+      <Viz layout={{ align, mobileVariant, resizeInteractive, transparentFloat }} {isInViewport} {discardSlot} {onLoad}
         >{@render children?.()}</Viz
       >
     {/if}
-    <Panels layout={_layout} {panels} {customPanel} bind:panelRoot />
+    <Panels layout={{ align, mobileVariant, resizeInteractive, transparentFloat }} {panels} {customPanel} bind:panelRoot />
   </div>
 </div>
 
