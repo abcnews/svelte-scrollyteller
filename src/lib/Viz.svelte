@@ -1,12 +1,13 @@
 <script lang="ts">
-  import GraphicObserver from "./Scrollyteller/GraphicObserver.svelte";
-  import type { Style } from "./types.js";
+  import { getContext } from "svelte";
+  import { retryUntil } from "./Scrollyteller/Scrollyteller.util.js";
+  import type { Style, WritableDims } from "./types.js";
 
   interface Props {
     layout: Style;
     discardSlot?: boolean;
     isInViewport?: boolean;
-    onLoad?: (HTMLElement) => void;
+    onLoad?: (el: HTMLElement | undefined) => void;
     children?: import("svelte").Snippet;
   }
 
@@ -26,9 +27,49 @@
       onLoad(graphicRootEl);
     }
   });
-</script>
 
-<GraphicObserver {graphicRootEl} />
+  const vizDims = getContext<WritableDims>("vizDims");
+  const graphicRootDims = getContext<WritableDims>("graphicRootDims");
+
+  $effect(() => {
+    if (!graphicRootEl) return;
+
+    const observer = new ResizeObserver((entries) => {
+      requestAnimationFrame(() => {
+        entries.forEach((entry) => {
+          if (entry.target === graphicRootEl) {
+            graphicRootDims.set({
+              status: "ready",
+              dims: [entry.contentRect.width, entry.contentRect.height],
+            });
+          } else {
+            vizDims.set({
+              status: "ready",
+              dims: [entry.contentRect.width, entry.contentRect.height],
+            });
+          }
+        });
+      });
+    });
+
+    retryUntil(() => graphicRootEl).then(() => {
+      if (!graphicRootEl) {
+        return;
+      }
+      observer.observe(graphicRootEl);
+    });
+
+    // wait for the viz to be inserted
+    retryUntil(() => graphicRootEl?.children?.length).then(() => {
+      const child = graphicRootEl?.children[0];
+      if (child) observer.observe(child);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  });
+</script>
 
 <div
   class="viz"

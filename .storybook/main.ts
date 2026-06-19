@@ -1,21 +1,19 @@
-import type { StorybookConfig } from '@storybook/sveltekit';
+import type { StorybookConfig } from "@storybook/sveltekit";
 
 const config: StorybookConfig = {
-  "stories": [
+  stories: [
     "../src/**/*.stories.svelte",
     "../src/**/*.stories.ts",
-    "../src/**/*.stories.js"
+    "../src/**/*.stories.js",
   ],
-  "addons": [
-    "@storybook/addon-svelte-csf"
-  ],
-  "framework": "@storybook/sveltekit",
-  "core": {
-    "disableTelemetry": true,
-    "disableWhatsNewNotifications": true
+  addons: ["@storybook/addon-svelte-csf"],
+  framework: "@storybook/sveltekit",
+  core: {
+    disableTelemetry: true,
+    disableWhatsNewNotifications: true,
   },
-  "features": {
-    "sidebarOnboardingChecklist": false
-  }
+  features: {
+    sidebarOnboardingChecklist: false,
+  },
 };
 export default config;

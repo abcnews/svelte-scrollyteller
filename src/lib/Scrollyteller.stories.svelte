@@ -260,15 +260,11 @@
   :global(body[data-scheme="light"]) {
     background-color: #ffffff;
     color: #000000;
-    --color-panel-background: rgba(255, 255, 255, 0.95);
-    --color-panel-text: #000000;
   }
 
   :global(body[data-scheme="dark"]) {
     background-color: #0d0d0d;
     color: #ffffff;
-    --color-panel-background: rgba(15, 15, 15, 0.9);
-    --color-panel-text: #ffffff;
   }
 
   .example-graphic {

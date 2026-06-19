@@ -3,9 +3,8 @@
   import { onMount, setContext } from "svelte";
   import type { PanelDefinition, Style } from "./types.js";
   import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util.js";
-  import OnProgressHandler from "./Scrollyteller/OnProgressHandler.svelte";
-  import PanelObserver from "./Scrollyteller/PanelObserver.svelte";
-  import ScreenDimsStoreUpdater from "./Scrollyteller/ScreenDimsStoreUpdater.svelte";
+  import { useOnProgressHandler } from "./Scrollyteller/useOnProgressHandler.svelte.js";
+  import { usePanelObserver } from "./Scrollyteller/usePanelObserver.svelte.js";
   import {
     setSteps,
     setMargin,
@@ -71,14 +70,14 @@
       },
     ) => void;
     onMarker?: (marker: Data) => void;
-    onLoad?: (HTMLElement) => void;
+    onLoad?: (arg: HTMLElement) => void;
     observerOptions?: IntersectionObserverInit;
     /**
      * When `true` we remove the slot from the DOM when not in the viewport, and
      * debounce loading markers while the browser is scrolling quickly.
      *
      * This is useful to free up layers/memory/CPU in complex interactives,
-     * especially to prevent out of memory crashe issues with iPhone Safari.
+     * especially to prevent out of memory crash issues with iPhone Safari.
      *
      * The trade-off is you may need to use `<link rel="preload"` for resources
      * that don't appear in the page by default.
@@ -123,8 +122,8 @@
   let marker = $state<Data>();
   let isInViewport = $state(false);
   let scrollSpeed = 0;
-  let deferUntilScrollSettlesActions = [];
-  let panelRoot = $state<HTMLElement>();
+  let deferUntilScrollSettlesActions: (() => void)[] = [];
+  let panelRoot = $state<HTMLElement | undefined>();
 
   const scrollytellerObserver = new IntersectionObserver(
     ([scrollytellerEntry]) =>
@@ -133,7 +132,7 @@
       }),
   );
 
-  const deferUntilScrollSettles = (fn) => {
+  const deferUntilScrollSettles = (fn: () => void) => {
     if (scrollSpeed < maxScrollSpeed) {
       fn();
     } else {
@@ -151,7 +150,9 @@
   };
 
   onMount(() => {
-    if (discardSlot) {
+    $screenDimsStore = [window.innerWidth, window.innerHeight];
+
+    if (discardSlot && scrollytellerRef) {
       scrollytellerObserver.observe(scrollytellerRef);
     }
 
@@ -161,17 +162,13 @@
     });
   });
 
-  let _layout = $derived({
-    align: layout.align || "centre",
-    mobileVariant: layout.mobileVariant || "blocks", // or rows
-    resizeInteractive: layout.resizeInteractive ?? true,
-    transparentFloat:
-      layout.transparentFloat ?? ["left", "right"].includes(layout.align),
-  });
-  let _observerOptions = $derived({
-    rootMargin: _layout.mobileVariant === "rows" ? "-50% 0% 0% 0%" : undefined,
-    ...(observerOptions || {}),
-  });
+  let align = $derived(layout.align || "centre");
+  let mobileVariant = $derived(layout.mobileVariant || "blocks");
+  let resizeInteractive = $derived(layout.resizeInteractive ?? true);
+  let transparentFloat = $derived(
+    layout.transparentFloat ?? ["left", "right"].includes(align),
+  );
+
   $effect(() => {
     $ratioStore = ratio;
   });
@@ -193,21 +190,27 @@
   let isDebug = $derived(
     typeof location !== "undefined" && location.hash === "#debug=true",
   );
+  $effect(() => {
+    $globalAlignStore = align;
+  });
+  $effect(() => {
+    $mobileVariantStore = mobileVariant;
+  });
+
+  // prettier-ignore
+  usePanelObserver({
+    get marker() {  return marker; },
+    set marker(v) { marker = v; },
+    get observerOptions() { return observerOptions; },
+    get vizMarkerThreshold() { return vizMarkerThreshold; },
+  });
+
+  // prettier-ignore
+  useOnProgressHandler({
+    get scrollytellerRef() { return scrollytellerRef; },
+    get onProgress() { return onProgress; },
+  });
 </script>
-
-{#if onProgress}
-  <OnProgressHandler {scrollytellerRef} {onProgress} />
-{/if}
-
-<ScreenDimsStoreUpdater
-  align={_layout.align}
-  mobileVariant={_layout.mobileVariant}
-/>
-<PanelObserver
-  bind:marker
-  observerOptions={_observerOptions}
-  {vizMarkerThreshold}
-/>
 
 <svelte:head>
   {#if isOdyssey}
@@ -221,33 +224,46 @@
   {/if}
 </svelte:head>
 
+<svelte:window
+  onresize={() => ($screenDimsStore = [window.innerWidth, window.innerHeight])}
+/>
+
 <div
   class="scrollyteller-wrapper"
   style:opacity={$vizDimsStore.status === "ready" ? 1 : 0}
 >
-  {#if !_layout.resizeInteractive}
-    <Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}
-      >{@render children?.()}</Viz
+  {#if !resizeInteractive}
+    <Viz
+      layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
+      {isInViewport}
+      {discardSlot}
+      {onLoad}>{@render children?.()}</Viz
     >
   {/if}
   <div
     class="scrollyteller"
-    class:scrollyteller--resized={_layout.resizeInteractive}
+    class:scrollyteller--resized={resizeInteractive}
     class:scrollyteller--debug={isDebug}
-    class:scrollyteller--columns={["left", "right"].includes(_layout.align)}
-    class:scrollyteller--mobile-row-variant={["rows"].includes(
-      _layout.mobileVariant,
-    )}
+    class:scrollyteller--columns={["left", "right"].includes(align)}
+    class:scrollyteller--mobile-row-variant={["rows"].includes(mobileVariant)}
     style:--maxScrollytellerWidthPx={$maxScrollytellerWidthStore + "px"}
     style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidthStore}px)`}
     bind:this={scrollytellerRef}
   >
-    {#if _layout.resizeInteractive}
-      <Viz layout={_layout} {isInViewport} {discardSlot} {onLoad}
-        >{@render children?.()}</Viz
+    {#if resizeInteractive}
+      <Viz
+        layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
+        {isInViewport}
+        {discardSlot}
+        {onLoad}>{@render children?.()}</Viz
       >
     {/if}
-    <Panels layout={_layout} {panels} {customPanel} bind:panelRoot />
+    <Panels
+      layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
+      {panels}
+      {customPanel}
+      bind:panelRoot
+    />
   </div>
 </div>
 
