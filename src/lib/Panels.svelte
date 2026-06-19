@@ -17,7 +17,7 @@
     layout,
     panels,
     customPanel = null,
-    steps = [],
+    steps = $bindable([]),
     currentPanel = 0,
   }: Props = $props();
 
@@ -60,7 +60,7 @@
             {...panel}
             align={panel.align || layout.align}
             transparentFloat={layout.transparentFloat}
-            {steps}
+            bind:panelRef={steps[panel.i]}
             {currentPanel}
           />
         {/if}

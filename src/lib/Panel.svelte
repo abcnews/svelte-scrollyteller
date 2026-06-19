@@ -10,8 +10,8 @@
     data: any;
     nodes: Element[];
     i?: number;
-    steps?: PanelRef[];
     currentPanel?: number;
+    panelRef?: PanelRef;
   }
 
   let {
@@ -21,16 +21,13 @@
     data,
     nodes,
     i = -1,
-    steps = [],
     currentPanel = 0,
+    panelRef = $bindable(),
   }: Props = $props();
 
-  let panelRef = $state<PanelRef>();
-
-  onMount(() => {
+  $effect(() => {
     if (panelRef) {
       panelRef.scrollyData = data;
-      steps.push(panelRef);
     }
   });
 </script>
