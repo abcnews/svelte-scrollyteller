@@ -168,10 +168,6 @@
     transparentFloat:
       layout.transparentFloat ?? ["left", "right"].includes(layout.align),
   });
-  let _observerOptions = $derived({
-    rootMargin: _layout.mobileVariant === "rows" ? "-50% 0% 0% 0%" : undefined,
-    ...(observerOptions || {}),
-  });
   $effect(() => {
     $ratioStore = ratio;
   });
@@ -201,7 +197,7 @@
   usePanelObserver({
     get marker() { return marker; },
     set marker(v) { marker = v; },
-    get observerOptions() { return _observerOptions; },
+    get observerOptions() { return observerOptions; },
     get vizMarkerThreshold() { return vizMarkerThreshold; }
   });
 
