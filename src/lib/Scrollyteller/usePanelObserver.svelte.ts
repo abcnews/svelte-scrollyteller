@@ -54,15 +54,24 @@ export function usePanelObserver(props: PanelObserverProps) {
   const screenDims = fromStore(screenDimsStore, [0, 0]);
   const steps = fromStore(stepsStore, []);
 
+  /**
+   * The root margin amount, includes space either side.
+   *
+   * E.g. 20% margin = 0.6 multiplier (60% in the block, 2*20% outside = 100%)
+   */
   let vizMarkerThresholdMarginDecimal = $derived(
     (100 - props.vizMarkerThreshold * 2) / 100,
   );
 
+  /** Intersection observer root margin */
   let rootMargin = $derived.by(() => {
     if (isMobileRowMode.value) {
+      // For row layout on small portrait screens, block out space taken up by the viz at the top
       const threshold = (vizDims.value.dims[1] / screenDims.value[1]) * 100;
       return `-${threshold}% 0px -30% 0px`;
     } else if (isSplitScreen.value) {
+      // For split screens, trigger the intersection observer when the block is
+      // over {vizMarkerThreshold}% of the interactive.
       const threshold = Math.round(
         (screenDims.value[1] -
           (vizDims.value.dims[1] || screenDims.value[1]) *
@@ -71,11 +80,16 @@ export function usePanelObserver(props: PanelObserverProps) {
       );
       return `-${threshold}px 0px -${threshold}px 0px`;
     } else {
+      // Otherwise 10% of the screen height (on top and bottom).
       const threshold = Math.round(screenDims.value[1] / 8);
       return `-${threshold}px 0px -${threshold}px 0px`;
     }
   });
 
+  /**
+   * When observerOptions isn't set, default to either 0.5 for centred blocks
+   * or a 20% margin on the interactive.
+   */
   let _observerOptions: IntersectionObserverInit | undefined = $derived.by(
     () => ({
       ...(props.observerOptions || {}),
@@ -83,6 +97,12 @@ export function usePanelObserver(props: PanelObserverProps) {
     }),
   );
 
+  // Set up observer for panel position
+
+  /**
+   * Track intersecting panels. We can change the viz back to the last panel
+   * which we otherwise can't do if there are 2 panels overlapping at once.
+   */
   let intersectingPanels = $state<IntersectionEntries[]>([]);
 
   $effect(() => {
@@ -102,6 +122,9 @@ export function usePanelObserver(props: PanelObserverProps) {
             );
           }
 
+          // The current panel is the most recently intersected panel.
+          // If the most recent panel scrolls out, this falls back to
+          // any earlier panels that are still intersecting.
           const newPanel = intersectingPanels[intersectingPanels.length - 1];
           if (newPanel) {
             props.marker = newPanel.target.scrollyData;
