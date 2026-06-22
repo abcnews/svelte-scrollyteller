@@ -7,7 +7,7 @@
   import { usePanelObserver } from "./Scrollyteller/usePanelObserver.svelte.js";
   import Panels from "./Panels.svelte";
   import Viz from "./Viz.svelte";
-  import { LARGE_TABLET_BREAKPOINT } from "./constants.js";
+  import { LARGE_TABLET_BREAKPOINT, UNBOUND_WIDTH } from "./constants.js";
 
   /** Each panel inserts itself into this list when it instantiates */
   let steps = $state<PanelRef[]>([]);
@@ -141,7 +141,7 @@
   );
 
   /** The max width when the scrollyteller centres itself in the page */
-  let maxScrollytellerWidth = $derived(isSplitScreen ? 2040 : 1e6);
+  let maxScrollytellerWidth = $derived(isSplitScreen ? 2040 : UNBOUND_WIDTH);
 
   /**
    * Given the ratio of the graphic, work out whether it fits in the column and if
@@ -149,7 +149,7 @@
    */
   let maxGraphicWidth = $derived.by(() => {
     if (!isSplitScreen) {
-      return 1e6;
+      return UNBOUND_WIDTH;
     }
     const [screenWidth] = screenDims;
     const [, columnHeight] = graphicRootDims.dims;
