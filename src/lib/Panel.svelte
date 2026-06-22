@@ -1,11 +1,7 @@
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { children } from "./actions.js";
   import type { PanelRef } from "./types.js";
-  import type { Writable } from "svelte/store";
-
-  const currentPanel = getContext<Writable<number>>("currentPanel");
-  const steps = getContext<Writable<PanelRef[]>>("steps");
 
   interface Props {
     align: string;
@@ -14,6 +10,8 @@
     data: any;
     nodes: Element[];
     i?: number;
+    currentPanel?: number;
+    panelRef?: PanelRef;
   }
 
   let {
@@ -23,14 +21,11 @@
     data,
     nodes,
     i = -1,
+    currentPanel = 0,
+    panelRef = $bindable(),
   }: Props = $props();
 
-  let panelRef = $state<PanelRef>();
 
-  onMount(() => {
-    panelRef.scrollyData = data;
-    $steps = [...$steps, panelRef];
-  });
 </script>
 
 <div
@@ -41,7 +36,7 @@
   class:st-panel-root--right={align === "right"}
   class:st-panel-root--centre={align === "centre"}
   class:st-panel-root--transparent-blocks={transparentFloat}
-  class:st-panel-root--active={i === $currentPanel}
+  class:st-panel-root--active={i === currentPanel}
   bind:this={panelRef}
 >
   <div class="st-panel" use:children={nodes}></div>

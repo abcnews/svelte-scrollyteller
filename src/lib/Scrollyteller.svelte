@@ -1,62 +1,23 @@
 <script lang="ts" generics="Data = any">
   import type { ComponentType } from "svelte";
-  import { onMount, setContext } from "svelte";
-  import type { PanelDefinition, Style } from "./types.js";
+  import { onMount } from "svelte";
+  import type { PanelDefinition, Style, Dims, PanelRef } from "./types.js";
   import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util.js";
   import { useOnProgressHandler } from "./Scrollyteller/useOnProgressHandler.svelte.js";
   import { usePanelObserver } from "./Scrollyteller/usePanelObserver.svelte.js";
-  import {
-    setSteps,
-    setMargin,
-    setVizDims,
-    setGraphicRootDims,
-    setRatio,
-    setScreenDims,
-    setGlobalAlign,
-    setMobileVariant,
-    setIsSplitScreen,
-    setIsMobileRowMode,
-    setMaxScrollytellerWidth,
-    setMaxGraphicWidth,
-    setCurrentPanel,
-  } from "./stores.js";
   import Panels from "./Panels.svelte";
   import Viz from "./Viz.svelte";
+  import { LARGE_TABLET_BREAKPOINT, UNBOUND_WIDTH } from "./constants.js";
 
-  setContext("steps", setSteps());
-  setContext("margin", setMargin());
-  const vizDimsStore = setContext("vizDims", setVizDims());
-  const graphicRootDimsStore = setContext(
-    "graphicRootDims",
-    setGraphicRootDims(),
-  );
-  const ratioStore = setContext("ratio", setRatio());
-  const screenDimsStore = setContext("screenDims", setScreenDims());
-  const globalAlignStore = setContext("globalAlign", setGlobalAlign());
-  const mobileVariantStore = setContext("mobileVariant", setMobileVariant());
-  const isSplitScreenStore = setContext(
-    "isSplitScreen",
-    setIsSplitScreen([screenDimsStore, globalAlignStore]),
-  );
-  setContext(
-    "isMobileRowMode",
-    setIsMobileRowMode([screenDimsStore, mobileVariantStore]),
-  );
-  const maxScrollytellerWidthStore = setContext(
-    "maxScrollytellerWidth",
-    setMaxScrollytellerWidth([isSplitScreenStore]),
-  );
-  const maxGraphicWidthStore = setContext(
-    "maxGraphicWidth",
-    setMaxGraphicWidth([
-      isSplitScreenStore,
-      graphicRootDimsStore,
-      screenDimsStore,
-      ratioStore,
-      maxScrollytellerWidthStore,
-    ]),
-  );
-  setContext("currentPanel", setCurrentPanel());
+  /** Each panel inserts itself into this list when it instantiates */
+  let steps = $state<PanelRef[]>([]);
+  /** Raw dimensions of the viz. Used to trigger panels when they hit 20% of the viz */
+  let vizDims = $state<Dims>({ status: "loading", dims: [0, 0] });
+  /** Dims of the root container inside which the viz sits */
+  let graphicRootDims = $state<Dims>({ status: "loading", dims: [0, 0] });
+  /** Reactive window.innerWidth/innerHeight */
+  let screenDims = $state<[number, number]>([0, 0]);
+  let currentPanel = $state(0);
 
   interface Props {
     customPanel?: ComponentType | null;
@@ -119,7 +80,7 @@
 
   let scrollytellerRef: HTMLElement | undefined = $state();
   /** The contents of the current marker as passed in from the library consumer */
-  let marker = $state<Data>();
+  let marker = $derived(panels[currentPanel]?.data);
   let isInViewport = $state(false);
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions: (() => void)[] = [];
@@ -150,7 +111,7 @@
   };
 
   onMount(() => {
-    $screenDimsStore = [window.innerWidth, window.innerHeight];
+    screenDims = [window.innerWidth, window.innerHeight];
 
     if (discardSlot && scrollytellerRef) {
       scrollytellerObserver.observe(scrollytellerRef);
@@ -169,9 +130,35 @@
     layout.transparentFloat ?? ["left", "right"].includes(align),
   );
 
-  $effect(() => {
-    $ratioStore = ratio;
+  /** Split screen mode happens when left/right aligned + not mobile */
+  let isSplitScreen = $derived(
+    ["left", "right"].includes(align) &&
+      screenDims[0] >= LARGE_TABLET_BREAKPOINT,
+  );
+
+  let isMobileRowMode = $derived(
+    mobileVariant === "rows" && screenDims[0] < LARGE_TABLET_BREAKPOINT,
+  );
+
+  /** The max width when the scrollyteller centres itself in the page */
+  let maxScrollytellerWidth = $derived(isSplitScreen ? 2040 : UNBOUND_WIDTH);
+
+  /**
+   * Given the ratio of the graphic, work out whether it fits in the column and if
+   * not, return how wide the column should be so there's no whitespace;
+   */
+  let maxGraphicWidth = $derived.by(() => {
+    if (!isSplitScreen) {
+      return UNBOUND_WIDTH;
+    }
+    const [screenWidth] = screenDims;
+    const [, columnHeight] = graphicRootDims.dims;
+    const columnWidth = Math.min(screenWidth, maxScrollytellerWidth) * 0.6;
+
+    const widthBasedOnHeight = columnHeight * ratio;
+    return Math.min(widthBasedOnHeight, columnWidth);
   });
+
   $effect(() => {
     if (vizMarkerThreshold >= 50) {
       throw new Error("vizMarkerThreshold must be <50% screen height");
@@ -190,19 +177,17 @@
   let isDebug = $derived(
     typeof location !== "undefined" && location.hash === "#debug=true",
   );
-  $effect(() => {
-    $globalAlignStore = align;
-  });
-  $effect(() => {
-    $mobileVariantStore = mobileVariant;
-  });
 
   // prettier-ignore
   usePanelObserver({
-    get marker() {  return marker; },
-    set marker(v) { marker = v; },
     get observerOptions() { return observerOptions; },
     get vizMarkerThreshold() { return vizMarkerThreshold; },
+    get vizDims() { return vizDims; },
+    get isSplitScreen() { return isSplitScreen; },
+    get isMobileRowMode() { return isMobileRowMode; },
+    get screenDims() { return screenDims; },
+    get steps() { return steps; },
+    set currentPanel(v) { currentPanel = v; }
   });
 
   // prettier-ignore
@@ -225,19 +210,21 @@
 </svelte:head>
 
 <svelte:window
-  onresize={() => ($screenDimsStore = [window.innerWidth, window.innerHeight])}
+  onresize={() => (screenDims = [window.innerWidth, window.innerHeight])}
 />
 
 <div
   class="scrollyteller-wrapper"
-  style:opacity={$vizDimsStore.status === "ready" ? 1 : 0}
+  style:opacity={vizDims.status === "ready" ? 1 : 0}
 >
   {#if !resizeInteractive}
     <Viz
       layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
       {isInViewport}
       {discardSlot}
-      {onLoad}>{@render children?.()}</Viz
+      {onLoad}
+      bind:vizDims
+      bind:graphicRootDims>{@render children?.()}</Viz
     >
   {/if}
   <div
@@ -246,8 +233,8 @@
     class:scrollyteller--debug={isDebug}
     class:scrollyteller--columns={["left", "right"].includes(align)}
     class:scrollyteller--mobile-row-variant={["rows"].includes(mobileVariant)}
-    style:--maxScrollytellerWidthPx={$maxScrollytellerWidthStore + "px"}
-    style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${$maxGraphicWidthStore}px)`}
+    style:--maxScrollytellerWidthPx={maxScrollytellerWidth + "px"}
+    style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${maxGraphicWidth}px)`}
     bind:this={scrollytellerRef}
   >
     {#if resizeInteractive}
@@ -255,7 +242,9 @@
         layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
         {isInViewport}
         {discardSlot}
-        {onLoad}>{@render children?.()}</Viz
+        {onLoad}
+        bind:vizDims
+        bind:graphicRootDims>{@render children?.()}</Viz
       >
     {/if}
     <Panels
@@ -263,6 +252,8 @@
       {panels}
       {customPanel}
       bind:panelRoot
+      bind:steps
+      {currentPanel}
     />
   </div>
 </div>
