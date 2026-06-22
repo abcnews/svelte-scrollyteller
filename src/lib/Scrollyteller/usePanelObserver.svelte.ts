@@ -30,7 +30,6 @@ interface PanelObserverProps {
  * scrolling back up the page doesn't work as expected.
  */
 export function usePanelObserver(props: PanelObserverProps) {
-
   /**
    * The root margin amount, includes space either side.
    *
@@ -104,7 +103,9 @@ export function usePanelObserver(props: PanelObserverProps) {
           // any earlier panels that are still intersecting.
           const newPanel = intersectingPanels[intersectingPanels.length - 1];
           if (newPanel) {
-            props.currentPanel = props.steps.findIndex((step) => step === newPanel.target);
+            props.currentPanel = props.steps.findIndex(
+              (step) => step === newPanel.target,
+            );
           }
         });
       },
