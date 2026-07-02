@@ -99,9 +99,9 @@
     &--left,
     &--right {
       max-width: 127.5rem;
-      margin-left: 0;
       @media (min-width: breakpoints.$breakpointLargeTablet) {
         max-width: 40rem;
+        margin-left: 0;
         margin-right: calc(
           var(--rightColumnWidth, 100px) + calc(var(--marginOuter) * 1)
         );
@@ -116,10 +116,12 @@
       }
     }
     &--right {
-      margin-right: 0;
-      margin-left: calc(
-        var(--rightColumnWidth, 100px) + calc(var(--marginOuter) * 1)
-      );
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
+        margin-right: 0;
+        margin-left: calc(
+          var(--rightColumnWidth, 100px) + calc(var(--marginOuter) * 1)
+        );
+      }
     }
   }
 </style>
