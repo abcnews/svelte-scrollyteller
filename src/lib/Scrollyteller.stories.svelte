@@ -149,7 +149,7 @@
         if (typeof document !== "undefined") {
           document.body.removeAttribute("data-scheme");
         }
-      }
+      },
     };
   };
   // Helper to compile CSS variables only if they have values, preventing empty overrides
@@ -240,7 +240,41 @@
 </Story>
 
 <Story
-  name="Left Aligned (Split Screen)"
+  name="Left Aligned"
+  args={{
+    align: "left",
+    mobileVariant: "blocks",
+    resizeInteractive: true,
+    transparentFloat: true,
+    ratio: 1,
+    vizMarkerThreshold: 20,
+    scheme: "light",
+  }}
+>
+  {#snippet template(args)}
+    {@render defaultTemplate(args)}
+  {/snippet}
+</Story>
+
+<Story
+  name="Right Aligned"
+  args={{
+    align: "right",
+    mobileVariant: "blocks",
+    resizeInteractive: true,
+    transparentFloat: true,
+    ratio: 1,
+    vizMarkerThreshold: 20,
+    scheme: "light",
+  }}
+>
+  {#snippet template(args)}
+    {@render defaultTemplate(args)}
+  {/snippet}
+</Story>
+
+<Story
+  name="Left Aligned (Mobile Rows)"
   args={{
     align: "left",
     mobileVariant: "rows",
