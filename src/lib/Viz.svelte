@@ -31,8 +31,6 @@
     }
   });
 
-
-
   $effect(() => {
     if (!graphicRootEl) return;
 
@@ -73,17 +71,19 @@
   });
 </script>
 
-<div
-  class="viz"
-  class:viz--resized={layout.resizeInteractive}
-  class:viz--right={layout.resizeInteractive && layout.align === "left"}
-  class:viz--left={layout.resizeInteractive && layout.align === "right"}
-  class:viz--centre={layout.resizeInteractive && layout.align === "centre"}
-  bind:this={graphicRootEl}
->
-  {#if isInViewport || discardSlot === false}
-    {@render children?.()}
-  {/if}
+<div class="viz-flow">
+  <div
+    class="viz"
+    class:viz--resized={layout.resizeInteractive}
+    class:viz--right={layout.resizeInteractive && layout.align === "left"}
+    class:viz--left={layout.resizeInteractive && layout.align === "right"}
+    class:viz--centre={layout.resizeInteractive && layout.align === "centre"}
+    bind:this={graphicRootEl}
+  >
+    {#if isInViewport || discardSlot === false}
+      {@render children?.()}
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
@@ -109,13 +109,21 @@
     }
   }
 
+  // Reserve 100dvh screen height, regardless of how big the viz is
   .viz {
-    transform: translate3d(0, 0, 0);
     height: 100dvh;
     position: sticky;
     top: 0;
     left: 0;
+    height: 100dvh;
     z-index: 1;
+  }
+
+  .viz {
+    // The actual viz size, this can change size based on resizeInteractive
+    position: absolute;
+    inset: 0;
+    transform: translate3d(0, 0, 0);
   }
 
   .viz--resized {

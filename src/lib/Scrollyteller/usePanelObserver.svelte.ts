@@ -82,7 +82,12 @@ export function usePanelObserver(props: PanelObserverProps) {
   let intersectingPanels = $state<IntersectionEntries[]>([]);
 
   $effect(() => {
-    if (props.vizDims.status !== "ready" || !props.steps.length) {
+    // Depend on screen dims so the observer reloads on change.
+    // Specifically fixes issues in Storybook
+    const [, screenHeight] = props.screenDims;
+    const vizDims = props.vizDims;
+
+    if (vizDims.status !== "ready" || !props.steps.length || !screenHeight) {
       return;
     }
     intersectingPanels = [];

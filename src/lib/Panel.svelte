@@ -24,8 +24,6 @@
     currentPanel = 0,
     panelRef = $bindable(),
   }: Props = $props();
-
-
 </script>
 
 <div
@@ -91,7 +89,9 @@
     }
 
     &.first {
-      margin-top: 100dvh;
+      // First panel appears 80% down the screen for mobile/centre aligned.
+      // Overridden to 50% for left/right aligned
+      margin-top: 80dvh;
     }
 
     &.last {
@@ -116,6 +116,7 @@
           opacity: var(--panel-opacity-inactive);
         }
         &.first {
+          // First panel appears 50% down the screen, overriding the default 80%
           margin-top: 50dvh;
         }
       }

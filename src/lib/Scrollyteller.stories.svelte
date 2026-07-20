@@ -189,7 +189,6 @@
         ].text}; --worm: {markerStates[activeIndex].text};"
       >
         <Worm />
-        <span class="number">{activeIndex + 1}</span>
 
         <!-- Scrollbar and progress indicator HUD -->
         <div
@@ -214,7 +213,7 @@
             class="progress-text"
             style="color: {markerStates[activeIndex].text};"
           >
-            Scroll progress: {Math.round(scrollProgress * 100)}%
+            Panel {activeIndex + 1} · Scroll progress: {Math.round(scrollProgress * 100)}%
           </p>
         </div>
       </div>
@@ -313,18 +312,6 @@
     box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.15);
     box-sizing: border-box;
     padding: 2rem;
-  }
-
-  .number {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: ABCSans, sans-serif;
-    font-weight: 900;
-    font-size: 3.5rem;
-    color: inherit;
-    z-index: 2;
   }
 
   .progress-hud {
