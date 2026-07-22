@@ -109,8 +109,9 @@
     }
   }
 
-  // Reserve 100dvh screen height, regardless of how big the viz is
-  .viz {
+  // Panel positioning is dependent on this block being 100dvh, even if the
+  // actual interactive is smaller.
+  .viz-flow {
     height: 100dvh;
     position: sticky;
     top: 0;
