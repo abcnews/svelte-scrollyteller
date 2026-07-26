@@ -123,6 +123,15 @@
     nodes: createLoremParagraph(index),
   }));
 
+  // Build the panels with mixed alignments
+  const alignments = ["left", "right", "centre"];
+  const mixedPanels: PanelDefinition<MarkData>[] = markerStates.map((state, index) => ({
+    data: { customdata: index + 1, name: state.name },
+    nodes: createLoremParagraph(index),
+    align: alignments[index % alignments.length],
+  }));
+
+
   // Reactive states for the visualization
   let activeIndex = $state(0);
   let scrollProgress = $state(0);
@@ -170,7 +179,7 @@
   <span style="display: none;" use:schemeSetter={args.scheme}></span>
   <div style={getStyleString(args)}>
     <Scrollyteller
-      {panels}
+      panels={args.panels || panels}
       layout={{
         align: args.align,
         mobileVariant: args.mobileVariant,
@@ -283,6 +292,24 @@
     ratio: 1,
     vizMarkerThreshold: 20,
     scheme: "light",
+  }}
+>
+  {#snippet template(args)}
+    {@render defaultTemplate(args)}
+  {/snippet}
+</Story>
+
+<Story
+  name="Mixed Aligned Panels"
+  args={{
+    align: "centre",
+    mobileVariant: "blocks",
+    resizeInteractive: true,
+    transparentFloat: true,
+    ratio: 16 / 9,
+    vizMarkerThreshold: 20,
+    scheme: "light",
+    panels: mixedPanels,
   }}
 >
   {#snippet template(args)}
