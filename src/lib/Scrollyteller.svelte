@@ -153,6 +153,7 @@
     }
     const [screenWidth] = screenDims;
     const [, columnHeight] = graphicRootDims.dims;
+    // Keep in sync with --vizMaxWidth in the CSS at the desktop breakpoint (0.6)
     const columnWidth = Math.min(screenWidth, maxScrollytellerWidth) * 0.6;
 
     const widthBasedOnHeight = columnHeight * ratio;
@@ -302,7 +303,8 @@
     @media (min-width: breakpoints.$breakpointDesktop) {
       --marginOuter: 3rem;
       --vizMarginOuter: 4rem;
-      --vizMaxWidth: 0.7;
+      /* Keep in sync with columnWidth multiplier in the JS (0.6) */
+      --vizMaxWidth: 0.6;
     }
     @media (min-width: breakpoints.$breakpointLargeDesktop) {
       --marginOuter: 4rem;
