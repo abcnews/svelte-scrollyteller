@@ -69,7 +69,7 @@ When a new box comes into view the `onMarker` callback will fire with the `data`
 	}}
   layout={{
     align: 'left',
-    // resizeInteractive: true
+    // resizeInteractive: false
     // transparentFloat: true
   }}
 >
