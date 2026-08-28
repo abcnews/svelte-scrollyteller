@@ -3,8 +3,7 @@
   import { onMount } from "svelte";
   import type { PanelDefinition, Style, Dims, PanelRef } from "./types.js";
   import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util.js";
-  import { useOnProgressHandler } from "./Scrollyteller/useOnProgressHandler.svelte.js";
-  import { usePanelObserver } from "./Scrollyteller/usePanelObserver.svelte.js";
+  import { useScrollManager } from "./Scrollyteller/useScrollManager.svelte.js";
   import Panels from "./Panels.svelte";
   import Viz from "./Viz.svelte";
   import { LARGE_TABLET_BREAKPOINT, UNBOUND_WIDTH } from "./constants.js";
@@ -32,7 +31,6 @@
     ) => void;
     onMarker?: (marker: Data) => void;
     onLoad?: (arg: HTMLElement) => void;
-    observerOptions?: IntersectionObserverInit;
     /**
      * When `true` we remove the slot from the DOM when not in the viewport, and
      * debounce loading markers while the browser is scrolling quickly.
@@ -68,7 +66,6 @@
     ) => {},
     onMarker = (marker: Data) => {},
     onLoad = () => {},
-    observerOptions = undefined,
     discardSlot = false,
     layout = {},
     ratio = 1,
@@ -180,21 +177,12 @@
   );
 
   // prettier-ignore
-  usePanelObserver({
-    get observerOptions() { return observerOptions; },
-    get vizMarkerThreshold() { return vizMarkerThreshold; },
-    get vizDims() { return vizDims; },
-    get isSplitScreen() { return isSplitScreen; },
-    get isMobileRowMode() { return isMobileRowMode; },
-    get screenDims() { return screenDims; },
-    get steps() { return steps; },
-    set currentPanel(v) { currentPanel = v; }
-  });
-
-  // prettier-ignore
-  useOnProgressHandler({
+  useScrollManager({
     get scrollytellerRef() { return scrollytellerRef; },
+    get steps() { return steps; },
+    get vizMarkerThreshold() { return vizMarkerThreshold; },
     get onProgress() { return onProgress; },
+    set currentPanel(v) { currentPanel = v; },
   });
 </script>
 
