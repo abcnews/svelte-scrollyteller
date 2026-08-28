@@ -16,7 +16,7 @@
   let graphicRootDims = $state<Dims>({ status: "loading", dims: [0, 0] });
   /** Reactive window.innerWidth/innerHeight */
   let screenDims = $state<[number, number]>([0, 0]);
-  let currentPanel = $state(0);
+  let currentPanel = $state(-1);
 
   interface Props {
     customPanel?: ComponentType | null;
@@ -24,9 +24,10 @@
     onProgress?: (
       type: string,
       payload: {
-        boundingRect: DOMRect;
         rootPct: number;
         scrollPct: number;
+        panelPct: number;
+        panelIndex: number;
       },
     ) => void;
     onMarker?: (marker: Data) => void;
@@ -59,9 +60,10 @@
     onProgress = (
       type: string,
       payload: {
-        boundingRect: DOMRect;
         rootPct: number;
         scrollPct: number;
+        panelPct: number;
+        panelIndex: number;
       },
     ) => {},
     onMarker = (marker: Data) => {},

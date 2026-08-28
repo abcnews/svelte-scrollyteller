@@ -122,7 +122,7 @@ const panels: PanelDefinition<MyPanelData>[] = [...];
 | ------------------ | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | panels             | `PanelDefinition[]`         | **required** Array of nodes and data which dictate the markers                                                                         |              |
 | onMarker           | `(data: Data) => void`      | **required** Called when a marker intersects and returns that markers `data`                                                           |              |
-| onProgress         | `(type, payload) => void`   | Fires on scroll and returns the scrollyteller progress. payload is `{ rootPct, scrollPct }`                                             |              |
+| onProgress         | `(type, payload) => void`   | Fires on scroll and returns the scrollyteller progress. payload is `{ rootPct, scrollPct, panelPct, panelIndex }`. `panelIndex` is `-1` during the prelude (before the first panel triggers). |              |
 | onLoad             | `(el: HTMLElement) => void` | Called when the interactive graphic mount node is ready.                                                                               |              |
 | customPanel        | Svelte Component            | Component to replace the default panel component                                                                                       | Panel.svelte |
 | vizMarkerThreshold | number                      | Percent past the bottom of the viewport the panel has to hit before triggering.                                                       | `20`         |

@@ -90,6 +90,7 @@
   import Scrollyteller from "./Scrollyteller.svelte";
   import type { PanelDefinition } from "./types.js";
   import Worm from "./Worm/Worm.svelte";
+  import ProgressHud from "./ProgressHud/ProgressHud.svelte";
 
   const createLoremParagraph = (index: number): Element[] => {
     if (typeof document === "undefined") return [];
@@ -135,6 +136,8 @@
   // Reactive states for the visualization
   let activeIndex = $state(0);
   let scrollProgress = $state(0);
+  let panelProgress = $state(0);
+  let currentPanelIndex = $state(-1);
 
   const handleMarker = (detail: MarkData) => {
     activeIndex = detail.customdata - 1;
@@ -142,6 +145,8 @@
 
   const handleProgress = (type: string, payload: any) => {
     scrollProgress = payload.scrollPct;
+    panelProgress = payload.panelPct;
+    currentPanelIndex = payload.panelIndex;
   };
 
   // Svelte action to set body data-scheme attribute
@@ -177,6 +182,7 @@
 
 {#snippet defaultTemplate(args)}
   <span style="display: none;" use:schemeSetter={args.scheme}></span>
+  <div style="height: 50vh;"></div>
   <div style={getStyleString(args)}>
     <Scrollyteller
       panels={args.panels || panels}
@@ -193,42 +199,24 @@
     >
       <div
         class="example-graphic"
-        style="background: {markerStates[activeIndex].bg}; color: {markerStates[
-          activeIndex
-        ].text}; --worm: {markerStates[activeIndex].text};"
+        style="background: {markerStates[Math.max(0, activeIndex)].bg}; color: {markerStates[
+          Math.max(0, activeIndex)
+        ].text}; --worm: {markerStates[Math.max(0, activeIndex)].text};"
       >
         <Worm />
-        <span class="number">{activeIndex + 1}</span>
+        <span class="number">{Math.max(0, activeIndex) + 1}</span>
 
-        <!-- Scrollbar and progress indicator HUD -->
-        <div
-          class="progress-hud"
-          style="border-color: {markerStates[activeIndex].text === '#ffffff'
-            ? 'rgba(255, 255, 255, 0.15)'
-            : 'rgba(0, 0, 0, 0.15)'};"
-        >
-          <div
-            class="progress-bar-container"
-            style="background: {markerStates[activeIndex].text === '#ffffff'
-              ? 'rgba(255, 255, 255, 0.2)'
-              : 'rgba(0, 0, 0, 0.15)'};"
-          >
-            <div
-              class="progress-bar"
-              style="background: {markerStates[activeIndex]
-                .text}; width: {Math.round(scrollProgress * 100)}%;"
-            ></div>
-          </div>
-          <p
-            class="progress-text"
-            style="color: {markerStates[activeIndex].text};"
-          >
-            Scroll progress: {Math.round(scrollProgress * 100)}%
-          </p>
-        </div>
+        <ProgressHud
+          scrollPct={scrollProgress}
+          panelPct={panelProgress}
+          panelIndex={currentPanelIndex}
+          totalPanels={panels.length}
+          colour={markerStates[Math.max(0, activeIndex)].text}
+        />
       </div>
     </Scrollyteller>
   </div>
+  <div style="height: 100vh;"></div>
 {/snippet}
 
 <Story
@@ -352,43 +340,5 @@
     font-size: 3.5rem;
     color: inherit;
     z-index: 2;
-  }
-
-  .progress-hud {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1.25rem;
-    width: calc(100% - 4rem);
-    max-width: 240px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-    text-align: center;
-    z-index: 3;
-  }
-
-  .progress-bar-container {
-    border-radius: 1rem;
-    height: 0.4rem;
-    width: 100%;
-    overflow: hidden;
-    margin-bottom: 0.4rem;
-  }
-
-  .progress-bar {
-    height: 100%;
-    transition: width 0.1s ease-out;
-  }
-
-  .progress-text {
-    font-size: 0.8rem;
-    margin: 0;
-    font-weight: 700;
-    opacity: 0.95;
   }
 </style>
