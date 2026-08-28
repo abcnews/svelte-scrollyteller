@@ -134,20 +134,11 @@
 
 
   // Reactive states for the visualization
-  let activeIndex = $state(0);
-  let scrollProgress = $state(0);
-  let panelProgress = $state(0);
-  let currentPanelIndex = $state(-1);
-
-  const handleMarker = (detail: MarkData) => {
-    activeIndex = detail.customdata - 1;
-  };
-
-  const handleProgress = (type: string, payload: any) => {
-    scrollProgress = payload.scrollPct;
-    panelProgress = payload.panelPct;
-    currentPanelIndex = payload.panelIndex;
-  };
+  let currentPanel = $state(0);
+  let virtualPanel = $state(-1);
+  let marker = $state<MarkData>();
+  let panelPct = $state(0);
+  let scrollPct = $state(0);
 
   // Svelte action to set body data-scheme attribute
   const schemeSetter = (node: HTMLElement, scheme: string) => {
@@ -194,24 +185,33 @@
       }}
       ratio={args.ratio}
       vizMarkerThreshold={args.vizMarkerThreshold}
-      onMarker={handleMarker}
-      onProgress={handleProgress}
+      bind:currentPanel
+      bind:virtualPanel
+      bind:marker
+      bind:panelPct
+      bind:scrollPct
     >
       <div
         class="example-graphic"
-        style="background: {markerStates[Math.max(0, activeIndex)].bg}; color: {markerStates[
-          Math.max(0, activeIndex)
-        ].text}; --worm: {markerStates[Math.max(0, activeIndex)].text};"
+        style="background: {markerStates[currentPanel].bg}; color: {markerStates[
+          currentPanel
+        ].text}; --worm: {markerStates[currentPanel].text};"
       >
         <Worm />
-        <span class="number">{Math.max(0, activeIndex) + 1}</span>
+        <span class="number">
+          {virtualPanel === -1
+            ? "Intro"
+            : virtualPanel >= panels.length
+              ? "Outro"
+              : currentPanel + 1}
+        </span>
 
         <ProgressHud
-          scrollPct={scrollProgress}
-          panelPct={panelProgress}
-          panelIndex={currentPanelIndex}
+          {scrollPct}
+          {panelPct}
+          panelIndex={virtualPanel}
           totalPanels={panels.length}
-          colour={markerStates[Math.max(0, activeIndex)].text}
+          colour={markerStates[currentPanel].text}
         />
       </div>
     </Scrollyteller>

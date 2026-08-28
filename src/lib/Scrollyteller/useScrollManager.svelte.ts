@@ -7,10 +7,16 @@ interface ScrollManagerProps {
   get steps(): PanelRef[];
   /** Percentage from the bottom of the screen to trigger panels (default: 20) */
   get vizMarkerThreshold(): number;
-  /** Callback for scroll progress updates */
-  get onProgress(): ((type: string, payload: any) => void) | undefined | null;
-  /** Setter for current active panel index */
+  /** Setter for clamped active panel index (0 to N-1) */
   set currentPanel(index: number);
+  /** Setter for raw lifecycle panel index (-1 for prelude, 0..N-1 for panels, N for outro) */
+  set virtualPanel(index: number);
+  /** Setter for progress percentage through current panel */
+  set panelPct(pct: number);
+  /** Setter for overall scroll percentage */
+  set scrollPct(pct: number);
+  /** Setter for viewport coverage percentage */
+  set rootPct(pct: number);
 }
 
 interface ScrollSegment {
@@ -31,7 +37,6 @@ export function useScrollManager(props: ScrollManagerProps) {
     const ref = props.scrollytellerRef;
     const steps = props.steps;
     const vizMarkerThreshold = props.vizMarkerThreshold ?? 20;
-    const onProgress = props.onProgress;
 
     if (!ref) return;
 
@@ -134,21 +139,18 @@ export function useScrollManager(props: ScrollManagerProps) {
       // 3. Viewport coverage progress (rootPct)
       const rootPct = 1 - bottom / (height + windowHeight);
 
-      // 4. Update reactive panel index
+      // 4. Update reactive bound state
       if (currentSegment.index !== activePanelIndex) {
         activePanelIndex = currentSegment.index;
-        props.currentPanel = currentSegment.index;
+        props.virtualPanel = currentSegment.index;
+        props.currentPanel = Math.min(
+          steps.length - 1,
+          Math.max(0, currentSegment.index),
+        );
       }
-
-      // 5. Emit progress callback
-      if (onProgress) {
-        onProgress("progress", {
-          rootPct,
-          scrollPct: Number(scrollPct.toFixed(4)),
-          panelPct,
-          panelIndex: currentSegment.index,
-        });
-      }
+      props.panelPct = panelPct;
+      props.scrollPct = Number(scrollPct.toFixed(4));
+      props.rootPct = rootPct;
     };
 
     const handleResize = () => {

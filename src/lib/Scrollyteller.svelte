@@ -16,21 +16,22 @@
   let graphicRootDims = $state<Dims>({ status: "loading", dims: [0, 0] });
   /** Reactive window.innerWidth/innerHeight */
   let screenDims = $state<[number, number]>([0, 0]);
-  let currentPanel = $state(-1);
 
   interface Props {
-    customPanel?: ComponentType | null;
     panels: PanelDefinition<Data>[];
-    onProgress?: (
-      type: string,
-      payload: {
-        rootPct: number;
-        scrollPct: number;
-        panelPct: number;
-        panelIndex: number;
-      },
-    ) => void;
-    onMarker?: (marker: Data) => void;
+    customPanel?: ComponentType | null;
+    /** Clamped active panel index (0 to N-1), safe for indexing data arrays */
+    currentPanel?: number;
+    /** Raw lifecycle panel index (-1 for prelude, 0..N-1 for panels, N for outro) */
+    virtualPanel?: number;
+    /** Active panel's custom data payload (undefined during prelude/outro) */
+    marker?: Data | undefined;
+    /** Progress percentage through current active panel or prelude/outro (0.0 to 1.0) */
+    panelPct?: number;
+    /** Overall scroll progress through scrollyteller (unclamped: <0 before start, 0..1, >1 after end) */
+    scrollPct?: number;
+    /** Viewport coverage progress (0.0 to 1.0) */
+    rootPct?: number;
     onLoad?: (arg: HTMLElement) => void;
     /**
      * When `true` we remove the slot from the DOM when not in the viewport, and
@@ -55,18 +56,14 @@
   }
 
   let {
-    customPanel = null,
     panels,
-    onProgress = (
-      type: string,
-      payload: {
-        rootPct: number;
-        scrollPct: number;
-        panelPct: number;
-        panelIndex: number;
-      },
-    ) => {},
-    onMarker = (marker: Data) => {},
+    customPanel = null,
+    currentPanel = $bindable(0),
+    virtualPanel = $bindable(-1),
+    marker = $bindable(undefined),
+    panelPct = $bindable(0),
+    scrollPct = $bindable(0),
+    rootPct = $bindable(0),
     onLoad = () => {},
     discardSlot = false,
     layout = {},
@@ -78,25 +75,40 @@
   const isOdyssey = !!window.__IS_ODYSSEY_FORMAT__;
 
   let scrollytellerRef: HTMLElement | undefined = $state();
-  /** The contents of the current marker as passed in from the library consumer */
-  let marker = $derived(panels[currentPanel]?.data);
   let isInViewport = $state(false);
   let scrollSpeed = 0;
   let deferUntilScrollSettlesActions: (() => void)[] = [];
   let panelRoot = $state<HTMLElement | undefined>();
+
+  // Synchronise marker prop with the active panel data
+  $effect(() => {
+    marker = panels[virtualPanel]?.data;
+  });
 
   const scrollytellerObserver = new IntersectionObserver(
     ([scrollytellerEntry]) =>
       deferUntilScrollSettles(() => {
         isInViewport = scrollytellerEntry.isIntersecting;
       }),
+    {
+      rootMargin: `${LARGE_TABLET_BREAKPOINT}px 0px ${LARGE_TABLET_BREAKPOINT}px 0px`,
+    },
   );
 
-  const deferUntilScrollSettles = (fn: () => void) => {
-    if (scrollSpeed < maxScrollSpeed) {
-      fn();
+  $effect(() => {
+    if (!scrollytellerRef) return;
+    scrollytellerObserver.observe(scrollytellerRef);
+
+    return () => {
+      scrollytellerObserver.disconnect();
+    };
+  });
+
+  const deferUntilScrollSettles = (action: () => void) => {
+    if (scrollSpeed > maxScrollSpeed) {
+      deferUntilScrollSettlesActions.push(action);
     } else {
-      deferUntilScrollSettlesActions = [...deferUntilScrollSettlesActions, fn];
+      action();
     }
   };
 
@@ -112,10 +124,6 @@
   onMount(() => {
     screenDims = [window.innerWidth, window.innerHeight];
 
-    if (discardSlot && scrollytellerRef) {
-      scrollytellerObserver.observe(scrollytellerRef);
-    }
-
     getScrollSpeed((newSpeed) => {
       scrollSpeed = newSpeed;
       runDeferredActions();
@@ -125,22 +133,24 @@
   let align = $derived(layout.align || "centre");
   let mobileVariant = $derived(layout.mobileVariant || "blocks");
   let resizeInteractive = $derived(layout.resizeInteractive ?? true);
-  let transparentFloat = $derived(
-    layout.transparentFloat ?? ["left", "right"].includes(align),
-  );
 
-  /** Split screen mode happens when left/right aligned + not mobile */
+  /**
+   * If we are in split screen mode
+   */
   let isSplitScreen = $derived(
     ["left", "right"].includes(align) &&
-      screenDims[0] >= LARGE_TABLET_BREAKPOINT,
+      screenDims[0] > LARGE_TABLET_BREAKPOINT,
   );
 
-  let isMobileRowMode = $derived(
-    mobileVariant === "rows" && screenDims[0] < LARGE_TABLET_BREAKPOINT,
+  let transparentFloat = $derived(
+    layout.transparentFloat ?? isSplitScreen,
   );
 
-  /** The max width when the scrollyteller centres itself in the page */
-  let maxScrollytellerWidth = $derived(isSplitScreen ? 2040 : UNBOUND_WIDTH);
+  let maxScrollytellerWidth = $derived(
+    mobileVariant === "rows" && screenDims[0] <= LARGE_TABLET_BREAKPOINT
+      ? screenDims[0]
+      : UNBOUND_WIDTH,
+  );
 
   /**
    * Given the ratio of the graphic, work out whether it fits in the column and if
@@ -169,10 +179,7 @@
    * new components or update markers.
    */
   let maxScrollSpeed = $derived(discardSlot ? 0.5 : Infinity);
-  $effect(() => {
-    marker &&
-      deferUntilScrollSettles(() => onMarker($state.snapshot(marker) as Data));
-  });
+
   // Debug mode should highlight blocks, graphic & show which breakpoint we're at
   let isDebug = $derived(
     typeof location !== "undefined" && location.hash === "#debug=true",
@@ -183,8 +190,11 @@
     get scrollytellerRef() { return scrollytellerRef; },
     get steps() { return steps; },
     get vizMarkerThreshold() { return vizMarkerThreshold; },
-    get onProgress() { return onProgress; },
     set currentPanel(v) { currentPanel = v; },
+    set virtualPanel(v) { virtualPanel = v; },
+    set panelPct(v) { panelPct = v; },
+    set scrollPct(v) { scrollPct = v; },
+    set rootPct(v) { rootPct = v; },
   });
 </script>
 
@@ -244,7 +254,7 @@
       {customPanel}
       bind:panelRoot
       bind:steps
-      {currentPanel}
+      currentPanel={virtualPanel}
     />
   </div>
 </div>
