@@ -24,8 +24,6 @@
     currentPanel = 0,
     panelRef = $bindable(),
   }: Props = $props();
-
-
 </script>
 
 <div
@@ -77,7 +75,7 @@
     --panel-column-margin: var(--color-panel-margin, 40vh);
 
     box-sizing: border-box;
-    margin: 80vh auto;
+    margin: 0 auto 80vh;
     position: relative;
     z-index: 1;
     pointer-events: none;
