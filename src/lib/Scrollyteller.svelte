@@ -2,7 +2,6 @@
   import type { ComponentType } from "svelte";
   import { onMount } from "svelte";
   import type { PanelDefinition, Style, Dims, PanelRef } from "./types.js";
-  import { getScrollSpeed } from "./Scrollyteller/Scrollyteller.util.js";
   import { useScrollManager } from "./Scrollyteller/useScrollManager.svelte.js";
   import Panels from "./Panels.svelte";
   import Viz from "./Viz.svelte";
@@ -33,19 +32,6 @@
     /** Viewport coverage progress (0.0 to 1.0) */
     rootPct?: number;
     onLoad?: (arg: HTMLElement) => void;
-    /**
-     * When `true` we remove the slot from the DOM when not in the viewport, and
-     * debounce loading markers while the browser is scrolling quickly.
-     *
-     * This is useful to free up layers/memory/CPU in complex interactives,
-     * especially to prevent out of memory crash issues with iPhone Safari.
-     *
-     * The trade-off is you may need to use `<link rel="preload"` for resources
-     * that don't appear in the page by default.
-     *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload mdn preload docs}
-     */
-    discardSlot?: boolean;
     layout?: Style;
     ratio?: number;
     /**
@@ -65,7 +51,6 @@
     scrollPct = $bindable(0),
     rootPct = $bindable(0),
     onLoad = () => {},
-    discardSlot = false,
     layout = {},
     ratio = 1,
     vizMarkerThreshold = 20,
@@ -75,9 +60,6 @@
   const isOdyssey = !!window.__IS_ODYSSEY_FORMAT__;
 
   let scrollytellerRef: HTMLElement | undefined = $state();
-  let isInViewport = $state(false);
-  let scrollSpeed = 0;
-  let deferUntilScrollSettlesActions: (() => void)[] = [];
   let panelRoot = $state<HTMLElement | undefined>();
 
   // Synchronise marker prop with the active panel data
@@ -85,49 +67,8 @@
     marker = panels[virtualPanel]?.data;
   });
 
-  const scrollytellerObserver = new IntersectionObserver(
-    ([scrollytellerEntry]) =>
-      deferUntilScrollSettles(() => {
-        isInViewport = scrollytellerEntry.isIntersecting;
-      }),
-    {
-      rootMargin: `${LARGE_TABLET_BREAKPOINT}px 0px ${LARGE_TABLET_BREAKPOINT}px 0px`,
-    },
-  );
-
-  $effect(() => {
-    if (!scrollytellerRef) return;
-    scrollytellerObserver.observe(scrollytellerRef);
-
-    return () => {
-      scrollytellerObserver.disconnect();
-    };
-  });
-
-  const deferUntilScrollSettles = (action: () => void) => {
-    if (scrollSpeed > maxScrollSpeed) {
-      deferUntilScrollSettlesActions.push(action);
-    } else {
-      action();
-    }
-  };
-
-  const runDeferredActions = () => {
-    if (scrollSpeed < maxScrollSpeed) {
-      if (deferUntilScrollSettlesActions.length) {
-        deferUntilScrollSettlesActions.forEach((fn) => fn());
-        deferUntilScrollSettlesActions = [];
-      }
-    }
-  };
-
   onMount(() => {
     screenDims = [window.innerWidth, window.innerHeight];
-
-    getScrollSpeed((newSpeed) => {
-      scrollSpeed = newSpeed;
-      runDeferredActions();
-    });
   });
 
   let align = $derived(layout.align || "centre");
@@ -174,12 +115,6 @@
       throw new Error("vizMarkerThreshold must be <50% screen height");
     }
   });
-  /**
-   * When the user is scrolling at a speed greater than this, don't mount
-   * new components or update markers.
-   */
-  let maxScrollSpeed = $derived(discardSlot ? 0.5 : Infinity);
-
   // Debug mode should highlight blocks, graphic & show which breakpoint we're at
   let isDebug = $derived(
     typeof location !== "undefined" && location.hash === "#debug=true",
@@ -221,8 +156,6 @@
   {#if !resizeInteractive}
     <Viz
       layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
-      {isInViewport}
-      {discardSlot}
       {onLoad}
       bind:vizDims
       bind:graphicRootDims>{@render children?.()}</Viz
@@ -241,8 +174,6 @@
     {#if resizeInteractive}
       <Viz
         layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
-        {isInViewport}
-        {discardSlot}
         {onLoad}
         bind:vizDims
         bind:graphicRootDims>{@render children?.()}</Viz

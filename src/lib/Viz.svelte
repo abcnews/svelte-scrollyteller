@@ -4,8 +4,6 @@
 
   interface Props {
     layout: Style;
-    discardSlot?: boolean;
-    isInViewport?: boolean;
     onLoad?: (el: HTMLElement | undefined) => void;
     vizDims?: Dims;
     graphicRootDims?: Dims;
@@ -14,8 +12,6 @@
 
   let {
     layout,
-    discardSlot = false,
-    isInViewport = false,
     onLoad = () => {},
     vizDims = $bindable({ status: "loading", dims: [0, 0] }),
     graphicRootDims = $bindable({ status: "loading", dims: [0, 0] }),
@@ -81,9 +77,7 @@
   class:viz--centre={layout.resizeInteractive && layout.align === "centre"}
   bind:this={graphicRootEl}
 >
-  {#if isInViewport || discardSlot === false}
-    {@render children?.()}
-  {/if}
+  {@render children?.()}
 </div>
 
 <style lang="scss">

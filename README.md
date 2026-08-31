@@ -54,7 +54,8 @@ When a new box comes into view, the active `marker` and `currentPanel` update au
   import MyGraphic from './MyGraphic.svelte';
 
   let { panels } = $props();
-  let currentPanel = $state(-1);
+  let currentPanel = $state(0);
+  let virtualPanel = $state(-1);
   let marker = $state();
   let panelPct = $state(0);
   let scrollPct = $state(0);
@@ -63,6 +64,7 @@ When a new box comes into view, the active `marker` and `currentPanel` update au
 <Scrollyteller
   {panels}
   bind:currentPanel
+  bind:virtualPanel
   bind:marker
   bind:panelPct
   bind:scrollPct
@@ -117,18 +119,18 @@ const panels: PanelDefinition<MyPanelData>[] = [...];
 
 ## Props
 
-| Property           | Type                        | Description                                                                                                                            | Default      |
-| ------------------ | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| panels             | `PanelDefinition[]`         | **required** Array of nodes and data which dictate the markers                                                                         |              |
-| currentPanel       | `number` (`$bindable`)      | Clamped active panel index (`0..N-1`), guaranteed safe for indexing panel arrays.                                                      | `0`          |
-| virtualPanel       | `number` (`$bindable`)      | Raw lifecycle panel index (`-1` during prelude, `0..N-1` for panels, `N` for outro).                                                   | `-1`         |
-| marker             | `Data` (`$bindable`)        | The active panel's `data` payload (`undefined` during prelude and outro).                                                              | `undefined`  |
-| panelPct           | `number` (`$bindable`)      | Progress percentage through the active panel or prelude/outro (`0.0` to `1.0`).                                                        | `0`          |
-| scrollPct          | `number` (`$bindable`)      | Overall scroll progress through the scrollyteller (unclamped: `<0` before entry, `0.0..1.0` through interactive, `>1` after unpin).    | `0`          |
-| rootPct            | `number` (`$bindable`)      | Viewport coverage percentage (`0.0` to `1.0`).                                                                                         | `0`          |
-| onLoad             | `(el: HTMLElement) => void` | Called when the interactive graphic mount node is ready.                                                                               |              |
-| customPanel        | Svelte Component            | Component to replace the default panel component                                                                                       | Panel.svelte |
-| vizMarkerThreshold | number                      | Percent past the bottom of the viewport the panel has to hit before triggering.                                                       | `20`         |
+| Property           | Type                        | Description                                                                                                                         | Default      |
+| ------------------ | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| panels             | `PanelDefinition[]`         | **required** Array of nodes and data which dictate the markers                                                                      |              |
+| currentPanel       | `number` (`$bindable`)      | Clamped active panel index (`0..N-1`), guaranteed safe for indexing panel arrays.                                                   | `0`          |
+| virtualPanel       | `number` (`$bindable`)      | Raw lifecycle panel index (`-1` during prelude, `0..N-1` for panels, `N` for outro).                                                | `-1`         |
+| marker             | `Data` (`$bindable`)        | The active panel's `data` payload (`undefined` during prelude and outro).                                                           | `undefined`  |
+| panelPct           | `number` (`$bindable`)      | Progress percentage through the active panel or prelude/outro (`0.0` to `1.0`).                                                     | `0`          |
+| scrollPct          | `number` (`$bindable`)      | Overall scroll progress through the scrollyteller (unclamped: `<0` before entry, `0.0..1.0` through interactive, `>1` after unpin). | `0`          |
+| rootPct            | `number` (`$bindable`)      | Viewport coverage percentage (`0.0` to `1.0`).                                                                                      | `0`          |
+| onLoad             | `(el: HTMLElement) => void` | Called when the interactive graphic mount node is ready.                                                                            |              |
+| customPanel        | Svelte Component            | Component to replace the default panel component                                                                                    | Panel.svelte |
+| vizMarkerThreshold | number                      | Percent past the bottom of the viewport the panel has to hit before triggering.                                                     | `20`         |
 
 ## Using layouts/styling your own
 
