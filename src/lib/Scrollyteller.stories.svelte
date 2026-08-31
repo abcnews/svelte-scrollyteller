@@ -90,7 +90,7 @@
   import Scrollyteller from "./Scrollyteller.svelte";
   import type { PanelDefinition } from "./types.js";
   import Worm from "./Worm/Worm.svelte";
-  import ProgressHud from "./ProgressHud/ProgressHud.svelte";
+  import StorybookProgressHud from "./StorybookProgressHud/StorybookProgressHud.svelte";
 
   const createLoremParagraph = (index: number): Element[] => {
     if (typeof document === "undefined") return [];
@@ -206,12 +206,11 @@
               : currentPanel + 1}
         </span>
 
-        <ProgressHud
+        <StorybookProgressHud
           {scrollPct}
           {panelPct}
           panelIndex={virtualPanel}
           totalPanels={panels.length}
-          colour={markerStates[currentPanel].text}
         />
       </div>
     </Scrollyteller>
