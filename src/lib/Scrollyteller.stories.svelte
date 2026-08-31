@@ -90,7 +90,6 @@
   import Scrollyteller from "./Scrollyteller.svelte";
   import type { PanelDefinition } from "./types.js";
   import Worm from "./Worm/Worm.svelte";
-  import StorybookProgressHud from "./StorybookProgressHud/StorybookProgressHud.svelte";
 
   const createLoremParagraph = (index: number): Element[] => {
     if (typeof document === "undefined") return [];
@@ -206,12 +205,18 @@
               : currentPanel + 1}
         </span>
 
-        <StorybookProgressHud
-          {scrollPct}
-          {panelPct}
-          panelIndex={virtualPanel}
-          totalPanels={panels.length}
-        />
+        <div class="storybook-hud">
+          <span>Overall scroll ({Math.round(scrollPct * 100)}%)</span>
+          <progress value={Math.min(1, Math.max(0, scrollPct))} max="1"></progress>
+          <span>
+            {virtualPanel === -1
+              ? "Prelude"
+              : virtualPanel >= panels.length
+                ? "Outro"
+                : `Panel ${virtualPanel + 1}`} ({Math.round(panelPct * 100)}%)
+          </span>
+          <progress value={Math.min(1, Math.max(0, panelPct))} max="1"></progress>
+        </div>
       </div>
     </Scrollyteller>
   </div>
@@ -339,5 +344,31 @@
     font-size: 3.5rem;
     color: inherit;
     z-index: 2;
+  }
+
+  .storybook-hud {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-family: ABCSans, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.75);
+    color: #ffffff;
+    border-radius: 0.5rem;
+    width: 220px;
+    box-sizing: border-box;
+    z-index: 10;
+
+    progress {
+      width: 100%;
+      height: 16px;
+      accent-color: #ffffff;
+    }
   }
 </style>
