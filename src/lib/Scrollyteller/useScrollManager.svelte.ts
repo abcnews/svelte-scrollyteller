@@ -34,11 +34,11 @@ interface ScrollSegment {
  */
 export function useScrollManager(props: ScrollManagerProps) {
   $effect(() => {
-    const ref = props.scrollytellerRef;
+    const scrollytellerRef = props.scrollytellerRef;
     const steps = props.steps;
     const vizMarkerThreshold = props.vizMarkerThreshold ?? 20;
 
-    if (!ref) return;
+    if (!scrollytellerRef) return;
 
     let scrollytellerTop = 0;
     let height = 0;
@@ -51,15 +51,16 @@ export function useScrollManager(props: ScrollManagerProps) {
      * This is a heavy op, so we do it once/when the size changes
      */
     const measureDimensions = () => {
-      const scrollY = window.scrollY;
-      const rect = ref.getBoundingClientRect();
+      const rect = scrollytellerRef.getBoundingClientRect();
 
-      scrollytellerTop = rect.top + scrollY;
+      scrollytellerTop = rect.top + window.scrollY;
       height = rect.height;
       windowHeight = window.innerHeight;
 
       /** Graphic element inside the scrollyteller */
-      const vizEl = ref.querySelector(".viz") as HTMLElement | null;
+      const vizEl = scrollytellerRef.querySelector(
+        ".viz",
+      ) as HTMLElement | null;
 
       /** CSS sticky top offset (e.g. 8dvh) where the graphic locks into place */
       const vizStickyTop = vizEl
@@ -163,8 +164,8 @@ export function useScrollManager(props: ScrollManagerProps) {
     handleScroll();
 
     const resizeObserver = new ResizeObserver(handleResize);
-    resizeObserver.observe(ref);
-    const vizEl = ref.querySelector(".viz");
+    resizeObserver.observe(scrollytellerRef);
+    const vizEl = scrollytellerRef.querySelector(".viz");
     if (vizEl) resizeObserver.observe(vizEl);
     steps.forEach((step) => {
       if (step) resizeObserver.observe(step);
