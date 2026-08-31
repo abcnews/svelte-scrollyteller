@@ -92,6 +92,13 @@ When a new box comes into view, the active `marker` and `currentPanel` update au
 </style>
 ```
 
+### Upgrading from previous versions
+
+Previous versions used callback functions (`onMarker` and `onProgress`). In v5+, these are replaced with native Svelte 5 two-way bindings (`bind:`).
+
+1. Replace `onMarker={(data) => marker = data}` with `bind:marker`.
+2. Replace `onProgress={(type, payload) => ...}` with `bind:scrollPct`, `bind:panelPct`, `bind:rootPct`, `bind:currentPanel`, or `bind:virtualPanel`.
+
 For a more complete example using Typescript see the [examples](examples).
 
 ### TypeScript Types
