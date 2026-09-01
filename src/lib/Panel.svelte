@@ -43,7 +43,8 @@
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
 
-  :global(.scrollyteller--mobile-row-variant) {
+  :global(.scrollyteller--mobile-row-variant),
+  :global(.scrollyteller-wrapper--mobile-row-variant) {
     @media (max-width: breakpoints.$breakpointLargeTablet) {
       /* Mobile row variant doesn't need scrims etc */
       .st-panel::before {
@@ -53,6 +54,10 @@
       /* Mobile row variant needs less spacing between panels */
       .st-panel-root {
         margin: 40vh auto;
+      }
+
+      .st-panel-root.first {
+        margin-top: 10vh;
       }
     }
   }

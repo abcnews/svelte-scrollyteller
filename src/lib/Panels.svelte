@@ -82,6 +82,15 @@
     pointer-events: none;
     font-size: 1.125rem;
   }
+
+  :global(.scrollyteller--mobile-row-variant),
+  :global(.scrollyteller-wrapper--mobile-row-variant) {
+    @media (max-width: breakpoints.$breakpointLargeTablet) {
+      .content {
+        margin-top: 0;
+      }
+    }
+  }
   .content {
     &--centre {
       @media (min-width: breakpoints.$breakpointLargeTablet) {
