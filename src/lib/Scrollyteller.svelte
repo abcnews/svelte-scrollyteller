@@ -64,7 +64,7 @@
 
   // Synchronise marker prop with the active panel data
   $effect(() => {
-    marker = panels[virtualPanel]?.data;
+    marker = panels[currentPanel]?.data;
   });
 
   onMount(() => {
