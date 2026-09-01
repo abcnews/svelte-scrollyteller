@@ -3,8 +3,9 @@
   "compilerOptions": {
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
-    "lib": ["es2020", "DOM"],
-    "target": "es2020",
+    "lib": ["es2023", "DOM", "DOM.Iterable"],
+    "target": "es2023",
+    "skipLibCheck": true,
     "resolveJsonModule": true,
     /**
 			To have warnings/errors of the Svelte compiler at the correct position,

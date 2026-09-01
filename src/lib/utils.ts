@@ -39,6 +39,13 @@ export const loadScrollyteller = <Data = any>(
   className?: string,
   markerName = "mark",
 ): ScrollytellerDefinition<Data> => {
+  // Feature detect: Scrollyteller requires Array.prototype.findLastIndex (ES2023+)
+  if (typeof Array.prototype.findLastIndex !== "function") {
+    throw new Error(
+      "Scrollyteller requires Array.prototype.findLastIndex support (ES2023+). Bailing out to article fallback content.",
+    );
+  }
+
   const targetNode = typeof nameOrNode !== "string" ? nameOrNode : null;
   const nameFromArgs = typeof nameOrNode === "string" ? nameOrNode : "";
 

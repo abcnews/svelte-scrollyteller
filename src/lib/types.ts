@@ -27,10 +27,6 @@ export type Style = {
 };
 export interface PanelRef<Data = any> extends Element {}
 
-export interface IntersectionEntries extends IntersectionObserverEntry {
-  target: PanelRef;
-}
-
 /** Config options to control an individual panel */
 export type PanelDefinition<Data = any> = {
   align?: string; // whether to align the panel to the left or right

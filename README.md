@@ -46,34 +46,35 @@ The `panels` prop is in the format of:
       }
     ]
 
-When a new box comes into view the `onMarker` callback will fire with the `data` of the incoming panel.
+When a new box comes into view, the active `marker` and `currentPanel` update automatically via Svelte 5 two-way bindings.
 
 ```svelte
 <script lang="ts">
-	import Scrollyteller from '@abcnews/svelte-scrollyteller';
-	import MyGraphic from 'MyGraphic.svelte';
+  import Scrollyteller from '@abcnews/svelte-scrollyteller';
+  import MyGraphic from './MyGraphic.svelte';
 
-  let {panels} = $props();
-  let marker = $state(0);
-  let progress = $state();
-
+  let { panels } = $props();
+  let currentPanel = $state(0);
+  let virtualPanel = $state(-1);
+  let marker = $state();
+  let panelPct = $state(0);
+  let scrollPct = $state(0);
 </script>
 
 <Scrollyteller
-	{panels}
-	onMarker={(data) => {
-		marker = data;
-	}}
-	onProgress={(type, payload) => {
-		progress = payload;
-	}}
+  {panels}
+  bind:currentPanel
+  bind:virtualPanel
+  bind:marker
+  bind:panelPct
+  bind:scrollPct
   layout={{
     align: 'left',
     // resizeInteractive: false
     // transparentFloat: true
   }}
 >
-	<MyGraphic {marker} />
+  <MyGraphic {marker} {panelPct} {scrollPct} />
 </Scrollyteller>
 
 <style lang="scss">
@@ -90,6 +91,13 @@ When a new box comes into view the `onMarker` callback will fire with the `data`
 }
 </style>
 ```
+
+### Upgrading from previous versions
+
+Previous versions used callback functions (`onMarker` and `onProgress`). In v5+, these are replaced with native Svelte 5 two-way bindings (`bind:`).
+
+1. Replace `onMarker={(data) => marker = data}` with `bind:marker`.
+2. Replace `onProgress={(type, payload) => ...}` with `bind:scrollPct`, `bind:panelPct`, `bind:rootPct`, `bind:currentPanel`, or `bind:virtualPanel`.
 
 For a more complete example using Typescript see the [examples](examples).
 
@@ -118,14 +126,18 @@ const panels: PanelDefinition<MyPanelData>[] = [...];
 
 ## Props
 
-| Property        | Type                        | Description                                                                                                                            | Default            |
-| --------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| panels          | `PanelDefinition[]`         | **required** Array of nodes and data which dictate the markers                                                                         |
-| onMarker        | `(data: Data) => void`      | **required** Called when a marker intersects and returns that markers `data`                                                           |                    |
-| onProgress      | `(type, payload) => void`   | Fires on scroll and returns the scrollyteller progress. payload is `{ boundingRect, rootPct, scrollPct }`                              |                    |
-| onLoad          | `(el: HTMLElement) => void` | Called when the interactive graphic mount node is ready.                                                                               |                    |
-| customPanel     | Svelte Component            | Component to replace the default panel component                                                                                       | Panel.svelte       |
-| observerOptions | IntersectionObserverInit    | Options for the intersection observer. Refer to the [docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) | `{threshold: 0.5}` |
+| Property           | Type                        | Description                                                                                                                         | Default      |
+| ------------------ | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| panels             | `PanelDefinition[]`         | **required** Array of nodes and data which dictate the markers                                                                      |              |
+| currentPanel       | `number` (`$bindable`)      | Clamped active panel index (`0..N-1`), guaranteed safe for indexing panel arrays.                                                   | `0`          |
+| virtualPanel       | `number` (`$bindable`)      | Raw lifecycle panel index (`-1` during prelude, `0..N-1` for panels, `N` for outro).                                                | `-1`         |
+| marker             | `Data` (`$bindable`)        | The active panel's `data` payload (`undefined` during prelude and outro).                                                           | `undefined`  |
+| panelPct           | `number` (`$bindable`)      | Progress percentage through the active panel or prelude/outro (`0.0` to `1.0`).                                                     | `0`          |
+| scrollPct          | `number` (`$bindable`)      | Overall scroll progress through the scrollyteller (unclamped: `<0` before entry, `0.0..1.0` through interactive, `>1` after unpin). | `0`          |
+| rootPct            | `number` (`$bindable`)      | Viewport coverage percentage (`0.0` to `1.0`).                                                                                      | `0`          |
+| onLoad             | `(el: HTMLElement) => void` | Called when the interactive graphic mount node is ready.                                                                            |              |
+| customPanel        | Svelte Component            | Component to replace the default panel component                                                                                    | Panel.svelte |
+| vizMarkerThreshold | number                      | Percent past the bottom of the viewport the panel has to hit before triggering.                                                     | `20`         |
 
 ## Using layouts/styling your own
 
