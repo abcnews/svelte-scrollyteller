@@ -66,7 +66,7 @@ export function useScrollManager(props: ScrollManagerProps) {
       triggers = steps.map((step) =>
         step
           ? step.getBoundingClientRect().top + scrollY - triggerLine
-          : scrollytellerTop
+          : scrollytellerTop,
       );
     };
 
@@ -88,8 +88,13 @@ export function useScrollManager(props: ScrollManagerProps) {
         const preludeSpan = Math.max(1, triggers[0] - preludeStart);
         props.virtualPanel = -1;
         props.currentPanel = 0;
-        props.panelPct = Math.min(1, Math.max(0, (scrollY - preludeStart) / preludeSpan));
-        props.scrollPct = Number(((scrollY - triggers[0]) / totalScrollDistance).toFixed(4));
+        props.panelPct = Math.min(
+          1,
+          Math.max(0, (scrollY - preludeStart) / preludeSpan),
+        );
+        props.scrollPct = Number(
+          ((scrollY - triggers[0]) / totalScrollDistance).toFixed(4),
+        );
         return;
       }
 
@@ -99,7 +104,10 @@ export function useScrollManager(props: ScrollManagerProps) {
         const outroSpan = Math.max(1, outroEnd - unpinScroll);
         props.virtualPanel = steps.length;
         props.currentPanel = Math.max(0, steps.length - 1);
-        props.panelPct = Math.min(1, Math.max(0, (scrollY - unpinScroll) / outroSpan));
+        props.panelPct = Math.min(
+          1,
+          Math.max(0, (scrollY - unpinScroll) / outroSpan),
+        );
         props.scrollPct = 1;
         return;
       }
@@ -107,14 +115,22 @@ export function useScrollManager(props: ScrollManagerProps) {
       // 3. Active panel (0 to N-1)
       const activeIndex = triggers.findLastIndex((t) => scrollY >= t);
       const nextTrigger =
-        activeIndex < triggers.length - 1 ? triggers[activeIndex + 1] : unpinScroll;
+        activeIndex < triggers.length - 1
+          ? triggers[activeIndex + 1]
+          : unpinScroll;
       const span = Math.max(1, nextTrigger - triggers[activeIndex]);
 
       props.virtualPanel = activeIndex;
       props.currentPanel = Math.min(steps.length - 1, Math.max(0, activeIndex));
-      props.panelPct = Math.min(1, Math.max(0, (scrollY - triggers[activeIndex]) / span));
+      props.panelPct = Math.min(
+        1,
+        Math.max(0, (scrollY - triggers[activeIndex]) / span),
+      );
       props.scrollPct = Number(
-        Math.min(1, Math.max(0, (scrollY - triggers[0]) / totalScrollDistance)).toFixed(4)
+        Math.min(
+          1,
+          Math.max(0, (scrollY - triggers[0]) / totalScrollDistance),
+        ).toFixed(4),
       );
     };
 
