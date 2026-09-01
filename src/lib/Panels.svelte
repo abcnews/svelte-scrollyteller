@@ -20,60 +20,37 @@
     steps = $bindable([]),
     currentPanel = 0,
   }: Props = $props();
-
-  /**
-   * Panels grouped by `align` property. We render a container per alignment
-   * so we can have multiple left/right/centred panels in one scrollyteller.
-   */
-  let panelGroups = $derived.by(() => {
-    const newPanelGroups = [];
-    let group;
-    panels.forEach(({ align = layout.align, panelClass = "", ...panel }, i) => {
-      if (align !== group?.align) {
-        group && newPanelGroups.push(group);
-        group = { align, panels: [] };
-      }
-
-      if (i === 0) panelClass += " first";
-      if (i === panels.length - 1) panelClass += " last";
-      group.panels.push({ ...panel, panelClass, i });
-    });
-    newPanelGroups.push(group);
-    return newPanelGroups;
-  });
 </script>
 
-{#each panelGroups as group}
-  <div class="panel-wrapper" bind:this={panelRoot}>
-    <div
-      class="content"
-      class:content--centre={group.align === "centre"}
-      class:content--right={group.align === "right"}
-      class:content--left={group.align === "left"}
-    >
-      {#each group.panels as panel}
-        {#if customPanel}
-          {@const SvelteComponent = customPanel}
-          <SvelteComponent {...panel} {steps} {currentPanel} />
-        {:else}
-          <Panel
-            {...panel}
-            align={panel.align || layout.align}
-            transparentFloat={layout.transparentFloat}
-            bind:panelRef={steps[panel.i]}
-            {currentPanel}
-          />
-        {/if}
-      {/each}
-    </div>
-  </div>
-{/each}
+<div class="content" bind:this={panelRoot}>
+  {#each panels as panel, i}
+    {@const align = panel.align || layout.align || "centre"}
+    {@const isFirst = i === 0}
+    {@const isLast = i === panels.length - 1}
+    {@const panelClass = `${panel.panelClass || ""}${isFirst ? " first" : ""}${isLast ? " last" : ""}`}
+    {#if customPanel}
+      {@const SvelteComponent = customPanel}
+      <SvelteComponent {...panel} {steps} {currentPanel} />
+    {:else}
+      <Panel
+        {...panel}
+        i={i}
+        {align}
+        transparentFloat={layout.transparentFloat}
+        {panelClass}
+        bind:panelRef={steps[i]}
+        {currentPanel}
+      />
+    {/if}
+  {/each}
+</div>
 
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
 
   .content {
-    margin: -100dvh auto 0;
+    margin-top: -100dvh;
+    margin-bottom: 0;
     // add bottom padding otherwise the `.last` panel margins collapse to 0
     padding-bottom: 1px;
     position: relative;
@@ -81,47 +58,16 @@
     // This style doesn't apply to child blocks, just the container
     pointer-events: none;
     font-size: 1.125rem;
+    width: 100%;
   }
-  .content {
-    &--centre {
-      @media (min-width: breakpoints.$breakpointLargeTablet) {
-        max-width: 48.75rem;
-      }
 
-      @media (min-width: breakpoints.$breakpointDesktop) {
-      }
-
-      @media (min-width: breakpoints.$breakpointLargeDesktop) {
-        max-width: 56.25rem;
-      }
-    }
-
-    &--left,
-    &--right {
-      max-width: 127.5rem;
-      @media (min-width: breakpoints.$breakpointLargeTablet) {
-        max-width: 40rem;
-        margin-left: 0;
-        margin-right: calc(
-          var(--rightColumnWidth, 100px) + calc(var(--marginOuter) * 1)
-        );
-        font-size: 1.125rem;
-      }
-      @media (min-width: breakpoints.$breakpointDesktop) {
-        font-size: 1.125rem;
-      }
-      @media (min-width: breakpoints.$breakpointLargeDesktop) {
-        max-width: 45rem;
-        font-size: 1.25rem;
-      }
-    }
-    &--right {
-      @media (min-width: breakpoints.$breakpointLargeTablet) {
-        margin-right: 0;
-        margin-left: calc(
-          var(--rightColumnWidth, 100px) + calc(var(--marginOuter) * 1)
-        );
+  :global(.scrollyteller--mobile-row-variant),
+  :global(.scrollyteller-wrapper--mobile-row-variant) {
+    @media (max-width: breakpoints.$breakpointLargeTablet) {
+      .content {
+        margin-top: 0;
       }
     }
   }
 </style>
+

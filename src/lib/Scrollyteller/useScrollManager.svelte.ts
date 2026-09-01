@@ -3,6 +3,8 @@ import type { PanelRef } from "../types.js";
 interface ScrollManagerProps {
   /** Reference to the root scrollyteller element */
   get scrollytellerRef(): HTMLElement | undefined;
+  /** Reference to the sticky viz graphic element */
+  get vizEl(): HTMLElement | undefined;
   /** Array of DOM references for each panel step */
   get steps(): PanelRef[];
   /** Percentage from the bottom of the screen to trigger panels (default: 20) */
@@ -19,139 +21,101 @@ interface ScrollManagerProps {
   set rootPct(pct: number);
 }
 
-interface ScrollSegment {
-  /** Panel index: -1 for prelude, 0..N-1 for panels, N for outro */
-  index: number;
-  /** Document scroll position (window.scrollY) where this segment begins */
-  start: number;
-}
-
 /**
  * Manages scroll-driven panel triggering and progress reporting using passive event handlers.
- *
- * All lifecycle milestones (prelude, individual panels, and completion) are modelled
- * as a sequence of scroll segments calculated on load/resize.
  */
 export function useScrollManager(props: ScrollManagerProps) {
   $effect(() => {
     const scrollytellerRef = props.scrollytellerRef;
+    const vizEl = props.vizEl;
     const steps = props.steps;
     const vizMarkerThreshold = props.vizMarkerThreshold ?? 20;
 
-    if (!scrollytellerRef) return;
+    if (!scrollytellerRef || !vizEl) return;
 
+    let preludeStart = 0;
+    let triggers: number[] = [];
     let scrollytellerTop = 0;
     let height = 0;
     let windowHeight = window.innerHeight;
-    let segments: ScrollSegment[] = [];
-    let activePanelIndex = -1;
+    let unpinScroll = 0;
 
     /**
-     * Measures element bounding rectangles and constructs document-relative scroll segments.
-     * This is a heavy op, so we do it once/when the size changes
+     * Measures element bounding rectangles and constructs trigger scroll positions.
      */
     const measureDimensions = () => {
+      const scrollY = window.scrollY;
       const rect = scrollytellerRef.getBoundingClientRect();
+      const vizRect = vizEl.getBoundingClientRect();
+      const wrapperEl = scrollytellerRef.parentElement || scrollytellerRef;
+      const wrapperRect = wrapperEl.getBoundingClientRect();
 
-      scrollytellerTop = rect.top + window.scrollY;
-      height = rect.height;
       windowHeight = window.innerHeight;
+      height = rect.height;
+      scrollytellerTop = rect.top + scrollY;
 
-      /** Graphic element inside the scrollyteller */
-      const vizEl = scrollytellerRef.querySelector(
-        ".viz",
-      ) as HTMLElement | null;
+      const wrapperTop = wrapperRect.top + scrollY;
+      const vizStickyTop = parseFloat(window.getComputedStyle(vizEl).top) || 0;
+      const vizHeight = vizRect.height || windowHeight;
+      const triggerLine = windowHeight * (1 - vizMarkerThreshold / 100);
 
-      /** CSS sticky top offset (e.g. 8dvh) where the graphic locks into place */
-      const vizStickyTop = vizEl
-        ? parseFloat(window.getComputedStyle(vizEl).top) || 0
-        : 0;
+      preludeStart = wrapperTop - windowHeight;
+      unpinScroll = scrollytellerTop + height - (vizStickyTop + vizHeight);
 
-      /** Rendered height of the sticky graphic element */
-      const vizHeight = vizEl
-        ? vizEl.getBoundingClientRect().height
-        : windowHeight;
-
-      /** Distance from the top of the viewport where panels activate */
-      const triggerOffset = windowHeight * (1 - vizMarkerThreshold / 100);
-
-      /** Document scroll position where the sticky graphic reaches the container bottom and unpins */
-      const unpinScroll =
-        scrollytellerTop + height - (vizStickyTop + vizHeight);
-
-      // Construct flat array of all scroll boundaries
-      segments = [
-        // Virtual panel -1: Prelude starts when scrollyteller top enters the bottom of the viewport
-        { index: -1, start: scrollytellerTop - windowHeight },
-
-        // Panel 0: Starts when the graphic hits its sticky top position and locks
-        { index: 0, start: scrollytellerTop - vizStickyTop },
-
-        // Panels 1..N-1: Trigger when their top hits the viewport trigger line
-        ...steps.slice(1).map((step, i) => ({
-          index: i + 1,
-          start: step
-            ? step.getBoundingClientRect().top + scrollY - triggerOffset
-            : scrollytellerTop,
-        })),
-
-        // Virtual panel N: Outro starts when the scrollyteller begins scrolling out
-        { index: steps.length, start: unpinScroll },
-
-        // End of outro: When the scrollyteller completely leaves the top of the viewport
-        { index: steps.length + 1, start: scrollytellerTop + height },
-      ];
+      // Measure trigger scroll position for each panel step
+      triggers = steps.map((step) =>
+        step
+          ? step.getBoundingClientRect().top + scrollY - triggerLine
+          : scrollytellerTop
+      );
     };
 
     /**
-     * Calculates scroll progress and updates active panel index based on current scroll position.
+     * Calculates scroll progress and updates active panel state.
      */
     const handleScroll = () => {
-      if (segments.length < 2) return;
+      if (triggers.length === 0) return;
 
       const scrollY = window.scrollY;
+      const totalScrollDistance = Math.max(1, unpinScroll - triggers[0]);
       const bottom = scrollytellerTop - scrollY + height;
 
-      // Find the active segment
-      const activeSegmentIndex = segments.findLastIndex(
-        (seg) => scrollY >= seg.start,
-      );
-      const currentIndex = Math.min(
-        segments.length - 2,
-        Math.max(0, activeSegmentIndex),
-      );
+      // Viewport coverage progress
+      props.rootPct = 1 - bottom / (height + windowHeight);
 
-      const currentSegment = segments[currentIndex];
-      const nextSegment = segments[currentIndex + 1];
-
-      // 1. Progress percentage through the active panel, prelude, or outro (0.0 -> 1.0)
-      const span = Math.max(1, nextSegment.start - currentSegment.start);
-      const panelPct = Math.min(
-        1,
-        Math.max(0, (scrollY - currentSegment.start) / span),
-      );
-
-      // 2. Overall scroll progress through the scrollyteller (unclamped: <0 before start, >1 after end)
-      const scrollStart = segments[1].start;
-      const scrollEnd = segments[segments.length - 2].start;
-      const scrollableDistance = Math.max(1, scrollEnd - scrollStart);
-      const scrollPct = (scrollY - scrollStart) / scrollableDistance;
-
-      // 3. Viewport coverage progress (rootPct)
-      const rootPct = 1 - bottom / (height + windowHeight);
-
-      // 4. Update reactive bound state
-      if (currentSegment.index !== activePanelIndex) {
-        activePanelIndex = currentSegment.index;
-        props.virtualPanel = currentSegment.index;
-        props.currentPanel = Math.min(
-          steps.length - 1,
-          Math.max(0, currentSegment.index),
-        );
+      // 1. Prelude (starts at 0% when wrapper enters bottom of viewport)
+      if (scrollY < triggers[0]) {
+        const preludeSpan = Math.max(1, triggers[0] - preludeStart);
+        props.virtualPanel = -1;
+        props.currentPanel = 0;
+        props.panelPct = Math.min(1, Math.max(0, (scrollY - preludeStart) / preludeSpan));
+        props.scrollPct = Number(((scrollY - triggers[0]) / totalScrollDistance).toFixed(4));
+        return;
       }
-      props.panelPct = panelPct;
-      props.scrollPct = Number(scrollPct.toFixed(4));
-      props.rootPct = rootPct;
+
+      // 2. Outro (after graphic unpins from bottom of container)
+      if (scrollY >= unpinScroll) {
+        const outroEnd = scrollytellerTop + height;
+        const outroSpan = Math.max(1, outroEnd - unpinScroll);
+        props.virtualPanel = steps.length;
+        props.currentPanel = Math.max(0, steps.length - 1);
+        props.panelPct = Math.min(1, Math.max(0, (scrollY - unpinScroll) / outroSpan));
+        props.scrollPct = 1;
+        return;
+      }
+
+      // 3. Active panel (0 to N-1)
+      const activeIndex = triggers.findLastIndex((t) => scrollY >= t);
+      const nextTrigger =
+        activeIndex < triggers.length - 1 ? triggers[activeIndex + 1] : unpinScroll;
+      const span = Math.max(1, nextTrigger - triggers[activeIndex]);
+
+      props.virtualPanel = activeIndex;
+      props.currentPanel = Math.min(steps.length - 1, Math.max(0, activeIndex));
+      props.panelPct = Math.min(1, Math.max(0, (scrollY - triggers[activeIndex]) / span));
+      props.scrollPct = Number(
+        Math.min(1, Math.max(0, (scrollY - triggers[0]) / totalScrollDistance)).toFixed(4)
+      );
     };
 
     const handleResize = () => {
@@ -159,14 +123,12 @@ export function useScrollManager(props: ScrollManagerProps) {
       handleScroll();
     };
 
-    // Initial measurement and immediate calculation
     measureDimensions();
     handleScroll();
 
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(scrollytellerRef);
-    const vizEl = scrollytellerRef.querySelector(".viz");
-    if (vizEl) resizeObserver.observe(vizEl);
+    resizeObserver.observe(vizEl);
     steps.forEach((step) => {
       if (step) resizeObserver.observe(step);
     });

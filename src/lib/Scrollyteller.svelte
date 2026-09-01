@@ -120,9 +120,12 @@
     typeof location !== "undefined" && location.hash === "#debug=true",
   );
 
+  let vizEl = $state<HTMLElement>();
+
   // prettier-ignore
   useScrollManager({
     get scrollytellerRef() { return scrollytellerRef; },
+    get vizEl() { return vizEl; },
     get steps() { return steps; },
     get vizMarkerThreshold() { return vizMarkerThreshold; },
     set currentPanel(v) { currentPanel = v; },
@@ -151,16 +154,16 @@
 
 <div
   class="scrollyteller-wrapper"
+  class:scrollyteller-wrapper--mobile-row-variant={["rows"].includes(mobileVariant)}
   style:opacity={vizDims.status === "ready" ? 1 : 0}
 >
-  {#if !resizeInteractive}
-    <Viz
-      layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
-      {onLoad}
-      bind:vizDims
-      bind:graphicRootDims>{@render children?.()}</Viz
-    >
-  {/if}
+  <Viz
+    layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
+    {onLoad}
+    bind:vizDims
+    bind:graphicRootDims
+    bind:vizEl>{@render children?.()}</Viz
+  >
   <div
     class="scrollyteller"
     class:scrollyteller--resized={resizeInteractive}
@@ -171,14 +174,6 @@
     style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${maxGraphicWidth}px)`}
     bind:this={scrollytellerRef}
   >
-    {#if resizeInteractive}
-      <Viz
-        layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
-        {onLoad}
-        bind:vizDims
-        bind:graphicRootDims>{@render children?.()}</Viz
-      >
-    {/if}
     <Panels
       layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
       {panels}
@@ -201,6 +196,7 @@
     --maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);
     --marginOuter: 1rem;
     margin: 0 auto;
+    width: 100%;
     max-width: calc(
       var(--maxScrollytellerWidth) - calc(var(--marginOuter) * 2)
     );
@@ -224,12 +220,6 @@
       --marginOuter: 2rem;
       --vizMarginOuter: 3rem;
       --vizMaxWidth: 0.55;
-
-      // When in column mode, use fit-content to collapse whitespace
-      // between text & viz
-      &--columns {
-        width: fit-content;
-      }
     }
     @media (min-width: breakpoints.$breakpointDesktop) {
       --marginOuter: 3rem;
