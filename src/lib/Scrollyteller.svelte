@@ -196,6 +196,7 @@
     --maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);
     --marginOuter: 1rem;
     margin: 0 auto;
+    width: 100%;
     max-width: calc(
       var(--maxScrollytellerWidth) - calc(var(--marginOuter) * 2)
     );
@@ -219,12 +220,6 @@
       --marginOuter: 2rem;
       --vizMarginOuter: 3rem;
       --vizMaxWidth: 0.55;
-
-      // When in column mode, use fit-content to collapse whitespace
-      // between text & viz
-      &--columns {
-        width: fit-content;
-      }
     }
     @media (min-width: breakpoints.$breakpointDesktop) {
       --marginOuter: 3rem;

@@ -297,7 +297,7 @@
     align: "centre",
     mobileVariant: "blocks",
     resizeInteractive: true,
-    transparentFloat: true,
+    transparentFloat: false,
     ratio: 16 / 9,
     vizMarkerThreshold: 20,
     scheme: "light",

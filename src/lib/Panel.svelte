@@ -33,7 +33,7 @@
   class:st-panel-root--left={align === "left"}
   class:st-panel-root--right={align === "right"}
   class:st-panel-root--centre={align === "centre"}
-  class:st-panel-root--transparent-blocks={transparentFloat}
+  class:st-panel-root--transparent-blocks={transparentFloat && (align === "left" || align === "right")}
   class:st-panel-root--active={i === currentPanel}
   bind:this={panelRef}
 >
@@ -76,14 +76,15 @@
     /* How opaque do we make inactive panels on 2 column mode */
     --panel-opacity-inactive: var(--color-panel-opacity-inactive, 1);
 
-    /** How much margin should we have between panels on 2 column mode */
-    --panel-column-margin: var(--color-panel-margin, 40vh);
+    /** Default bottom margin between panels */
+    --panel-margin: var(--color-panel-margin, 80vh);
 
     box-sizing: border-box;
-    margin: 0 auto 80vh;
+    margin: 0 auto var(--panel-margin);
     position: relative;
     z-index: 1;
     pointer-events: none;
+    width: 100%;
 
     @media (min-width: breakpoints.$breakpointTablet) {
       --panel-padding: 2rem;
@@ -101,11 +102,49 @@
       margin-bottom: 50vh;
     }
 
+    &--centre {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 48.75rem;
+
+      @media (min-width: breakpoints.$breakpointLargeDesktop) {
+        max-width: 56.25rem;
+      }
+    }
+
+    &--left {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
+
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
+        max-width: 40rem;
+        margin-left: 0;
+        margin-right: auto;
+      }
+      @media (min-width: breakpoints.$breakpointLargeDesktop) {
+        max-width: 45rem;
+      }
+    }
+
+    &--right {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
+
+      @media (min-width: breakpoints.$breakpointLargeTablet) {
+        max-width: 40rem;
+        margin-left: auto;
+        margin-right: 0;
+      }
+      @media (min-width: breakpoints.$breakpointLargeDesktop) {
+        max-width: 45rem;
+      }
+    }
+
     &--left,
     &--right {
       @media (min-width: breakpoints.$breakpointLargeTablet) {
-        margin-top: var(--panel-column-margin);
-        margin-bottom: var(--panel-column-margin);
         opacity: 1;
 
         &.st-panel-root--transparent-blocks.st-panel-root--active {
@@ -118,13 +157,6 @@
           --panel-padding: 0;
           opacity: var(--panel-opacity-inactive);
         }
-        &.first {
-          margin-top: 50dvh;
-        }
-      }
-      @media (min-width: breakpoints.$breakpointDesktop) {
-      }
-      @media (min-width: breakpoints.$breakpointLargeDesktop) {
       }
     }
   }
