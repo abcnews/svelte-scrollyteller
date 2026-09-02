@@ -19,6 +19,8 @@ interface ScrollManagerProps {
   set scrollPct(pct: number);
   /** Setter for viewport coverage percentage */
   set rootPct(pct: number);
+  /** Setter for scroll delta */
+  set scrollDelta(delta: number);
 }
 
 /**
@@ -39,6 +41,7 @@ export function useScrollManager(props: ScrollManagerProps) {
     let height = 0;
     let windowHeight = window.innerHeight;
     let unpinScroll = 0;
+    let previousScrollY = 0;
 
     /**
      * Measures element bounding rectangles and constructs trigger scroll positions.
@@ -77,6 +80,9 @@ export function useScrollManager(props: ScrollManagerProps) {
       if (triggers.length === 0) return;
 
       const scrollY = window.scrollY;
+      const delta = scrollY - previousScrollY;
+      previousScrollY = scrollY;
+      props.scrollDelta = delta;
       const totalScrollDistance = Math.max(1, unpinScroll - triggers[0]);
       const bottom = scrollytellerTop - scrollY + height;
 

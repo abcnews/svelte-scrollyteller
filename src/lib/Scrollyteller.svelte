@@ -29,6 +29,8 @@
     panelPct?: number;
     /** Overall scroll progress through scrollyteller (unclamped: <0 before start, 0..1, >1 after end) */
     scrollPct?: number;
+    /** Diff in pixels between previous scroll events, useful for determining velocity/chunky scroll wheel vs smooth trackpad */
+    scrollDelta?: number;
     /** Viewport coverage progress (0.0 to 1.0) */
     rootPct?: number;
     onLoad?: (arg: HTMLElement) => void;
@@ -49,6 +51,7 @@
     marker = $bindable(undefined),
     panelPct = $bindable(0),
     scrollPct = $bindable(0),
+    scrollDelta = $bindable(-3),
     rootPct = $bindable(0),
     onLoad = () => {},
     layout = {},
@@ -121,7 +124,7 @@
   );
 
   let vizEl = $state<HTMLElement>();
-
+    
   // prettier-ignore
   useScrollManager({
     get scrollytellerRef() { return scrollytellerRef; },
@@ -133,6 +136,7 @@
     set panelPct(v) { panelPct = v; },
     set scrollPct(v) { scrollPct = v; },
     set rootPct(v) { rootPct = v; },
+    set scrollDelta(delta) { scrollDelta = delta; },
   });
 </script>
 

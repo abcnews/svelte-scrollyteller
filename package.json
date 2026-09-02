@@ -5,6 +5,7 @@
     "start": "concurrently \"vite dev\" \"svelte-package --watch\"",
     "dev": "npm run storybook",
     "package": "svelte-package",
+    "package:watch": "svelte-package --watch",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --ignore-path .gitignore --check .",

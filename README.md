@@ -134,6 +134,7 @@ const panels: PanelDefinition<MyPanelData>[] = [...];
 | marker             | `Data` (`$bindable`)        | The active panel's `data` payload (`undefined` during prelude and outro).                                                           | `undefined`  |
 | panelPct           | `number` (`$bindable`)      | Progress percentage through the active panel or prelude/outro (`0.0` to `1.0`).                                                     | `0`          |
 | scrollPct          | `number` (`$bindable`)      | Overall scroll progress through the scrollyteller (unclamped: `<0` before entry, `0.0..1.0` through interactive, `>1` after unpin). | `0`          |
+| scrollDelta        | `number` (`$bindable`)      | Diff in pixels between previous scroll event, useful for determining velocity/chunky scroll wheel vs smooth trackpad.               | `0`          |
 | rootPct            | `number` (`$bindable`)      | Viewport coverage percentage (`0.0` to `1.0`).                                                                                      | `0`          |
 | onLoad             | `(el: HTMLElement) => void` | Called when the interactive graphic mount node is ready.                                                                            |              |
 | customPanel        | Svelte Component            | Component to replace the default panel component                                                                                    | Panel.svelte |
