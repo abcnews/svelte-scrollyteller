@@ -1,10 +1,11 @@
 {
   "name": "@abcnews/svelte-scrollyteller",
-  "version": "4.0.2",
+  "version": "5.0.0-next.2",
   "scripts": {
     "start": "concurrently \"vite dev\" \"svelte-package --watch\"",
     "dev": "npm run storybook",
     "package": "svelte-package",
+    "package:watch": "svelte-package --watch",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --ignore-path .gitignore --check .",

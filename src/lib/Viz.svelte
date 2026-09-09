@@ -4,21 +4,19 @@
 
   interface Props {
     layout: Style;
-    discardSlot?: boolean;
-    isInViewport?: boolean;
     onLoad?: (el: HTMLElement | undefined) => void;
     vizDims?: Dims;
     graphicRootDims?: Dims;
+    vizEl?: HTMLElement;
     children?: import("svelte").Snippet;
   }
 
   let {
     layout,
-    discardSlot = false,
-    isInViewport = false,
     onLoad = () => {},
     vizDims = $bindable({ status: "loading", dims: [0, 0] }),
     graphicRootDims = $bindable({ status: "loading", dims: [0, 0] }),
+    vizEl = $bindable(),
     children,
   }: Props = $props();
 
@@ -26,6 +24,7 @@
   // support slots & must insert content  manually.
   let graphicRootEl = $state<HTMLElement>();
   $effect(() => {
+    vizEl = graphicRootEl;
     if (graphicRootEl) {
       onLoad(graphicRootEl);
     }
@@ -76,36 +75,36 @@
 <div
   class="viz"
   class:viz--resized={layout.resizeInteractive}
+  class:viz--mobile-rows={layout.mobileVariant === "rows"}
   class:viz--right={layout.resizeInteractive && layout.align === "left"}
   class:viz--left={layout.resizeInteractive && layout.align === "right"}
   class:viz--centre={layout.resizeInteractive && layout.align === "centre"}
   bind:this={graphicRootEl}
 >
-  {#if isInViewport || discardSlot === false}
-    {@render children?.()}
-  {/if}
+  {@render children?.()}
 </div>
 
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
 
-  :global(.scrollyteller--mobile-row-variant) {
+  :global(.scrollyteller--mobile-row-variant),
+  :global(.scrollyteller-wrapper--mobile-row-variant) {
     --marginOuter: 0;
     --vizMarginOuter: 0;
+  }
 
-    @media (max-width: breakpoints.$breakpointLargeTablet) {
-      .viz--resized {
-        z-index: 10;
-        top: 0;
-        margin: 0;
-        background: white;
-        width: 100% !important;
-        max-height: calc(45vh + 50px);
-        aspect-ratio: 1;
-        container-type: normal;
-        padding-bottom: 40px;
-        background: linear-gradient(to bottom, white 90%, transparent 100%);
-      }
+  @media (max-width: breakpoints.$breakpointLargeTablet) {
+    .viz--mobile-rows.viz--resized {
+      z-index: 10;
+      top: 0;
+      margin: 0;
+      background: white;
+      width: 100% !important;
+      max-height: calc(45vh + 50px);
+      aspect-ratio: 1;
+      container-type: normal;
+      padding-bottom: 40px;
+      background: linear-gradient(to bottom, white 90%, transparent 100%);
     }
   }
 
