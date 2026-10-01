@@ -107,7 +107,7 @@
     const [screenWidth] = screenDims;
     const [, columnHeight] = graphicRootDims.dims;
     // Keep in sync with --vizMaxWidth in the CSS at the desktop breakpoint (0.6)
-    const columnWidth = Math.min(screenWidth, maxScrollytellerWidth) * 0.6;
+    const columnWidth = Math.min(screenWidth, maxScrollytellerWidth, 1600) * 0.6;
 
     const widthBasedOnHeight = columnHeight * ratio;
     return Math.min(widthBasedOnHeight, columnWidth);
@@ -161,13 +161,15 @@
   class:scrollyteller-wrapper--mobile-row-variant={["rows"].includes(mobileVariant)}
   style:opacity={vizDims.status === "ready" ? 1 : 0}
 >
-  <Viz
-    layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
-    {onLoad}
-    bind:vizDims
-    bind:graphicRootDims
-    bind:vizEl>{@render children?.()}</Viz
-  >
+  {#if !resizeInteractive}
+    <Viz
+      layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
+      {onLoad}
+      bind:vizDims
+      bind:graphicRootDims
+      bind:vizEl>{@render children?.()}</Viz
+    >
+  {/if}
   <div
     class="scrollyteller"
     class:scrollyteller--resized={resizeInteractive}
@@ -178,6 +180,15 @@
     style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${maxGraphicWidth}px)`}
     bind:this={scrollytellerRef}
   >
+    {#if resizeInteractive}
+      <Viz
+        layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
+        {onLoad}
+        bind:vizDims
+        bind:graphicRootDims
+        bind:vizEl>{@render children?.()}</Viz
+      >
+    {/if}
     <Panels
       layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
       {panels}
@@ -234,6 +245,7 @@
     @media (min-width: breakpoints.$breakpointLargeDesktop) {
       --marginOuter: 4rem;
       --vizMarginOuter: 6rem;
+      --maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100rem);
     }
 
     &--debug:after {

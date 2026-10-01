@@ -118,12 +118,12 @@
       max-width: 100%;
 
       @media (min-width: breakpoints.$breakpointLargeTablet) {
-        max-width: 40rem;
+        max-width: min(40rem, calc(100% - var(--rightColumnWidth) - 1.5rem));
         margin-left: 0;
         margin-right: auto;
       }
       @media (min-width: breakpoints.$breakpointLargeDesktop) {
-        max-width: 45rem;
+        max-width: min(45rem, calc(100% - var(--rightColumnWidth) - 2rem));
       }
     }
 
@@ -133,12 +133,12 @@
       max-width: 100%;
 
       @media (min-width: breakpoints.$breakpointLargeTablet) {
-        max-width: 40rem;
+        max-width: min(40rem, calc(100% - var(--rightColumnWidth) - 1.5rem));
         margin-left: auto;
         margin-right: 0;
       }
       @media (min-width: breakpoints.$breakpointLargeDesktop) {
-        max-width: 45rem;
+        max-width: min(45rem, calc(100% - var(--rightColumnWidth) - 2rem));
       }
     }
 
