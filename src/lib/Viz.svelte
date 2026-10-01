@@ -1,9 +1,10 @@
 <script lang="ts">
   import { retryUntil } from "./Scrollyteller/Scrollyteller.util.js";
+  import { getLayoutContext } from "./Scrollyteller/useLayoutManager.svelte.js";
   import type { Style, Dims } from "./types.js";
 
   interface Props {
-    layout: Style;
+    layout?: Style;
     onLoad?: (el: HTMLElement | undefined) => void;
     vizDims?: Dims;
     graphicRootDims?: Dims;
@@ -20,6 +21,8 @@
     children,
   }: Props = $props();
 
+  const layoutCtx = $derived(getLayoutContext()?.());
+
   // emit an event with the viz root, because the web component doesn't
   // support slots & must insert content  manually.
   let graphicRootEl = $state<HTMLElement>();
@@ -29,8 +32,6 @@
       onLoad(graphicRootEl);
     }
   });
-
-
 
   $effect(() => {
     if (!graphicRootEl) return;
@@ -74,11 +75,12 @@
 
 <div
   class="viz"
-  class:viz--resized={layout.resizeInteractive}
-  class:viz--mobile-rows={layout.mobileVariant === "rows"}
-  class:viz--right={layout.resizeInteractive && layout.align === "left"}
-  class:viz--left={layout.resizeInteractive && layout.align === "right"}
-  class:viz--centre={layout.resizeInteractive && layout.align === "centre"}
+  class:viz--resized={layoutCtx?.resizeInteractive}
+  class:viz--mobile-rows={layoutCtx?.mobileVariant === "rows"}
+  class:viz--right={layoutCtx?.resizeInteractive && layoutCtx?.align === "left"}
+  class:viz--left={layoutCtx?.resizeInteractive && layoutCtx?.align === "right"}
+  class:viz--centre={layoutCtx?.resizeInteractive && layoutCtx?.align === "centre"}
+  style:width={layoutCtx?.isSplitScreen && layoutCtx?.resizeInteractive ? `${layoutCtx.graphicWidthPx}px` : undefined}
   bind:this={graphicRootEl}
 >
   {@render children?.()}
@@ -86,12 +88,6 @@
 
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
-
-  :global(.scrollyteller--mobile-row-variant),
-  :global(.scrollyteller-wrapper--mobile-row-variant) {
-    --marginOuter: 0;
-    --vizMarginOuter: 0;
-  }
 
   @media (max-width: breakpoints.$breakpointLargeTablet) {
     .viz--mobile-rows.viz--resized {
@@ -113,8 +109,9 @@
     height: 100dvh;
     position: sticky;
     top: 0;
-    left: 0;
     z-index: 1;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .viz--resized {
@@ -125,18 +122,15 @@
     justify-content: center;
     align-items: flex-start;
     margin: 0 auto;
-    margin: 0 auto;
-    width: calc(100% - calc(var(--marginOuter) * 2));
-    max-width: calc(100vw - var(--vizMarginOuter) * 2);
+    width: 100%;
+    max-width: 100%;
     @media (min-width: breakpoints.$breakpointTablet) {
-      --margin: 4rem;
       top: 8dvh;
       height: 62dvh;
     }
 
     &.viz--left,
     &.viz--right {
-      width: var(--rightColumnWidth);
       @media (min-width: breakpoints.$breakpointLargeTablet) {
         align-items: center;
         height: 84dvh;

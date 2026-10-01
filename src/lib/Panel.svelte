@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { children } from "./actions.js";
+  import { getLayoutContext } from "./Scrollyteller/useLayoutManager.svelte.js";
   import type { PanelRef } from "./types.js";
 
   interface Props {
@@ -24,6 +25,8 @@
     currentPanel = 0,
     panelRef = $bindable(),
   }: Props = $props();
+
+  const layoutCtx = $derived(getLayoutContext()?.());
 </script>
 
 <div
@@ -35,6 +38,7 @@
   class:st-panel-root--centre={align === "centre"}
   class:st-panel-root--transparent-blocks={transparentFloat && (align === "left" || align === "right")}
   class:st-panel-root--active={i === currentPanel}
+  style:max-width={layoutCtx?.isSplitScreen && (align === "left" || align === "right") ? `${layoutCtx.panelMaxWidthPx}px` : undefined}
   bind:this={panelRef}
 >
   <div class="st-panel" use:children={nodes}></div>
@@ -118,12 +122,8 @@
       max-width: 100%;
 
       @media (min-width: breakpoints.$breakpointLargeTablet) {
-        max-width: min(40rem, calc(100% - var(--rightColumnWidth) - 1.5rem));
         margin-left: 0;
         margin-right: auto;
-      }
-      @media (min-width: breakpoints.$breakpointLargeDesktop) {
-        max-width: min(45rem, calc(100% - var(--rightColumnWidth) - 2rem));
       }
     }
 
@@ -133,12 +133,8 @@
       max-width: 100%;
 
       @media (min-width: breakpoints.$breakpointLargeTablet) {
-        max-width: min(40rem, calc(100% - var(--rightColumnWidth) - 1.5rem));
         margin-left: auto;
         margin-right: 0;
-      }
-      @media (min-width: breakpoints.$breakpointLargeDesktop) {
-        max-width: min(45rem, calc(100% - var(--rightColumnWidth) - 2rem));
       }
     }
 
@@ -161,16 +157,19 @@
     }
   }
   .st-panel {
+    box-sizing: border-box;
     -webkit-backdrop-filter: var(--panel-filter);
     backdrop-filter: var(--panel-filter);
     color: var(--panel-color);
     border-radius: var(--panel-radius);
     padding: var(--panel-padding);
-    max-width: 640px;
+    max-width: 100%;
     margin: auto;
+    overflow-wrap: break-word;
 
     &::before {
       content: "";
+      box-sizing: border-box;
 
       background-color: var(--panel-background);
       opacity: var(--panel-opacity);

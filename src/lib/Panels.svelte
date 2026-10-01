@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { ComponentType } from "svelte";
   import Panel from "./Panel.svelte";
+  import { getLayoutContext } from "./Scrollyteller/useLayoutManager.svelte.js";
   import type { PanelDefinition, PanelRef, Style } from "./types.js";
 
   interface Props {
     panelRoot?: HTMLElement;
-    layout: Style;
+    layout?: Style;
     panels: PanelDefinition[];
     customPanel?: ComponentType | null;
     steps?: PanelRef[];
@@ -20,11 +21,13 @@
     steps = $bindable([]),
     currentPanel = 0,
   }: Props = $props();
+
+  const layoutCtx = $derived(getLayoutContext()?.());
 </script>
 
 <div class="content" bind:this={panelRoot}>
   {#each panels as panel, i}
-    {@const align = panel.align || layout.align || "centre"}
+    {@const align = panel.align || layout?.align || layoutCtx?.align || "centre"}
     {@const isFirst = i === 0}
     {@const isLast = i === panels.length - 1}
     {@const panelClass = `${panel.panelClass || ""}${isFirst ? " first" : ""}${isLast ? " last" : ""}`}
@@ -36,7 +39,7 @@
         {...panel}
         i={i}
         {align}
-        transparentFloat={layout.transparentFloat}
+        transparentFloat={layout?.transparentFloat ?? layoutCtx?.transparentFloat ?? false}
         {panelClass}
         bind:panelRef={steps[i]}
         {currentPanel}
@@ -59,6 +62,8 @@
     pointer-events: none;
     font-size: 1.125rem;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   :global(.scrollyteller--mobile-row-variant),

@@ -5,7 +5,6 @@
   import { useScrollManager } from "./Scrollyteller/useScrollManager.svelte.js";
   import Panels from "./Panels.svelte";
   import Viz from "./Viz.svelte";
-  import { LARGE_TABLET_BREAKPOINT, UNBOUND_WIDTH } from "./constants.js";
 
   /** Each panel inserts itself into this list when it instantiates */
   let steps = $state<PanelRef[]>([]);
@@ -13,8 +12,8 @@
   let vizDims = $state<Dims>({ status: "loading", dims: [0, 0] });
   /** Dims of the root container inside which the viz sits */
   let graphicRootDims = $state<Dims>({ status: "loading", dims: [0, 0] });
-  /** Reactive window.innerWidth/innerHeight */
-  let screenDims = $state<[number, number]>([0, 0]);
+  /** Reactive container width measured via Svelte 5 bind:clientWidth */
+  let containerWidth = $state(0);
 
   interface Props {
     panels: PanelDefinition<Data>[];
@@ -70,58 +69,16 @@
     marker = panels[currentPanel]?.data;
   });
 
-  onMount(() => {
-    screenDims = [window.innerWidth, window.innerHeight];
+  import { useLayoutManager } from "./Scrollyteller/useLayoutManager.svelte.js";
+
+  const getLayoutState = useLayoutManager({
+    get containerWidth() { return containerWidth; },
+    get graphicRootDims() { return graphicRootDims; },
+    get layout() { return layout; },
+    get ratio() { return ratio; },
   });
 
-  let align = $derived(layout.align || "centre");
-  let mobileVariant = $derived(layout.mobileVariant || "blocks");
-  let resizeInteractive = $derived(layout.resizeInteractive ?? true);
-
-  /**
-   * If we are in split screen mode
-   */
-  let isSplitScreen = $derived(
-    ["left", "right"].includes(align) &&
-      screenDims[0] > LARGE_TABLET_BREAKPOINT,
-  );
-
-  let transparentFloat = $derived(
-    layout.transparentFloat ?? isSplitScreen,
-  );
-
-  let maxScrollytellerWidth = $derived(
-    mobileVariant === "rows" && screenDims[0] <= LARGE_TABLET_BREAKPOINT
-      ? screenDims[0]
-      : UNBOUND_WIDTH,
-  );
-
-  /**
-   * Given the ratio of the graphic, work out whether it fits in the column and if
-   * not, return how wide the column should be so there's no whitespace;
-   */
-  let maxGraphicWidth = $derived.by(() => {
-    if (!isSplitScreen) {
-      return UNBOUND_WIDTH;
-    }
-    const [screenWidth] = screenDims;
-    const [, columnHeight] = graphicRootDims.dims;
-    // Keep in sync with --vizMaxWidth in the CSS at the desktop breakpoint (0.6)
-    const columnWidth = Math.min(screenWidth, maxScrollytellerWidth, 1600) * 0.6;
-
-    const widthBasedOnHeight = columnHeight * ratio;
-    return Math.min(widthBasedOnHeight, columnWidth);
-  });
-
-  $effect(() => {
-    if (vizMarkerThreshold >= 50) {
-      throw new Error("vizMarkerThreshold must be <50% screen height");
-    }
-  });
-  // Debug mode should highlight blocks, graphic & show which breakpoint we're at
-  let isDebug = $derived(
-    typeof location !== "undefined" && location.hash === "#debug=true",
-  );
+  let layoutCtx = $derived(getLayoutState());
 
   let vizEl = $state<HTMLElement>();
     
@@ -152,18 +109,14 @@
   {/if}
 </svelte:head>
 
-<svelte:window
-  onresize={() => (screenDims = [window.innerWidth, window.innerHeight])}
-/>
-
 <div
   class="scrollyteller-wrapper"
-  class:scrollyteller-wrapper--mobile-row-variant={["rows"].includes(mobileVariant)}
+  bind:clientWidth={containerWidth}
+  class:scrollyteller-wrapper--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
   style:opacity={vizDims.status === "ready" ? 1 : 0}
 >
-  {#if !resizeInteractive}
+  {#if !layoutCtx.resizeInteractive}
     <Viz
-      layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
       {onLoad}
       bind:vizDims
       bind:graphicRootDims
@@ -172,17 +125,15 @@
   {/if}
   <div
     class="scrollyteller"
-    class:scrollyteller--resized={resizeInteractive}
-    class:scrollyteller--debug={isDebug}
-    class:scrollyteller--columns={["left", "right"].includes(align)}
-    class:scrollyteller--mobile-row-variant={["rows"].includes(mobileVariant)}
-    style:--maxScrollytellerWidthPx={maxScrollytellerWidth + "px"}
-    style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${maxGraphicWidth}px)`}
+    class:scrollyteller--resized={layoutCtx.resizeInteractive}
+    class:scrollyteller--debug={layoutCtx.isDebug}
+    class:scrollyteller--columns={["left", "right"].includes(layoutCtx.align)}
+    class:scrollyteller--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
+    style:max-width={`${layoutCtx.scrollytellerWidthPx}px`}
     bind:this={scrollytellerRef}
   >
-    {#if resizeInteractive}
+    {#if layoutCtx.resizeInteractive}
       <Viz
-        layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
         {onLoad}
         bind:vizDims
         bind:graphicRootDims
@@ -190,7 +141,6 @@
       >
     {/if}
     <Panels
-      layout={{ align, mobileVariant, resizeInteractive, transparentFloat }}
       {panels}
       {customPanel}
       bind:panelRoot
@@ -205,48 +155,15 @@
   .scrollyteller-wrapper {
     position: relative;
     transition: opacity 0.25s;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   .scrollyteller {
     position: relative;
-    --maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);
-    --marginOuter: 1rem;
     margin: 0 auto;
     width: 100%;
-    max-width: calc(
-      var(--maxScrollytellerWidth) - calc(var(--marginOuter) * 2)
-    );
-
-    --vizMaxWidth: 1;
-    --vizMarginOuter: 1.5rem;
-
-    /* Force full width when using the mobile row variant */
-    @media (max-width: breakpoints.$breakpointLargeTablet) {
-      &.scrollyteller--mobile-row-variant {
-        --marginOuter: 0;
-        --vizMarginOuter: 0;
-      }
-    }
-
-    @media (min-width: breakpoints.$breakpointTablet) {
-      --marginOuter: 2rem;
-      --vizMarginOuter: 3rem;
-    }
-    @media (min-width: breakpoints.$breakpointLargeTablet) {
-      --marginOuter: 2rem;
-      --vizMarginOuter: 3rem;
-      --vizMaxWidth: 0.55;
-    }
-    @media (min-width: breakpoints.$breakpointDesktop) {
-      --marginOuter: 3rem;
-      --vizMarginOuter: 4rem;
-      /* Keep in sync with columnWidth multiplier in the JS (0.6) */
-      --vizMaxWidth: 0.6;
-    }
-    @media (min-width: breakpoints.$breakpointLargeDesktop) {
-      --marginOuter: 4rem;
-      --vizMarginOuter: 6rem;
-      --maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100rem);
-    }
+    box-sizing: border-box;
 
     &--debug:after {
       content: "Mobile";
