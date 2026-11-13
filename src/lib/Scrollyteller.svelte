@@ -110,9 +110,9 @@
 </svelte:head>
 
 <div
-  class="scrollyteller-wrapper"
+  class="st-wrapper"
   bind:clientWidth={containerWidth}
-  class:scrollyteller-wrapper--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
+  class:st-wrapper--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
   style:opacity={vizDims.status === "ready" ? 1 : 0}
 >
   {#if !layoutCtx.resizeInteractive}
@@ -124,11 +124,11 @@
     >
   {/if}
   <div
-    class="scrollyteller"
-    class:scrollyteller--resized={layoutCtx.resizeInteractive}
-    class:scrollyteller--debug={layoutCtx.isDebug}
-    class:scrollyteller--columns={["left", "right"].includes(layoutCtx.align)}
-    class:scrollyteller--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
+    class="st"
+    class:st--resized={layoutCtx.resizeInteractive}
+    class:st--debug={layoutCtx.isDebug}
+    class:st--columns={["left", "right"].includes(layoutCtx.align)}
+    class:st--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
     style:max-width={`${layoutCtx.scrollytellerWidthPx}px`}
     bind:this={scrollytellerRef}
   >
@@ -152,14 +152,14 @@
 
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
-  .scrollyteller-wrapper {
+  .st-wrapper {
     position: relative;
     transition: opacity 0.25s;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
-  .scrollyteller {
+  .st {
     position: relative;
     margin: 0 auto;
     width: 100%;

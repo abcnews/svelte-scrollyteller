@@ -169,7 +169,7 @@
         height: 58dvh;
       }
     }
-    :global(.scrollyteller--debug) & {
+    :global(.st--debug) & {
       outline: 5px solid limegreen;
     }
   }

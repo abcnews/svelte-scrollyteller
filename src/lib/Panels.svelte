@@ -66,8 +66,8 @@
     box-sizing: border-box;
   }
 
-  :global(.scrollyteller--mobile-row-variant),
-  :global(.scrollyteller-wrapper--mobile-row-variant) {
+  :global(.st--mobile-row-variant),
+  :global(.st-wrapper--mobile-row-variant) {
     @media (max-width: breakpoints.$breakpointLargeTablet) {
       .content {
         margin-top: 0;
