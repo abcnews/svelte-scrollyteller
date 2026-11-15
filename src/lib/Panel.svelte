@@ -45,7 +45,7 @@
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
 
-  :global(.scrollyteller--mobile-row-variant) {
+  :global(.st--mobile-row-variant) {
     @media (max-width: breakpoints.$breakpointLargeTablet) {
       /* Mobile row variant doesn't need scrims etc */
       .st-panel::before {
@@ -86,7 +86,7 @@
       --panel-padding: 2rem;
     }
 
-    :global(.scrollyteller--debug) & {
+    :global(.st--debug) & {
       outline: 5px solid limegreen;
     }
 

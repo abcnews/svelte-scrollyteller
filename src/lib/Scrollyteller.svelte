@@ -215,7 +215,7 @@
 />
 
 <div
-  class="scrollyteller-wrapper"
+  class="st-wrapper"
   style:opacity={vizDims.status === "ready" ? 1 : 0}
 >
   {#if !resizeInteractive}
@@ -229,11 +229,11 @@
     >
   {/if}
   <div
-    class="scrollyteller"
-    class:scrollyteller--resized={resizeInteractive}
-    class:scrollyteller--debug={isDebug}
-    class:scrollyteller--columns={["left", "right"].includes(align)}
-    class:scrollyteller--mobile-row-variant={["rows"].includes(mobileVariant)}
+    class="st"
+    class:st--resized={resizeInteractive}
+    class:st--debug={isDebug}
+    class:st--columns={["left", "right"].includes(align)}
+    class:st--mobile-row-variant={["rows"].includes(mobileVariant)}
     style:--maxScrollytellerWidthPx={maxScrollytellerWidth + "px"}
     style:--rightColumnWidth={`min(calc(var(--maxScrollytellerWidth) * var(--vizMaxWidth)), ${maxGraphicWidth}px)`}
     bind:this={scrollytellerRef}
@@ -261,11 +261,12 @@
 
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
-  .scrollyteller-wrapper {
+  /* Class names avoid "scroll" because browser reader modes strip elements whose class contains it */
+  .st-wrapper {
     position: relative;
     transition: opacity 0.25s;
   }
-  .scrollyteller {
+  .st {
     position: relative;
     --maxScrollytellerWidth: min(var(--maxScrollytellerWidthPx), 100vw);
     --marginOuter: 1rem;
@@ -279,7 +280,7 @@
 
     /* Force full width when using the mobile row variant */
     @media (max-width: breakpoints.$breakpointLargeTablet) {
-      &.scrollyteller--mobile-row-variant {
+      &.st--mobile-row-variant {
         --marginOuter: 0;
         --vizMarginOuter: 0;
       }
