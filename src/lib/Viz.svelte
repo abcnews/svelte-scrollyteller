@@ -89,7 +89,7 @@
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
 
-  :global(.scrollyteller--mobile-row-variant) {
+  :global(.st--mobile-row-variant) {
     --marginOuter: 0;
     --vizMarginOuter: 0;
 
@@ -176,7 +176,7 @@
         height: 58dvh;
       }
     }
-    :global(.scrollyteller--debug) & {
+    :global(.st--debug) & {
       outline: 5px solid limegreen;
     }
   }
