@@ -133,16 +133,11 @@
 
 
   // Reactive states for the visualization
-  let activeIndex = $state(0);
-  let scrollProgress = $state(0);
-
-  const handleMarker = (detail: MarkData) => {
-    activeIndex = detail.customdata - 1;
-  };
-
-  const handleProgress = (type: string, payload: any) => {
-    scrollProgress = payload.scrollPct;
-  };
+  let currentPanel = $state(0);
+  let virtualPanel = $state(-1);
+  let marker = $state<MarkData>();
+  let panelPct = $state(0);
+  let scrollPct = $state(0);
 
   // Svelte action to set body data-scheme attribute
   const schemeSetter = (node: HTMLElement, scheme: string) => {
@@ -177,6 +172,7 @@
 
 {#snippet defaultTemplate(args)}
   <span style="display: none;" use:schemeSetter={args.scheme}></span>
+  <div style="height: 50vh;"></div>
   <div style={getStyleString(args)}>
     <Scrollyteller
       panels={args.panels || panels}
@@ -188,47 +184,43 @@
       }}
       ratio={args.ratio}
       vizMarkerThreshold={args.vizMarkerThreshold}
-      onMarker={handleMarker}
-      onProgress={handleProgress}
+      bind:currentPanel
+      bind:virtualPanel
+      bind:marker
+      bind:panelPct
+      bind:scrollPct
     >
       <div
         class="example-graphic"
-        style="background: {markerStates[activeIndex].bg}; color: {markerStates[
-          activeIndex
-        ].text}; --worm: {markerStates[activeIndex].text};"
+        style="background: {markerStates[currentPanel].bg}; color: {markerStates[
+          currentPanel
+        ].text}; --worm: {markerStates[currentPanel].text};"
       >
         <Worm />
-        <span class="number">{activeIndex + 1}</span>
+        <span class="number">
+          {virtualPanel === -1
+            ? "Intro"
+            : virtualPanel >= panels.length
+              ? "Outro"
+              : currentPanel + 1}
+        </span>
 
-        <!-- Scrollbar and progress indicator HUD -->
-        <div
-          class="progress-hud"
-          style="border-color: {markerStates[activeIndex].text === '#ffffff'
-            ? 'rgba(255, 255, 255, 0.15)'
-            : 'rgba(0, 0, 0, 0.15)'};"
-        >
-          <div
-            class="progress-bar-container"
-            style="background: {markerStates[activeIndex].text === '#ffffff'
-              ? 'rgba(255, 255, 255, 0.2)'
-              : 'rgba(0, 0, 0, 0.15)'};"
-          >
-            <div
-              class="progress-bar"
-              style="background: {markerStates[activeIndex]
-                .text}; width: {Math.round(scrollProgress * 100)}%;"
-            ></div>
-          </div>
-          <p
-            class="progress-text"
-            style="color: {markerStates[activeIndex].text};"
-          >
-            Scroll progress: {Math.round(scrollProgress * 100)}%
-          </p>
+        <div class="storybook-hud">
+          <span>Overall scroll ({Math.round(scrollPct * 100)}%)</span>
+          <progress value={Math.min(1, Math.max(0, scrollPct))} max="1"></progress>
+          <span>
+            {virtualPanel === -1
+              ? "Prelude"
+              : virtualPanel >= panels.length
+                ? "Outro"
+                : `Panel ${virtualPanel + 1}`} ({Math.round(panelPct * 100)}%)
+          </span>
+          <progress value={Math.min(1, Math.max(0, panelPct))} max="1"></progress>
         </div>
       </div>
     </Scrollyteller>
   </div>
+  <div style="height: 100vh;"></div>
 {/snippet}
 
 <Story
@@ -305,7 +297,7 @@
     align: "centre",
     mobileVariant: "blocks",
     resizeInteractive: true,
-    transparentFloat: true,
+    transparentFloat: false,
     ratio: 16 / 9,
     vizMarkerThreshold: 20,
     scheme: "light",
@@ -354,41 +346,29 @@
     z-index: 2;
   }
 
-  .progress-hud {
+  .storybook-hud {
     position: absolute;
-    bottom: 2rem;
+    bottom: 1rem;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1.25rem;
-    width: calc(100% - 4rem);
-    max-width: 240px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-    text-align: center;
-    z-index: 3;
-  }
-
-  .progress-bar-container {
-    border-radius: 1rem;
-    height: 0.4rem;
-    width: 100%;
-    overflow: hidden;
-    margin-bottom: 0.4rem;
-  }
-
-  .progress-bar {
-    height: 100%;
-    transition: width 0.1s ease-out;
-  }
-
-  .progress-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-family: ABCSans, sans-serif;
     font-size: 0.8rem;
-    margin: 0;
     font-weight: 700;
-    opacity: 0.95;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.75);
+    color: #ffffff;
+    border-radius: 0.5rem;
+    width: 220px;
+    box-sizing: border-box;
+    z-index: 10;
+
+    progress {
+      width: 100%;
+      height: 16px;
+      accent-color: #ffffff;
+    }
   }
 </style>
