@@ -70,6 +70,14 @@ export const loadScrollyteller = <Data = any>(
 
     className && firstEl.classList.add(className);
     const config = acto(getMountValue(firstEl, openingMountValuePrefix));
+
+    // Once the mount has been read, rename to remove the word "scroll" because
+    // it breaks reader mode
+    const oldId = firstEl.id;
+    if (oldId.startsWith(SELECTOR_COMMON)) {
+      firstEl.id = `stellar${oldId.slice(SELECTOR_COMMON.length)}`;
+    }
+
     const els: Element[] = [];
     let el: Element | null = firstEl.nextElementSibling;
     let hasMoreContent = true;
