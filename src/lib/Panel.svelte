@@ -32,41 +32,41 @@
 <div
   data-align={align}
   data-index={i}
-  class={`st-panel-root ${panelClass || ""}`}
-  class:st-panel-root--left={align === "left"}
-  class:st-panel-root--right={align === "right"}
-  class:st-panel-root--centre={align === "centre"}
-  class:st-panel-root--transparent-blocks={transparentFloat && (align === "left" || align === "right")}
-  class:st-panel-root--active={i === currentPanel}
+  class={`stellar-panel-root ${panelClass || ""}`}
+  class:stellar-panel-root--left={align === "left"}
+  class:stellar-panel-root--right={align === "right"}
+  class:stellar-panel-root--centre={align === "centre"}
+  class:stellar-panel-root--transparent-blocks={transparentFloat && (align === "left" || align === "right")}
+  class:stellar-panel-root--active={i === currentPanel}
   style:max-width={layoutCtx?.isSplitScreen && (align === "left" || align === "right") ? `${layoutCtx.panelMaxWidthPx}px` : undefined}
   bind:this={panelRef}
 >
-  <div class="st-panel" use:children={nodes}></div>
+  <div class="stellar-panel" use:children={nodes}></div>
 </div>
 
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
 
-  :global(.st--mobile-row-variant),
-  :global(.st-wrapper--mobile-row-variant) {
+  :global(.stellar--mobile-row-variant),
+  :global(.stellar-wrapper--mobile-row-variant) {
     @media (max-width: breakpoints.$breakpointLargeTablet) {
       /* Mobile row variant doesn't need scrims etc */
-      .st-panel::before {
+      .stellar-panel::before {
         opacity: 0 !important;
       }
 
       /* Mobile row variant needs less spacing between panels */
-      .st-panel-root {
+      .stellar-panel-root {
         margin: 40vh auto;
       }
 
-      .st-panel-root.first {
+      .stellar-panel-root.first {
         margin-top: 10vh;
       }
     }
   }
 
-  .st-panel-root {
+  .stellar-panel-root {
     --panel-radius: 0.75rem;
     --panel-background: var(
       --color-panel-background,
@@ -94,7 +94,7 @@
       --panel-padding: 2rem;
     }
 
-    :global(.st--debug) & {
+    :global(.stellar--debug) & {
       outline: 5px solid limegreen;
     }
 
@@ -143,10 +143,10 @@
       @media (min-width: breakpoints.$breakpointLargeTablet) {
         opacity: 1;
 
-        &.st-panel-root--transparent-blocks.st-panel-root--active {
+        &.stellar-panel-root--transparent-blocks.stellar-panel-root--active {
           opacity: 1;
         }
-        &.st-panel-root--transparent-blocks {
+        &.stellar-panel-root--transparent-blocks {
           --panel-filter: none;
           --panel-background: none;
           --panel-border: none;
@@ -156,7 +156,7 @@
       }
     }
   }
-  .st-panel {
+  .stellar-panel {
     box-sizing: border-box;
     -webkit-backdrop-filter: var(--panel-filter);
     backdrop-filter: var(--panel-filter);

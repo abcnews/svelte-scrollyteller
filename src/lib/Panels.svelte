@@ -66,8 +66,8 @@
     box-sizing: border-box;
   }
 
-  :global(.st--mobile-row-variant),
-  :global(.st-wrapper--mobile-row-variant) {
+  :global(.stellar--mobile-row-variant),
+  :global(.stellar-wrapper--mobile-row-variant) {
     @media (max-width: breakpoints.$breakpointLargeTablet) {
       .content {
         margin-top: 0;

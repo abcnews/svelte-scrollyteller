@@ -110,9 +110,9 @@
 </svelte:head>
 
 <div
-  class="st-wrapper"
+  class="stellar-wrapper"
   bind:clientWidth={containerWidth}
-  class:st-wrapper--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
+  class:stellar-wrapper--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
   style:opacity={vizDims.status === "ready" ? 1 : 0}
 >
   {#if !layoutCtx.resizeInteractive}
@@ -124,11 +124,11 @@
     >
   {/if}
   <div
-    class="st"
-    class:st--resized={layoutCtx.resizeInteractive}
-    class:st--debug={layoutCtx.isDebug}
-    class:st--columns={["left", "right"].includes(layoutCtx.align)}
-    class:st--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
+    class="stellar"
+    class:stellar--resized={layoutCtx.resizeInteractive}
+    class:stellar--debug={layoutCtx.isDebug}
+    class:stellar--columns={["left", "right"].includes(layoutCtx.align)}
+    class:stellar--mobile-row-variant={layoutCtx.mobileVariant === "rows"}
     style:max-width={`${layoutCtx.scrollytellerWidthPx}px`}
     bind:this={scrollytellerRef}
   >
@@ -152,14 +152,14 @@
 
 <style lang="scss">
   @use "./breakpoints.scss" as breakpoints;
-  .st-wrapper {
+  .stellar-wrapper {
     position: relative;
     transition: opacity 0.25s;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
-  .st {
+  .stellar {
     position: relative;
     margin: 0 auto;
     width: 100%;

@@ -169,7 +169,7 @@
         height: 58dvh;
       }
     }
-    :global(.st--debug) & {
+    :global(.stellar--debug) & {
       outline: 5px solid limegreen;
     }
   }
